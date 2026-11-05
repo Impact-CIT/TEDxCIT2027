@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Navbar } from './components/navigation/Navbar';
 import { Hero } from './components/hero/Hero';
+import { WhatIsTEDxSection } from './components/sections/WhatIsTEDxSection';
 import { ScrollExpansionSection } from './components/sections/ScrollExpansionSection';
 import { AboutVideoSection } from './components/sections/AboutVideoSection';
 import { ImpactStatsSection } from './components/sections/ImpactStatsSection';
@@ -44,6 +45,9 @@ export default function App() {
         <main className="flex-1 w-full flex flex-col">
           {/* Full-screen Edge-to-Edge UNTAPPED Hero Section */}
           <Hero />
+
+          {/* What is TEDx Section (Directly below Hero Header) */}
+          <WhatIsTEDxSection />
 
           {/* Cinematic Scroll-Driven Visual Expansion Section */}
           <ScrollExpansionSection />
