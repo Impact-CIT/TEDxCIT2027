@@ -3,6 +3,7 @@ import { Navbar } from './components/navigation/Navbar';
 import { Hero } from './components/hero/Hero';
 import { ScrollExpansionSection } from './components/sections/ScrollExpansionSection';
 import { AboutVideoSection } from './components/sections/AboutVideoSection';
+import { ImpactStatsSection } from './components/sections/ImpactStatsSection';
 import { CinematicFramesSection } from './components/sections/CinematicFramesSection';
 import { CinematicStage } from './components/stage/CinematicStage';
 
@@ -56,6 +57,9 @@ export default function App() {
             videoSrc="" /* <--- PROMPT: Leave empty for placeholder, or supply your video file/URL */
             posterSrc="/images/stage-speaker-crop.jpg"
           />
+
+          {/* Dynamic Scroll Count-Up Impact Metrics Section */}
+          <ImpactStatsSection />
 
           {/* 3-Frame Rotating Stage Showcase Section (Cycles every 3 seconds to new 3 images) */}
           {/* USER IMAGES PROMPT:
