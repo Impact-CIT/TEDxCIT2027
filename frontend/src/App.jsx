@@ -6,6 +6,7 @@ import { ScrollExpansionSection } from './components/sections/ScrollExpansionSec
 import { AboutVideoSection } from './components/sections/AboutVideoSection';
 import { ImpactStatsSection } from './components/sections/ImpactStatsSection';
 import { PastEventsSection } from './components/sections/PastEventsSection';
+import { SponsorSection } from './components/sections/SponsorSection';
 import { CinematicFramesSection } from './components/sections/CinematicFramesSection';
 import { CinematicStage } from './components/stage/CinematicStage';
 
@@ -74,6 +75,9 @@ export default function App() {
 
           {/* Past Events Glassy Cards Section (Past events. Lasting ideas.) */}
           <PastEventsSection />
+
+          {/* Infinite Marquee Sponsors Section (Our Sponsors) */}
+          <SponsorSection />
         </main>
       </div>
     </div>
