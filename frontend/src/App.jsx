@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Navbar } from './components/navigation/Navbar';
 import { Hero } from './components/hero/Hero';
 import { ScrollExpansionSection } from './components/sections/ScrollExpansionSection';
+import { AboutVideoSection } from './components/sections/AboutVideoSection';
 import { CinematicStage } from './components/stage/CinematicStage';
 
 export default function App() {
@@ -44,6 +45,16 @@ export default function App() {
 
           {/* Cinematic Scroll-Driven Visual Expansion Section */}
           <ScrollExpansionSection />
+
+          {/* 50/50 Split Stage Video & TEDx CIT Mission Section */}
+          {/* USER VIDEO PROMPT:
+              To add your custom video, drop your video file (e.g. 'tedx-stage.mp4')
+              into 'frontend/public/videos/' and supply videoSrc="/videos/tedx-stage.mp4" below:
+          */}
+          <AboutVideoSection
+            videoSrc="" /* <--- PROMPT: Replace "" with "/videos/your-video.mp4" or your video URL */
+            posterSrc="/images/reference-speaker.jpg"
+          />
         </main>
       </div>
     </div>
