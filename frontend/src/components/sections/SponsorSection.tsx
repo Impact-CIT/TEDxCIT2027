@@ -258,3 +258,4 @@ export const SponsorSection: React.FC<SponsorSectionProps> = ({
 };
 
 export default SponsorSection;
+

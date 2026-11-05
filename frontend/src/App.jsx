@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Navbar } from './components/navigation/Navbar';
+import { Footer } from './components/Footer';
 import { Hero } from './components/hero/Hero';
 import { WhatIsTEDxSection } from './components/sections/WhatIsTEDxSection';
 import { ScrollExpansionSection } from './components/sections/ScrollExpansionSection';
@@ -79,6 +80,9 @@ export default function App() {
           {/* Infinite Marquee Sponsors Section (Our Sponsors) */}
           <SponsorSection />
         </main>
+
+        {/* Global Footer (Matching Reference Layout) */}
+        <Footer />
       </div>
     </div>
   );
