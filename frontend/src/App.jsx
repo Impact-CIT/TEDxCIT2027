@@ -56,13 +56,9 @@ export default function App() {
           <ScrollExpansionSection />
 
           {/* 50/50 Split Stage Video (16:9 Frame) & TEDx CIT Mission Section */}
-          {/* USER VIDEO & TEXT PROMPT:
-              - To add your video: set videoSrc="/videos/your-video.mp4" or a YouTube link.
-              - Header, subhead, and description already formatted as requested below.
-          */}
           <AboutVideoSection
-            videoSrc="" /* <--- PROMPT: Leave empty for placeholder, or supply your video file/URL */
-            posterSrc="/images/stage-speaker-crop.jpg"
+            videoSrc="/videos/tedx-cit-speaker.mp4"
+            posterSrc="/images/tedx-speaker-stage-poster.jpg"
           />
 
           {/* 3-Frame Rotating Stage Showcase Section (Cycles every 3 seconds to new 3 images) */}
