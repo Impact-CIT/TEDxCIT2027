@@ -46,14 +46,14 @@ export default function App() {
           {/* Cinematic Scroll-Driven Visual Expansion Section */}
           <ScrollExpansionSection />
 
-          {/* 50/50 Split Stage Video & TEDx CIT Mission Section */}
-          {/* USER VIDEO PROMPT:
-              To add your custom video, drop your video file (e.g. 'tedx-stage.mp4')
-              into 'frontend/public/videos/' and supply videoSrc="/videos/tedx-stage.mp4" below:
+          {/* 50/50 Split Stage Video (16:9 Frame) & TEDx CIT Mission Section */}
+          {/* USER VIDEO & TEXT PROMPT:
+              - To add your video: set videoSrc="/videos/your-video.mp4" or a YouTube link.
+              - Header, subhead, and description already formatted as requested below.
           */}
           <AboutVideoSection
-            videoSrc="" /* <--- PROMPT: Replace "" with "/videos/your-video.mp4" or your video URL */
-            posterSrc="/images/reference-speaker.jpg"
+            videoSrc="" /* <--- PROMPT: Leave empty for placeholder, or supply your video file/URL */
+            posterSrc="/images/stage-speaker-crop.jpg"
           />
         </main>
       </div>
