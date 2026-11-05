@@ -53,7 +53,16 @@ export default function App() {
           <WhatIsTEDxSection />
 
           {/* Cinematic Scroll-Driven Visual Expansion Section */}
-          <ScrollExpansionSection />
+          <ScrollExpansionSection
+            images={[
+              '/images/beyond-seen-1.jpg',
+              '/images/beyond-seen-2.jpg',
+            ]}
+            imageLabels={[
+              'Organizing Committee',
+              'Team & Crew',
+            ]}
+          />
 
           {/* 50/50 Split Stage Video (16:9 Frame) & TEDx CIT Mission Section */}
           <AboutVideoSection
