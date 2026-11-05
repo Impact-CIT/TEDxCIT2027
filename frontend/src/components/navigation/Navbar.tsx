@@ -94,7 +94,7 @@ const linkItemVariants: Variants = {
  * Premium Cinematic Grid Navigation Bar for TEDx Chennai Institute of Technology.
  * - Left End: Official TEDx branding logo
  * - Right End: All navigation links and enlarged CTA buttons
- * - Generous, balanced padding on both edges matching editorial event sites
+ * - Subtle cinematic entrance animation and interactive hover effects
  */
 export const Navbar: React.FC<NavbarProps> = ({
   className = '',
@@ -161,7 +161,10 @@ export const Navbar: React.FC<NavbarProps> = ({
   }, []);
 
   return (
-    <header
+    <motion.header
+      initial={{ opacity: 0, y: -8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] as const }}
       className={`relative top-0 left-0 right-0 z-50 w-full transition-colors duration-300 ease-in-out font-sans bg-[#000000] border-b ${
         isScrolled ? 'border-[#333333]' : 'border-[#292929]'
       } ${className}`}
@@ -236,18 +239,25 @@ export const Navbar: React.FC<NavbarProps> = ({
             {ctaButtons.map((btn) => {
               const isActive = pathname === btn.href || pathname.startsWith(`${btn.href}/`);
               return (
-                <a
+                <motion.a
                   key={btn.href}
                   href={btn.href}
+                  whileHover={{ scale: 1.025 }}
+                  whileTap={{ scale: 0.975 }}
+                  transition={{ duration: 0.2 }}
                   aria-current={isActive ? 'page' : undefined}
-                  className={`border bg-transparent px-5 sm:px-6 lg:px-6 xl:px-7 py-3 lg:py-3.5 text-xs sm:text-[13px] lg:text-[14px] font-bold tracking-[0.08em] uppercase transition-all duration-200 rounded-none whitespace-nowrap focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2B25] ${
+                  className={`group relative overflow-hidden border bg-transparent px-5 sm:px-6 lg:px-6 xl:px-7 py-3 lg:py-3.5 text-xs sm:text-[13px] lg:text-[14px] font-bold tracking-[0.08em] uppercase transition-all duration-300 rounded-none whitespace-nowrap focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2B25] ${
                     isActive
                       ? 'border-[#FF2B25] text-[#FF2B25]'
-                      : 'border-[#292929] text-[#F5F5F2] hover:border-[#F5F5F2] hover:text-[#FF2B25]'
+                      : 'border-[#292929] text-[#F5F5F2] hover:border-[#FF2B25] hover:text-white'
                   }`}
                 >
-                  {btn.label}
-                </a>
+                  <span
+                    className="absolute inset-0 bg-[#FF2B25]/15 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    aria-hidden="true"
+                  />
+                  <span className="relative z-10">{btn.label}</span>
+                </motion.a>
               );
             })}
           </div>
@@ -390,7 +400,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           </motion.div>
         )}
       </AnimatePresence>
-    </header>
+    </motion.header>
   );
 };
 

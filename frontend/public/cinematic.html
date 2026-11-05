@@ -1,0 +1,1678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>TEDx Chennai Institute of Technology | Official Event</title>
+  <meta name="description" content="TEDx Chennai Institute of Technology — An independently organized TED event. Uncover untapped perspectives and ideas worth spreading.">
+
+  <!-- Inter & Space Mono Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- GSAP & ScrollTrigger from cdnjs -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <style>
+    /* ==========================================================================
+       1. CORE TOKENS & RESET
+       ========================================================================== */
+    :root {
+      --bg: #000000;
+      --bg-surface: #0a0a0a;
+      --bg-card: #0f0f10;
+      --ted-red: #E62B1E;
+      --ted-red-glow: rgba(230, 43, 30, 0.75);
+      --ted-red-soft: rgba(230, 43, 30, 0.15);
+      --text: #F5F5F2;
+      --text-muted: #8E8E93;
+      --border: #222224;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'Space Mono', monospace;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      background-color: var(--bg);
+      overflow-x: hidden;
+      width: 100%;
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    body.intro-active {
+      overflow: hidden;
+    }
+
+    ::selection {
+      background-color: var(--ted-red);
+      color: #FFFFFF;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      background: none;
+      border: none;
+      font: inherit;
+      color: inherit;
+      cursor: pointer;
+    }
+
+    /* ==========================================================================
+       2. OPENING SEQUENCE & STAGE LIGHTING
+       ========================================================================== */
+    #stage-container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      height: 100svh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #000000;
+      perspective: 1000px;
+      z-index: 50;
+    }
+
+    /* Ambient atmospheric canvas for floating dust particles */
+    #haze-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.85;
+    }
+
+    /* Cinematic Stage Haze / Ambient Depth */
+    .stage-haze {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 50%, rgba(20, 3, 4, 0.45) 0%, rgba(0, 0, 0, 0.95) 75%);
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    /* Skip Intro Button */
+    .skip-intro-btn {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      z-index: 100;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      padding: 8px 16px;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(8px);
+      transition: all 0.25s ease;
+      outline: none;
+    }
+
+    .skip-intro-btn:hover, .skip-intro-btn:focus-visible {
+      color: #FFFFFF;
+      border-color: var(--ted-red);
+      background: rgba(230, 43, 30, 0.12);
+    }
+
+    /* Spotlight Beams */
+    .spotlight-wrapper {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 5;
+      overflow: hidden;
+    }
+
+    /* Beam 1: Bottom-Left angled toward center */
+    .beam-left {
+      position: absolute;
+      bottom: -60px;
+      left: -60px;
+      width: 140vw;
+      height: 140vh;
+      transform-origin: 60px calc(100% - 60px);
+      transform: rotate(32deg);
+      background: conic-gradient(
+        from 270deg at 60px calc(100% - 60px),
+        transparent 0deg,
+        rgba(230, 43, 30, 0.08) 12deg,
+        rgba(255, 255, 255, 0.65) 18deg,
+        rgba(230, 43, 30, 0.9) 21deg,
+        rgba(230, 43, 30, 0.15) 28deg,
+        transparent 35deg
+      );
+      mix-blend-mode: screen;
+      filter: blur(20px);
+      opacity: 0;
+      will-change: opacity, transform;
+    }
+
+    /* Lens point at bottom-left corner */
+    .lens-left {
+      position: absolute;
+      bottom: 12px;
+      left: 12px;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #FFFFFF 0%, var(--ted-red) 45%, transparent 75%);
+      box-shadow: 0 0 40px 15px var(--ted-red);
+      opacity: 0;
+      z-index: 6;
+      filter: blur(2px);
+    }
+
+    /* Beam 2: Bottom-Right angled toward center */
+    .beam-right {
+      position: absolute;
+      bottom: -60px;
+      right: -60px;
+      width: 140vw;
+      height: 140vh;
+      transform-origin: calc(100% - 60px) calc(100% - 60px);
+      transform: rotate(-32deg);
+      background: conic-gradient(
+        from 90deg at calc(100% - 60px) calc(100% - 60px),
+        transparent 0deg,
+        rgba(230, 43, 30, 0.08) 12deg,
+        rgba(255, 255, 255, 0.65) 18deg,
+        rgba(230, 43, 30, 0.9) 21deg,
+        rgba(230, 43, 30, 0.15) 28deg,
+        transparent 35deg
+      );
+      mix-blend-mode: screen;
+      filter: blur(20px);
+      opacity: 0;
+      will-change: opacity, transform;
+    }
+
+    /* Lens point at bottom-right corner */
+    .lens-right {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #FFFFFF 0%, var(--ted-red) 45%, transparent 75%);
+      box-shadow: 0 0 40px 15px var(--ted-red);
+      opacity: 0;
+      z-index: 6;
+      filter: blur(2px);
+    }
+
+    /* Center crossing flash burst */
+    .center-flash {
+      position: absolute;
+      top: 45%;
+      left: 50%;
+      width: 180px;
+      height: 180px;
+      transform: translate(-50%, -50%) scale(0.2);
+      border-radius: 50%;
+      background: radial-gradient(circle, #FFFFFF 0%, rgba(255, 255, 255, 0.9) 25%, var(--ted-red) 65%, transparent 80%);
+      box-shadow: 0 0 90px 40px #FFFFFF, 0 0 160px 80px var(--ted-red);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 10;
+      mix-blend-mode: screen;
+    }
+
+    /* Theatrical Title Assembly */
+    .title-stage {
+      position: relative;
+      z-index: 15;
+      text-align: center;
+      padding: 0 20px;
+      max-width: 960px;
+      opacity: 0;
+      transform: translateY(12px) scale(0.97);
+      will-change: opacity, transform, filter;
+    }
+
+    .tedx-brand {
+      display: inline-flex;
+      align-items: baseline;
+      font-weight: 900;
+      font-size: clamp(3.2rem, 13vw, 8.5rem);
+      line-height: 0.9;
+      letter-spacing: -0.05em;
+      color: #FFFFFF;
+      text-transform: uppercase;
+      text-shadow: 
+        0 0 12px rgba(255, 255, 255, 0.9),
+        0 0 28px var(--ted-red),
+        0 0 70px var(--ted-red-glow),
+        0 0 140px rgba(230, 43, 30, 0.4);
+    }
+
+    .tedx-brand .red-accent {
+      color: var(--ted-red);
+    }
+
+    .tedx-brand sup {
+      font-size: 0.52em;
+      font-weight: 800;
+      color: var(--ted-red);
+      margin-left: 2px;
+      vertical-align: super;
+    }
+
+    .cit-subheading {
+      display: block;
+      margin-top: 14px;
+      font-weight: 600;
+      font-size: clamp(0.85rem, 3.2vw, 1.85rem);
+      letter-spacing: clamp(0.18em, 0.8vw, 0.38em);
+      text-transform: uppercase;
+      color: #FFFFFF;
+      text-shadow:
+        0 0 10px rgba(255, 255, 255, 0.8),
+        0 0 25px var(--ted-red),
+        0 0 60px var(--ted-red-glow);
+    }
+
+    /* Glossy Stage Floor Reflection */
+    .stage-reflection {
+      position: absolute;
+      top: calc(50% + 70px);
+      left: 50%;
+      transform: translateX(-50%) scaleY(-1);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 4;
+      filter: blur(4px);
+      mask-image: linear-gradient(to top, rgba(0, 0, 0, 0.55) 0%, transparent 80%);
+      -webkit-mask-image: linear-gradient(to top, rgba(0, 0, 0, 0.55) 0%, transparent 80%);
+    }
+
+    /* Scroll Cue */
+    .scroll-cue {
+      position: absolute;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 25;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      opacity: 0;
+      transition: color 0.2s ease;
+    }
+
+    .scroll-cue:hover {
+      color: var(--ted-red);
+    }
+
+    .scroll-cue-arrow {
+      animation: pulseBob 2s infinite ease-in-out;
+      font-size: 14px;
+      color: var(--ted-red);
+    }
+
+    @keyframes pulseBob {
+      0%, 100% { transform: translateY(0); opacity: 0.6; }
+      50% { transform: translateY(6px); opacity: 1; }
+    }
+
+    /* ==========================================================================
+       3. STICKY MINIMAL NAVIGATION
+       ========================================================================== */
+    .sticky-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 72px;
+      z-index: 1000;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 clamp(16px, 4vw, 48px);
+      transform: translateY(-100%);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .sticky-nav.visible {
+      transform: translateY(0);
+    }
+
+    .nav-logo {
+      font-weight: 800;
+      font-size: 16px;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .nav-logo .red {
+      color: var(--ted-red);
+    }
+
+    .nav-links {
+      display: none;
+      align-items: center;
+      gap: 28px;
+      list-style: none;
+    }
+
+    @media (min-width: 840px) {
+      .nav-links {
+        display: flex;
+      }
+    }
+
+    .nav-link {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      transition: color 0.2s ease;
+    }
+
+    .nav-link:hover, .nav-link:focus-visible {
+      color: var(--ted-red);
+    }
+
+    .nav-cta-btn {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 9px 18px;
+      background: var(--ted-red);
+      color: #FFFFFF;
+      border: 1px solid var(--ted-red);
+      box-shadow: 0 0 18px rgba(230, 43, 30, 0.5);
+      transition: all 0.25s ease;
+    }
+
+    .nav-cta-btn:hover {
+      background: transparent;
+      color: var(--ted-red);
+      box-shadow: 0 0 25px rgba(230, 43, 30, 0.8);
+    }
+
+    /* Mobile Hamburger */
+    .mobile-menu-btn {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      padding: 8px;
+      z-index: 1010;
+    }
+
+    @media (min-width: 840px) {
+      .mobile-menu-btn {
+        display: none;
+      }
+    }
+
+    .mobile-menu-btn span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background-color: var(--text);
+      transition: transform 0.25s ease, opacity 0.25s ease;
+    }
+
+    .mobile-drawer {
+      position: fixed;
+      inset: 0;
+      background: #000000;
+      z-index: 1005;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 28px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .mobile-drawer.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .mobile-drawer a {
+      font-size: 22px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text);
+      transition: color 0.2s;
+    }
+
+    .mobile-drawer a:hover {
+      color: var(--ted-red);
+    }
+
+    /* ==========================================================================
+       4. EDITORIAL CONTENT SECTIONS (SPOTLIGHT SCROLL REVEALS)
+       ========================================================================== */
+    .content-wrapper {
+      position: relative;
+      background: #000000;
+      z-index: 20;
+    }
+
+    section.spotlight-section {
+      position: relative;
+      padding: clamp(80px, 14vh, 160px) clamp(20px, 5vw, 64px);
+      max-width: 1200px;
+      margin: 0 auto;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* Subtle spotlight background cone following the active section */
+    .section-light-cone {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: clamp(300px, 60vw, 700px);
+      height: 350px;
+      background: radial-gradient(ellipse at 50% 0%, rgba(230, 43, 30, 0.12) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .section-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--ted-red);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-weight: 900;
+      font-size: clamp(2.2rem, 6.5vw, 4.4rem);
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+      color: #FFFFFF;
+      margin-bottom: 24px;
+    }
+
+    .section-subtitle {
+      font-size: clamp(1rem, 2.2vw, 1.25rem);
+      color: var(--text-muted);
+      max-width: 680px;
+      line-height: 1.6;
+      margin-bottom: 48px;
+    }
+
+    /* 4A. ABOUT SECTION */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+      margin-top: 36px;
+    }
+
+    @media (min-width: 768px) {
+      .about-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .about-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: clamp(24px, 4vw, 36px);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .about-card:hover {
+      border-color: rgba(230, 43, 30, 0.4);
+      transform: translateY(-4px);
+    }
+
+    .about-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: var(--ted-red);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .about-card:hover::after {
+      opacity: 1;
+    }
+
+    .card-num {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--ted-red);
+      margin-bottom: 12px;
+    }
+
+    .card-heading {
+      font-size: 20px;
+      font-weight: 700;
+      color: #FFFFFF;
+      margin-bottom: 12px;
+    }
+
+    .card-body {
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* 4B. SPEAKERS SECTION */
+    .speaker-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+
+    @media (min-width: 600px) {
+      .speaker-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .speaker-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    .speaker-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+    }
+
+    .speaker-card:hover {
+      border-color: var(--ted-red);
+      box-shadow: 0 10px 30px -10px rgba(230, 43, 30, 0.35);
+      transform: translateY(-6px);
+    }
+
+    .speaker-img-placeholder {
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      background: #141416;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .speaker-scanlines {
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.15),
+        rgba(0, 0, 0, 0.15) 2px,
+        transparent 2px,
+        transparent 4px
+      );
+      pointer-events: none;
+    }
+
+    .speaker-tag {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      background: rgba(0, 0, 0, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #FFFFFF;
+      padding: 4px 8px;
+      text-transform: uppercase;
+    }
+
+    .speaker-info {
+      padding: 20px;
+    }
+
+    .speaker-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: #FFFFFF;
+      margin-bottom: 4px;
+    }
+
+    .speaker-title {
+      font-size: 13px;
+      color: var(--ted-red);
+      font-family: var(--font-mono);
+      margin-bottom: 12px;
+    }
+
+    .speaker-topic {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      border-top: 1px solid var(--border);
+      padding-top: 12px;
+    }
+
+    /* 4C. SCHEDULE SECTION */
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      position: relative;
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 24px;
+      transition: all 0.25s ease;
+    }
+
+    @media (min-width: 680px) {
+      .timeline-item {
+        grid-template-columns: 180px 1fr;
+        align-items: center;
+        gap: 32px;
+      }
+    }
+
+    .timeline-item:hover {
+      border-color: rgba(230, 43, 30, 0.5);
+      background: #121214;
+    }
+
+    .timeline-time {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ted-red);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .timeline-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--ted-red);
+      box-shadow: 0 0 10px var(--ted-red);
+    }
+
+    .timeline-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #FFFFFF;
+      margin-bottom: 4px;
+    }
+
+    .timeline-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    /* 4D. VENUE SECTION */
+    .venue-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: clamp(28px, 5vw, 54px);
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+
+    @media (min-width: 880px) {
+      .venue-card {
+        grid-template-columns: 1.2fr 1fr;
+        align-items: center;
+      }
+    }
+
+    .venue-details h3 {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      margin-bottom: 16px;
+      color: #FFFFFF;
+    }
+
+    .venue-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .meta-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      font-size: 15px;
+      color: var(--text);
+    }
+
+    .meta-icon {
+      color: var(--ted-red);
+      font-family: var(--font-mono);
+      font-weight: bold;
+    }
+
+    .venue-map-mock {
+      border: 1px solid var(--border);
+      background: #080809;
+      aspect-ratio: 16 / 10;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .map-grid-overlay {
+      position: absolute;
+      inset: 0;
+      background-size: 24px 24px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    }
+
+    .map-pin {
+      position: relative;
+      z-index: 2;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--ted-red);
+      box-shadow: 0 0 25px 8px var(--ted-red);
+      margin-bottom: 12px;
+      animation: pinRadar 2s infinite ease-out;
+    }
+
+    @keyframes pinRadar {
+      0% { box-shadow: 0 0 0 0 rgba(230, 43, 30, 0.9); }
+      70% { box-shadow: 0 0 0 25px rgba(230, 43, 30, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(230, 43, 30, 0); }
+    }
+
+    /* 4E. REGISTRATION CTA SECTION */
+    .cta-section {
+      text-align: center;
+      padding: clamp(90px, 16vh, 180px) 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-glow-backdrop {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: clamp(350px, 70vw, 750px);
+      height: clamp(350px, 70vw, 750px);
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(230, 43, 30, 0.22) 0%, transparent 68%);
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .cta-content {
+      position: relative;
+      z-index: 2;
+      max-width: 780px;
+      margin: 0 auto;
+    }
+
+    .cta-heading {
+      font-size: clamp(2.4rem, 7vw, 5.2rem);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+      color: #FFFFFF;
+      margin-bottom: 24px;
+    }
+
+    .pulsing-register-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      margin-top: 36px;
+      padding: clamp(16px, 2.5vw, 22px) clamp(32px, 5vw, 56px);
+      font-family: var(--font-mono);
+      font-size: clamp(13px, 1.8vw, 16px);
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      background: var(--ted-red);
+      color: #FFFFFF;
+      border: 1px solid var(--ted-red);
+      border-radius: 0;
+      box-shadow: 
+        0 0 25px rgba(230, 43, 30, 0.8),
+        0 0 60px rgba(230, 43, 30, 0.45);
+      animation: registerPulse 2.4s infinite ease-in-out;
+      transition: all 0.3s ease;
+      outline: none;
+    }
+
+    .pulsing-register-btn:hover, .pulsing-register-btn:focus-visible {
+      transform: scale(1.04);
+      background: #FFFFFF;
+      color: #000000;
+      border-color: #FFFFFF;
+      box-shadow: 
+        0 0 35px #FFFFFF,
+        0 0 80px var(--ted-red);
+    }
+
+    @keyframes registerPulse {
+      0%, 100% {
+        box-shadow: 0 0 20px rgba(230, 43, 30, 0.6), 0 0 50px rgba(230, 43, 30, 0.3);
+      }
+      50% {
+        box-shadow: 0 0 40px rgba(230, 43, 30, 0.95), 0 0 90px rgba(230, 43, 30, 0.6);
+      }
+    }
+
+    /* ==========================================================================
+       5. FOOTER & MANDATORY NOTICE
+       ========================================================================== */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: clamp(48px, 8vw, 84px) clamp(20px, 5vw, 64px) 40px;
+      background: #050505;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 36px;
+    }
+
+    .footer-top {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      justify-content: space-between;
+    }
+
+    @media (min-width: 768px) {
+      .footer-top {
+        flex-direction: row;
+        align-items: center;
+      }
+    }
+
+    .mandatory-notice {
+      font-size: 12px;
+      line-height: 1.6;
+      max-width: 540px;
+      color: #A1A1A6;
+      border-left: 2px solid var(--ted-red);
+      padding-left: 14px;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding-top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+    }
+
+    @media (min-width: 640px) {
+      .footer-bottom {
+        flex-direction: row;
+      }
+    }
+
+    /* ==========================================================================
+       6. PREFERS-REDUCED-MOTION OVERRIDES
+       ========================================================================== */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+
+      .beam-left, .beam-right, .lens-left, .lens-right, .center-flash {
+        display: none !important;
+      }
+
+      .title-stage {
+        opacity: 1 !important;
+        transform: none !important;
+      }
+
+      .scroll-cue {
+        opacity: 1 !important;
+      }
+
+      .skip-intro-btn {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body class="intro-active">
+
+  <!-- ==========================================================================
+       OPENING SEQUENCE (4.5s Auto-play Theatrical Intro)
+       ========================================================================== -->
+  <div id="stage-container" role="banner" aria-label="TEDx Chennai Institute of Technology Theatrical Intro">
+    <!-- Atmospheric Stage Canvas (haze + ambient dust particles) -->
+    <canvas id="haze-canvas"></canvas>
+    <div class="stage-haze"></div>
+
+    <!-- Skip Intro Button (Accessible from start) -->
+    <button id="skip-intro-btn" class="skip-intro-btn" aria-label="Skip opening cinematic sequence">
+      SKIP INTRO <span style="opacity: 0.5;">[Esc]</span>
+    </button>
+
+    <!-- Dynamic Stage Spotlight Beams -->
+    <div class="spotlight-wrapper" aria-hidden="true">
+      <div id="beam-left" class="beam-left"></div>
+      <div id="lens-left" class="lens-left"></div>
+      <div id="beam-right" class="beam-right"></div>
+      <div id="lens-right" class="lens-right"></div>
+      <div id="center-flash" class="center-flash"></div>
+    </div>
+
+    <!-- Theatrical Title Revealed by Light -->
+    <div id="title-stage" class="title-stage">
+      <h1 class="tedx-brand">
+        <span class="red-accent">TED</span><span>x</span>
+      </h1>
+      <span class="cit-subheading">Chennai Institute of Technology</span>
+    </div>
+
+    <!-- Glossy Stage Floor Reflection -->
+    <div id="stage-reflection" class="stage-reflection" aria-hidden="true">
+      <div class="tedx-brand">
+        <span class="red-accent">TED</span><span>x</span>
+      </div>
+      <span class="cit-subheading">Chennai Institute of Technology</span>
+    </div>
+
+    <!-- Scroll Cue Indicator -->
+    <a href="#about" id="scroll-cue" class="scroll-cue" aria-label="Scroll down to explore event content">
+      <span>SCROLL</span>
+      <span class="scroll-cue-arrow">↓</span>
+    </a>
+  </div>
+
+  <!-- ==========================================================================
+       STICKY MINIMAL NAVIGATION (Reveals after intro)
+       ========================================================================== -->
+  <header id="sticky-nav" class="sticky-nav" role="navigation" aria-label="Main Navigation">
+    <a href="#stage-container" class="nav-logo" aria-label="TEDx Chennai Institute of Technology Home">
+      <span class="red">TED<sup>x</sup></span>&nbsp;<span>CIT</span>
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="#about" class="nav-link">About</a></li>
+      <li><a href="#speakers" class="nav-link">Speakers</a></li>
+      <li><a href="#schedule" class="nav-link">Schedule</a></li>
+      <li><a href="#venue" class="nav-link">Venue</a></li>
+    </ul>
+
+    <a href="#register" class="nav-cta-btn">REGISTER NOW</a>
+
+    <button id="mobile-menu-btn" class="mobile-menu-btn" aria-label="Toggle mobile menu" aria-expanded="false">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </header>
+
+  <!-- Mobile Drawer Overlay -->
+  <div id="mobile-drawer" class="mobile-drawer" role="dialog" aria-modal="true" aria-label="Mobile Menu">
+    <a href="#about" class="mobile-link">About</a>
+    <a href="#speakers" class="mobile-link">Speakers</a>
+    <a href="#schedule" class="mobile-link">Schedule</a>
+    <a href="#venue" class="mobile-link">Venue</a>
+    <a href="#register" class="mobile-link nav-cta-btn" style="margin-top: 16px;">REGISTER NOW</a>
+  </div>
+
+  <!-- ==========================================================================
+       EDITORIAL CONTENT SECTIONS (SPOTLIGHT SCROLL REVEALS)
+       ========================================================================== -->
+  <main class="content-wrapper">
+
+    <!-- 1. ABOUT SECTION -->
+    <section id="about" class="spotlight-section" aria-labelledby="about-heading">
+      <div class="section-light-cone"></div>
+      <div class="section-eyebrow">// 01 ABOUT THE EVENT</div>
+      <h2 id="about-heading" class="section-title">Where bold ideas ignite uncharted futures.</h2>
+      <p class="section-subtitle">
+        TEDx Chennai Institute of Technology brings together visionaries, researchers, artists, and catalysts for an unforgettable day of intellectual bravery. Organized independently under license from TED.
+      </p>
+
+      <div class="about-grid">
+        <div class="about-card">
+          <div class="card-num">01 / DISCOVERY</div>
+          <h3 class="card-heading">Untapped Perspectives</h3>
+          <p class="card-body">Uncovering breakthrough discoveries and paradigm shifts hiding just beneath conventional thinking.</p>
+        </div>
+
+        <div class="about-card">
+          <div class="card-num">02 / INTERDISCIPLINARY</div>
+          <h3 class="card-heading">Radical Fusion</h3>
+          <p class="card-body">Where artificial intelligence, quantum physics, cinema, biotechnology, and indigenous wisdom intersect.</p>
+        </div>
+
+        <div class="about-card">
+          <div class="card-num">03 / ACTION</div>
+          <h3 class="card-heading">Catalytic Impact</h3>
+          <p class="card-body">Ideas designed not just to provoke thought, but to furnish actionable sparks for global change.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. SPEAKERS SECTION (Placeholders clearly marked) -->
+    <section id="speakers" class="spotlight-section" aria-labelledby="speakers-heading">
+      <div class="section-light-cone"></div>
+      <div class="section-eyebrow">// 02 FEATURED VOICES</div>
+      <h2 id="speakers-heading" class="section-title">Speakers shaping the horizon.</h2>
+      <p class="section-subtitle">
+        Leaders, creators, and innovators from across the globe stepping onto the TEDx red circle to share ideas worth spreading.
+      </p>
+
+      <div class="speaker-grid">
+        <!-- SPEAKER 1 [REPLACEABLE] -->
+        <article class="speaker-card">
+          <div class="speaker-img-placeholder">
+            <div class="speaker-scanlines"></div>
+            <span class="speaker-tag">AI & DEEP TECH</span>
+            <!-- REPLACE THIS SVG WITH SPEAKER PHOTO: <img src="..." alt="..."> -->
+            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#E62B1E" stroke-width="1.2">
+              <circle cx="12" cy="8" r="4"/>
+              <path d="M6 20v-2a6 6 0 0 1 12 0v2"/>
+            </svg>
+          </div>
+          <div class="speaker-info">
+            <h3 class="speaker-name">[REPLACE: Dr. Arun Ramachandran]</h3>
+            <p class="speaker-title">Cognitive Computing Researcher</p>
+            <p class="speaker-topic">Talk: "The Architecture of Unconscious Intelligence"</p>
+          </div>
+        </article>
+
+        <!-- SPEAKER 2 [REPLACEABLE] -->
+        <article class="speaker-card">
+          <div class="speaker-img-placeholder">
+            <div class="speaker-scanlines"></div>
+            <span class="speaker-tag">CLIMATE & ENERGY</span>
+            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#E62B1E" stroke-width="1.2">
+              <circle cx="12" cy="8" r="4"/>
+              <path d="M6 20v-2a6 6 0 0 1 12 0v2"/>
+            </svg>
+          </div>
+          <div class="speaker-info">
+            <h3 class="speaker-name">[REPLACE: Meera Krishnan]</h3>
+            <p class="speaker-title">Carbon Capture Technologist</p>
+            <p class="speaker-topic">Talk: "Photosynthetic Engineering for Megacities"</p>
+          </div>
+        </article>
+
+        <!-- SPEAKER 3 [REPLACEABLE] -->
+        <article class="speaker-card">
+          <div class="speaker-img-placeholder">
+            <div class="speaker-scanlines"></div>
+            <span class="speaker-tag">SPACE & ASTRO</span>
+            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#E62B1E" stroke-width="1.2">
+              <circle cx="12" cy="8" r="4"/>
+              <path d="M6 20v-2a6 6 0 0 1 12 0v2"/>
+            </svg>
+          </div>
+          <div class="speaker-info">
+            <h3 class="speaker-name">[REPLACE: K. S. Narayanan]</h3>
+            <p class="speaker-title">Propulsion Systems Engineer</p>
+            <p class="speaker-topic">Talk: "Leaving the Cradle: Deep Space Voyages"</p>
+          </div>
+        </article>
+
+        <!-- SPEAKER 4 [REPLACEABLE] -->
+        <article class="speaker-card">
+          <div class="speaker-img-placeholder">
+            <div class="speaker-scanlines"></div>
+            <span class="speaker-tag">ARTS & DESIGN</span>
+            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#E62B1E" stroke-width="1.2">
+              <circle cx="12" cy="8" r="4"/>
+              <path d="M6 20v-2a6 6 0 0 1 12 0v2"/>
+            </svg>
+          </div>
+          <div class="speaker-info">
+            <h3 class="speaker-name">[REPLACE: Priya Sundaram]</h3>
+            <p class="speaker-title">Sensory Architect & Sculptor</p>
+            <p class="speaker-topic">Talk: "Designing Spaces for the Unseen Senses"</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- 3. SCHEDULE SECTION (Placeholders clearly marked) -->
+    <section id="schedule" class="spotlight-section" aria-labelledby="schedule-heading">
+      <div class="section-light-cone"></div>
+      <div class="section-eyebrow">// 03 CURATED TIMELINE</div>
+      <h2 id="schedule-heading" class="section-title">The order of exploration.</h2>
+      <p class="section-subtitle">
+        An immersive single-day journey carefully scored into thematic movements.
+      </p>
+
+      <div class="timeline">
+        <!-- ITEM 1 [REPLACEABLE] -->
+        <div class="timeline-item">
+          <div class="timeline-time">
+            <span class="timeline-dot"></span>
+            <span>09:00 AM IST</span>
+          </div>
+          <div>
+            <h3 class="timeline-title">[REPLACE: Registration & Atmospheric Prelude]</h3>
+            <p class="timeline-desc">Arrival, delegate kit handoff, interactive sensory installations and morning coffee.</p>
+          </div>
+        </div>
+
+        <!-- ITEM 2 [REPLACEABLE] -->
+        <div class="timeline-item">
+          <div class="timeline-time">
+            <span class="timeline-dot"></span>
+            <span>10:00 AM IST</span>
+          </div>
+          <div>
+            <h3 class="timeline-title">[REPLACE: Act I — The Invisible Spark]</h3>
+            <p class="timeline-desc">Opening keynotes uncovering hidden patterns in physics, computation, and biology.</p>
+          </div>
+        </div>
+
+        <!-- ITEM 3 [REPLACEABLE] -->
+        <div class="timeline-item">
+          <div class="timeline-time">
+            <span class="timeline-dot"></span>
+            <span>12:00 PM IST</span>
+          </div>
+          <div>
+            <h3 class="timeline-title">[REPLACE: Collaborative Intermission]</h3>
+            <p class="timeline-desc">Curated delegate dialogue, speaker meet-and-greets, and culinary experience.</p>
+          </div>
+        </div>
+
+        <!-- ITEM 4 [REPLACEABLE] -->
+        <div class="timeline-item">
+          <div class="timeline-time">
+            <span class="timeline-dot"></span>
+            <span>01:45 PM IST</span>
+          </div>
+          <div>
+            <h3 class="timeline-title">[REPLACE: Act II — Crossing Horizons]</h3>
+            <p class="timeline-desc">High-voltage discussions bridging indigenous philosophy with interstellar discovery.</p>
+          </div>
+        </div>
+
+        <!-- ITEM 5 [REPLACEABLE] -->
+        <div class="timeline-item">
+          <div class="timeline-time">
+            <span class="timeline-dot"></span>
+            <span>04:15 PM IST</span>
+          </div>
+          <div>
+            <h3 class="timeline-title">[REPLACE: Act III — The Resonance]</h3>
+            <p class="timeline-desc">Final inspirational talks, musical performance, and closing reflection ceremony.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. VENUE SECTION (Placeholders clearly marked) -->
+    <section id="venue" class="spotlight-section" aria-labelledby="venue-heading">
+      <div class="section-light-cone"></div>
+      <div class="section-eyebrow">// 04 THE STAGE</div>
+      <h2 id="venue-heading" class="section-title">Chennai Institute of Technology.</h2>
+
+      <div class="venue-card">
+        <div class="venue-details">
+          <h3>[REPLACE: CIT Main Auditorium]</h3>
+          <p style="color: var(--text-muted); line-height: 1.6;">
+            A world-class acoustic auditorium nestled in the technology corridor of Chennai, equipped with state-of-the-art concert lighting, high-fidelity sound, and tiered cinema seating.
+          </p>
+
+          <div class="venue-meta">
+            <div class="meta-row">
+              <span class="meta-icon">LOCATION:</span>
+              <span>[REPLACE: Sarathy Nagar, Kundrathur, Chennai, Tamil Nadu 600069]</span>
+            </div>
+            <div class="meta-row">
+              <span class="meta-icon">DATE & TIME:</span>
+              <span>[REPLACE: Saturday, March 20, 2027 | 09:00 AM - 05:30 PM IST]</span>
+            </div>
+            <div class="meta-row">
+              <span class="meta-icon">COORDINATES:</span>
+              <span style="font-family: var(--font-mono); color: var(--text-muted);">12.977° N, 80.056° E</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="venue-map-mock">
+          <div class="map-grid-overlay"></div>
+          <div class="map-pin"></div>
+          <div style="font-family: var(--font-mono); font-size: 13px; font-weight: 700; color: #FFFFFF; z-index: 2;">
+            CIT CAMPUS AUDITORIUM
+          </div>
+          <div style="font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); z-index: 2; margin-top: 4px;">
+            CHENNAI, INDIA
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. REGISTRATION CTA -->
+    <section id="register" class="cta-section" aria-labelledby="register-heading">
+      <div class="cta-glow-backdrop"></div>
+      <div class="cta-content">
+        <div class="section-eyebrow" style="justify-content: center;">// 05 JOIN THE CONVERSATION</div>
+        <h2 id="register-heading" class="cta-heading">Step into the circle.</h2>
+        <p class="section-subtitle" style="margin: 0 auto;">
+          Seats are strictly limited to ensure an intimate, high-impact salon atmosphere. Reserve your delegate pass today.
+        </p>
+
+        <div>
+          <a href="#register" class="pulsing-register-btn" role="button">
+            <span>CLAIM DELEGATE PASS</span>
+            <span>↗</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==========================================================================
+       FOOTER & MANDATORY NOTICE
+       ========================================================================== -->
+  <footer role="contentinfo">
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="tedx-brand" style="font-size: 28px;">
+          <span class="red-accent">TED</span><span>x</span>&nbsp;<span style="font-size: 16px; font-weight: 600; letter-spacing: 0.05em; color: var(--text);">Chennai Institute of Technology</span>
+        </div>
+
+        <p class="mandatory-notice">
+          This independent TEDx event is operated under license from TED.
+        </p>
+      </div>
+
+      <div class="footer-bottom">
+        <div>
+          &copy; 2027 TEDx Chennai Institute of Technology. All rights reserved.
+        </div>
+        <div style="color: var(--text-muted);">
+          POWERED BY IDEAS WORTH SPREADING
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==========================================================================
+       VANILLA JS SCRIPT (Cinematic Opening Timeline + Canvas + GSAP Scroll)
+       ========================================================================== -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      gsap.registerPlugin(ScrollTrigger);
+
+      // -------------------------------------------------------------
+      // 1. FLOATING ATMOSPHERIC CANVAS PARTICLES
+      // -------------------------------------------------------------
+      const canvas = document.getElementById('haze-canvas');
+      const ctx = canvas.getContext('2d');
+      let width, height;
+      let particles = [];
+
+      function resizeCanvas() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      }
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas);
+
+      class Particle {
+        constructor() {
+          this.reset();
+        }
+        reset() {
+          this.x = Math.random() * width;
+          this.y = Math.random() * height;
+          this.radius = Math.random() * 1.8 + 0.5;
+          this.vx = (Math.random() - 0.5) * 0.4;
+          this.vy = -Math.random() * 0.6 - 0.15;
+          this.alpha = Math.random() * 0.45 + 0.1;
+          this.isRed = Math.random() < 0.25;
+        }
+        update() {
+          this.x += this.vx;
+          this.y += this.vy;
+          if (this.y < -10 || this.x < -10 || this.x > width + 10) {
+            this.reset();
+            this.y = height + 10;
+          }
+        }
+        draw() {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+          ctx.fillStyle = this.isRed ? `rgba(230, 43, 30, ${this.alpha})` : `rgba(255, 255, 255, ${this.alpha})`;
+          ctx.fill();
+        }
+      }
+
+      for (let i = 0; i < 45; i++) {
+        particles.push(new Particle());
+      }
+
+      function animateParticles() {
+        ctx.clearRect(0, 0, width, height);
+        particles.forEach(p => {
+          p.update();
+          p.draw();
+        });
+        requestAnimationFrame(animateParticles);
+      }
+      animateParticles();
+
+      // -------------------------------------------------------------
+      // 2. STAGE PARALLAX (Cursor & Mobile Gyroscope)
+      // -------------------------------------------------------------
+      const stage = document.getElementById('stage-container');
+      const titleStage = document.getElementById('title-stage');
+      const stageReflection = document.getElementById('stage-reflection');
+      const beamLeft = document.getElementById('beam-left');
+      const beamRight = document.getElementById('beam-right');
+
+      let mouseTargetX = 0, mouseTargetY = 0;
+      let mouseCurrentX = 0, mouseCurrentY = 0;
+
+      window.addEventListener('mousemove', (e) => {
+        const cx = window.innerWidth / 2;
+        const cy = window.innerHeight / 2;
+        mouseTargetX = (e.clientX - cx) / cx;
+        mouseTargetY = (e.clientY - cy) / cy;
+      });
+
+      // Mobile device orientation fallback
+      if (window.DeviceOrientationEvent) {
+        window.addEventListener('deviceorientation', (e) => {
+          if (e.gamma !== null && e.beta !== null) {
+            mouseTargetX = Math.max(-1, Math.min(1, e.gamma / 30));
+            mouseTargetY = Math.max(-1, Math.min(1, (e.beta - 45) / 30));
+          }
+        }, { passive: true });
+      }
+
+      function updateParallax() {
+        mouseCurrentX += (mouseTargetX - mouseCurrentX) * 0.05;
+        mouseCurrentY += (mouseTargetY - mouseCurrentY) * 0.05;
+
+        if (titleStage) {
+          titleStage.style.transform = `translate(${mouseCurrentX * 14}px, ${mouseCurrentY * 10}px) scale(1)`;
+        }
+        if (stageReflection) {
+          stageReflection.style.transform = `translateX(calc(-50% + ${mouseCurrentX * 14}px)) scaleY(-1)`;
+        }
+        requestAnimationFrame(updateParallax);
+      }
+      updateParallax();
+
+      // -------------------------------------------------------------
+      // 3. CINEMATIC OPENING SEQUENCE (4.5s Auto-play)
+      // -------------------------------------------------------------
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const skipBtn = document.getElementById('skip-intro-btn');
+      const stickyNav = document.getElementById('sticky-nav');
+
+      let masterTl = gsap.timeline({
+        onComplete: finishIntro
+      });
+
+      if (prefersReducedMotion) {
+        // Reduced motion: show final lit state immediately
+        gsap.set(['#beam-left', '#beam-right', '#lens-left', '#lens-right'], { opacity: 0.75 });
+        gsap.set(['#title-stage', '#stage-reflection'], { opacity: 1, filter: 'brightness(1)' });
+        gsap.set('#scroll-cue', { opacity: 1 });
+        finishIntro();
+      } else {
+        // 1. 0s–1.0s: Pitch black haze
+        // 2. 1.0s–1.8s: Corner spotlights warm up & flicker 3 times
+        masterTl.to('#lens-left, #lens-right', { opacity: 0.35, duration: 0.1, delay: 1.0 })
+          .to('#beam-left, #beam-right', { opacity: 0.25, duration: 0.08 })
+          .to('#beam-left, #beam-right, #lens-left, #lens-right', { opacity: 0.05, duration: 0.06 }) // flicker 1
+          .to('#beam-left, #beam-right, #lens-left, #lens-right', { opacity: 0.45, duration: 0.1 })
+          .to('#beam-left, #beam-right, #lens-left, #lens-right', { opacity: 0.1, duration: 0.06 }) // flicker 2
+          .to('#beam-left, #beam-right, #lens-left, #lens-right', { opacity: 0.85, duration: 0.15 }) // locked on
+
+        // 3. 1.8s–2.2s: Both beams flash bright and meet in the center
+        masterTl.to('#center-flash', {
+          opacity: 1,
+          scale: 1.8,
+          duration: 0.18,
+          ease: 'power2.out'
+        }, 1.85)
+        .to('#beam-left, #beam-right', {
+          opacity: 1,
+          filter: 'blur(14px)',
+          duration: 0.18
+        }, 1.85)
+        .to('#center-flash', {
+          opacity: 0,
+          scale: 2.4,
+          duration: 0.35,
+          ease: 'power1.in'
+        }, 2.05);
+
+        // 4. 2.2s–3.8s: Light sweeps onto title, revealing TED red with glowing core
+        masterTl.to('#title-stage', {
+          opacity: 1,
+          duration: 0.7,
+          ease: 'power2.out'
+        }, 2.2)
+        .fromTo('#title-stage', {
+          filter: 'brightness(2.2) contrast(1.4)'
+        }, {
+          filter: 'brightness(1) contrast(1)',
+          duration: 1.2,
+          ease: 'power2.out'
+        }, 2.3)
+        .to('#stage-reflection', {
+          opacity: 0.35,
+          duration: 0.9,
+          ease: 'power2.out'
+        }, 2.4);
+
+        // 5. 3.8s–4.5s: Beams settle into breathing glow, scroll cue fades in
+        masterTl.to('#scroll-cue', {
+          opacity: 1,
+          duration: 0.7,
+          ease: 'power1.out'
+        }, 3.8)
+        .to(['#beam-left', '#beam-right'], {
+          opacity: 0.75,
+          duration: 0.8,
+          ease: 'power1.inOut'
+        }, 3.8);
+      }
+
+      function finishIntro() {
+        document.body.classList.remove('intro-active');
+        if (skipBtn) {
+          gsap.to(skipBtn, { opacity: 0, pointerEvents: 'none', duration: 0.3 });
+        }
+
+        // Add subtle breathing loop to beams
+        gsap.to(['#beam-left', '#beam-right'], {
+          opacity: 0.88,
+          duration: 3.5,
+          repeat: -1,
+          yoyo: true,
+          ease: 'sine.inOut'
+        });
+      }
+
+      // Skip button handler & Escape key
+      if (skipBtn) {
+        skipBtn.addEventListener('click', () => {
+          masterTl.progress(1);
+          finishIntro();
+        });
+      }
+
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && document.body.classList.contains('intro-active')) {
+          masterTl.progress(1);
+          finishIntro();
+        }
+      });
+
+      // -------------------------------------------------------------
+      // 4. STICKY NAV SCROLL TRIGGER
+      // -------------------------------------------------------------
+      ScrollTrigger.create({
+        trigger: '#about',
+        start: 'top 80%',
+        onEnter: () => stickyNav.classList.add('visible'),
+        onLeaveBack: () => stickyNav.classList.remove('visible')
+      });
+
+      // -------------------------------------------------------------
+      // 5. SPOTLIGHT SCROLL REVEALS FOR SECTIONS
+      // -------------------------------------------------------------
+      gsap.utils.toArray('.spotlight-section').forEach(sec => {
+        const cone = sec.querySelector('.section-light-cone');
+        const eyebrow = sec.querySelector('.section-eyebrow');
+        const title = sec.querySelector('.section-title');
+        const subtitle = sec.querySelector('.section-subtitle');
+        const cards = sec.querySelectorAll('.about-card, .speaker-card, .timeline-item, .venue-card');
+
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: sec,
+            start: 'top 75%',
+            toggleActions: 'play none none reverse'
+          }
+        });
+
+        if (cone) {
+          tl.fromTo(cone, { opacity: 0, scaleY: 0.6 }, { opacity: 1, scaleY: 1, duration: 1, ease: 'power2.out' }, 0);
+        }
+
+        if (eyebrow) {
+          tl.fromTo(eyebrow, { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }, 0.1);
+        }
+
+        if (title) {
+          tl.fromTo(title, { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' }, 0.2);
+        }
+
+        if (subtitle) {
+          tl.fromTo(subtitle, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' }, 0.3);
+        }
+
+        if (cards.length) {
+          tl.fromTo(cards, { opacity: 0, y: 35 }, { opacity: 1, y: 0, stagger: 0.12, duration: 0.8, ease: 'power2.out' }, 0.4);
+        }
+      });
+
+      // -------------------------------------------------------------
+      // 6. MOBILE DRAWER NAVIGATION
+      // -------------------------------------------------------------
+      const mobileBtn = document.getElementById('mobile-menu-btn');
+      const mobileDrawer = document.getElementById('mobile-drawer');
+      const mobileLinks = document.querySelectorAll('.mobile-link');
+
+      if (mobileBtn && mobileDrawer) {
+        mobileBtn.addEventListener('click', () => {
+          const isOpen = mobileDrawer.classList.toggle('open');
+          mobileBtn.setAttribute('aria-expanded', isOpen);
+          document.body.style.overflow = isOpen ? 'hidden' : '';
+        });
+
+        mobileLinks.forEach(link => {
+          link.addEventListener('click', () => {
+            mobileDrawer.classList.remove('open');
+            mobileBtn.setAttribute('aria-expanded', 'false');
+            document.body.style.overflow = '';
+          });
+        });
+      }
+    });
+  </script>
+</body>
+</html>
