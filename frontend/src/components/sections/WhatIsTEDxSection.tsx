@@ -143,22 +143,16 @@ export const WhatIsTEDxSection: React.FC<WhatIsTEDxSectionProps> = ({
             </span>
           </div>
 
-          {/* 2. Headline:
-              Line 1: "WHAT IS" (white)
-              Line 2: "TEDx" (red)
-          */}
+          {/* 2. Headline: "WHAT IS TEDx?" on the SAME LINE */}
           <div className="mb-7 sm:mb-8 font-['Inter',sans-serif]">
-            {/* Line 1: WHAT IS in White */}
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-extrabold tracking-tight text-white uppercase leading-none mb-2 sm:mb-3">
-              WHAT IS
-            </h2>
-
-            {/* Line 2: TEDx in RED */}
-            <div className="flex items-baseline gap-x-2.5 sm:gap-x-3.5">
-              <span className="text-4xl sm:text-5xl md:text-6xl lg:text-6xl xl:text-7xl font-black text-[#EB0028] tracking-tight">
+            <h2 className="flex items-baseline gap-x-3 sm:gap-x-4 flex-nowrap whitespace-nowrap">
+              <span className="text-3xl sm:text-4xl md:text-5xl lg:text-[44px] xl:text-[54px] 2xl:text-6xl font-extrabold tracking-tight text-white uppercase leading-none">
+                WHAT IS
+              </span>
+              <span className="text-3xl sm:text-4xl md:text-5xl lg:text-[44px] xl:text-[54px] 2xl:text-6xl font-black text-[#EB0028] tracking-tight leading-none">
                 TED<span className="lowercase font-bold text-[0.8em]">x</span>?
               </span>
-            </div>
+            </h2>
           </div>
 
           {/* 3. Description (3 readable paragraphs with elegant typography) */}
@@ -193,3 +187,4 @@ export const WhatIsTEDxSection: React.FC<WhatIsTEDxSectionProps> = ({
     </section>
   );
 };
+
