@@ -34,9 +34,9 @@ export interface CinematicFramesSectionProps {
 }
 
 /**
- * High-quality default mock image sets:
- * - Set 1: Dancers / Speaker / Audience (from TEDx stages)
- * - Set 2: Stage Innovation / Interactive Community / Speaker Insight
+ * High-quality default mock image sets from the reference video:
+ * - Set 1 (First 3 images): Dancers / Audience / Speaker
+ * - Set 2 (Next 3 images after 3s): Acrobatics / Audience Waves / Inspiring Dialogue
  */
 const DEFAULT_IMAGE_SETS: [FrameItem[], FrameItem[]] = [
   // SET 1 (First 3 images)
@@ -50,7 +50,7 @@ const DEFAULT_IMAGE_SETS: [FrameItem[], FrameItem[]] = [
     {
       src: '/images/frames/frame-set1-2.jpg',
       alt: 'TEDx Audience Community & Engagement',
-      tag: 'AUDIENCE & COMMUNITY',
+      tag: 'COMMUNITY & IMPACT',
       caption: 'Ideas That Resonate',
     },
     {
@@ -84,14 +84,14 @@ const DEFAULT_IMAGE_SETS: [FrameItem[], FrameItem[]] = [
 ];
 
 /**
- * CinematicFramesSection — 3 Slanted Frame Rotating Showcase
+ * CinematicFramesSection — Slanted / Angled (/ / / /) 3-Frame Rotating Showcase
  *
  * Implements:
+ * - The signature diagonal cross slant (/ / / /) at ~9.5 degrees from the reference video.
  * - 3 portrait frame columns side-by-side covering the screen.
- * - Slanted/sheared dividers matching the uploaded reference video.
+ * - Inner images counter-skewed so the content remains upright and un-distorted.
  * - Automatic 3-second cycle switching smoothly to 3 new images.
  * - Smooth crossfade dissolve with ambient scale animation.
- * - Full responsiveness: sleek tilted frames on desktop, polished grid on mobile.
  */
 export const CinematicFramesSection: React.FC<CinematicFramesSectionProps> = ({
   imageSets = DEFAULT_IMAGE_SETS,
@@ -132,13 +132,13 @@ export const CinematicFramesSection: React.FC<CinematicFramesSectionProps> = ({
     <section
       id="tedx-cinematic-frames"
       className={`w-full bg-[#000000] text-[#F5F5F2] py-20 lg:py-28 border-t border-[#1C1C1E] relative overflow-hidden ${className}`}
-      aria-label="TEDx Experience 3-Frame Showcase"
+      aria-label="TEDx Experience Slanted 3-Frame Showcase"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
       {/* Background Ambient Stage Red Hue */}
       <div
-        className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[850px] h-[500px] bg-[#EB0028]/6 rounded-full blur-[170px] pointer-events-none"
+        className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[850px] h-[550px] bg-[#EB0028]/7 rounded-full blur-[170px] pointer-events-none"
         aria-hidden="true"
       />
 
@@ -224,79 +224,82 @@ export const CinematicFramesSection: React.FC<CinematicFramesSectionProps> = ({
       </div>
 
       {/* =========================================================================
-          THE 3 SLANTED FRAMES CONTAINER (Full-width edge-to-edge experience)
+          THE SLANTED CROSS FRAMES CONTAINER (/  /  /  /)
+          Exact signature ~9.5° diagonal cuts matching the reference video.
           ========================================================================= */}
-      <div className="w-full px-3 sm:px-6 lg:px-8 xl:px-12">
-        <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 lg:gap-5 h-[520px] sm:h-[600px] lg:h-[680px] xl:h-[740px]">
+      <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 overflow-hidden">
+        {/* Outer Flex container allowing diagonal overhang without horizontal scrollbars */}
+        <div className="w-full flex flex-col md:flex-row gap-4 md:gap-5 lg:gap-6 h-[540px] sm:h-[620px] lg:h-[700px] xl:h-[760px] items-stretch justify-center">
           
           {currentSet.map((item, colIdx) => (
             <div
               key={colIdx}
-              className="relative w-full h-full overflow-hidden rounded-sm bg-[#080808] border border-[#222222] group shadow-2xl"
+              className="relative flex-1 w-full h-full rounded-none overflow-hidden bg-[#080808] border border-[#292929] group shadow-2xl transition-all duration-300 md:hover:border-[#EB0028]/60"
               style={{
-                // On desktop, add subtle cinematic slanted shear matching the reference video
-                transform: 'none',
+                // 9.8 degree diagonal slant (/ / / /) on desktop screens
+                transform: 'skewX(-9.8deg)',
               }}
             >
-              {/* Slanted border accent line for stage flair */}
+              {/* Inner wrapper: Counter-skews the image (+9.8deg) so the content stays 100% upright */}
               <div
-                className="absolute top-0 right-0 w-[2px] h-full bg-gradient-to-b from-[#EB0028]/30 via-white/10 to-transparent z-20 pointer-events-none hidden md:block"
-                aria-hidden="true"
-              />
+                className="w-full h-full relative overflow-hidden"
+                style={{
+                  transform: 'skewX(9.8deg) scale(1.22)',
+                }}
+              >
+                {/* AnimatePresence for smooth 3-second crossfade between image sets */}
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={`${activeSetIndex}-${colIdx}`}
+                    initial={{ opacity: 0, scale: 1.04 }}
+                    animate={{ opacity: 1, scale: 1.0 }}
+                    exit={{ opacity: 0, scale: 0.98 }}
+                    transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+                    className="absolute inset-0 w-full h-full"
+                  >
+                    <img
+                      src={item.src}
+                      alt={item.alt}
+                      className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-106"
+                      loading="lazy"
+                    />
 
-              {/* AnimatePresence for smooth 3-second crossfade between sets */}
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={`${activeSetIndex}-${colIdx}`}
-                  initial={{ opacity: 0, scale: 1.05 }}
-                  animate={{ opacity: 1, scale: 1.0 }}
-                  exit={{ opacity: 0, scale: 0.98 }}
-                  transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
-                  className="absolute inset-0 w-full h-full"
-                >
-                  {/* Image with graceful Ken-burns zoom on hover */}
-                  <img
-                    src={item.src}
-                    alt={item.alt}
-                    className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
-                    loading="lazy"
-                  />
+                    {/* Gradient Vignette Overlays for deep stage contrast */}
+                    <div
+                      className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-black/20 pointer-events-none"
+                      aria-hidden="true"
+                    />
+                    <div
+                      className="absolute inset-0 bg-black/15 group-hover:bg-transparent transition-colors duration-300 pointer-events-none"
+                      aria-hidden="true"
+                    />
+                  </motion.div>
+                </AnimatePresence>
 
-                  {/* Gradient Vignette Overlays for deep stage contrast */}
-                  <div
-                    className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-black/20 pointer-events-none"
-                    aria-hidden="true"
-                  />
-                  <div
-                    className="absolute inset-0 bg-black/15 group-hover:bg-transparent transition-colors duration-300 pointer-events-none"
-                    aria-hidden="true"
-                  />
-                </motion.div>
-              </AnimatePresence>
+                {/* Frame Corner Pill / Tag (Kept upright) */}
+                <div className="absolute top-5 left-5 z-20 pointer-events-none">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-black/80 backdrop-blur-md border border-white/15 text-[10px] font-mono tracking-wider uppercase text-white rounded-none">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#EB0028]" />
+                    {item.tag || `FRAME 0${colIdx + 1}`}
+                  </span>
+                </div>
 
-              {/* Frame Corner Pill / Tag */}
-              <div className="absolute top-4 left-4 z-20 pointer-events-none">
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-black/75 backdrop-blur-md border border-white/15 text-[10px] font-mono tracking-wider uppercase text-white rounded-none">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#EB0028]" />
-                  {item.tag || `FRAME 0${colIdx + 1}`}
-                </span>
+                {/* Frame Caption at Bottom (Kept upright) */}
+                <div className="absolute bottom-6 left-6 right-6 z-20 pointer-events-none flex flex-col gap-1 transform transition-transform duration-300 group-hover:-translate-y-1">
+                  {item.caption && (
+                    <h3 className="text-base sm:text-lg lg:text-xl font-bold text-white tracking-tight leading-snug drop-shadow-md">
+                      {item.caption}
+                    </h3>
+                  )}
+                  <span className="text-[11px] font-mono uppercase tracking-[0.2em] text-[#A0A0A5]">
+                    TEDx Chennai Institute of Technology
+                  </span>
+                </div>
               </div>
 
-              {/* Frame Caption at Bottom */}
-              <div className="absolute bottom-5 left-5 right-5 z-20 pointer-events-none flex flex-col gap-1 transform transition-transform duration-300 group-hover:-translate-y-1">
-                {item.caption && (
-                  <h3 className="text-base sm:text-lg lg:text-xl font-bold text-white tracking-tight leading-snug drop-shadow-md">
-                    {item.caption}
-                  </h3>
-                )}
-                <span className="text-[11px] font-mono uppercase tracking-[0.2em] text-[#A0A0A5]">
-                  TEDx Chennai Institute of Technology
-                </span>
-              </div>
-
-              {/* Red Laser Accent on Hover */}
+              {/* Red Laser Accent on Hover along bottom border */}
               <div
-                className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#EB0028] opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-30"
+                className="absolute bottom-0 left-0 right-0 h-[3px] bg-[#EB0028] opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-30"
                 aria-hidden="true"
               />
             </div>
@@ -305,13 +308,13 @@ export const CinematicFramesSection: React.FC<CinematicFramesSectionProps> = ({
         </div>
       </div>
 
-      {/* Bottom Timing Notice & Prompt Helper */}
+      {/* Bottom Timing Notice */}
       <div className="w-full px-6 sm:px-10 lg:px-14 xl:px-20 mt-6 flex flex-wrap items-center justify-between text-xs font-mono text-[#8E8E93]">
         <div className="flex items-center gap-2">
           <Sparkles className="w-3.5 h-3.5 text-[#EB0028]" />
           <span>CYCLES EVERY 3 SECONDS • SET {activeSetIndex + 1} OF {imageSets.length}</span>
         </div>
-        <span>HOVER TO PAUSE • FULL VIEWPORT COVERAGE</span>
+        <span>SLANTED STAGE FRAMES (/ / / /) • HOVER TO PAUSE</span>
       </div>
     </section>
   );
