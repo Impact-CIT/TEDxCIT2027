@@ -28,17 +28,6 @@ export interface AboutVideoSectionProps {
   subhead?: string;
 
   /**
-   * Main section header.
-   * Default: "ABOUT TEDx CHENNAI INSTITUTE OF TECHNOLOGY"
-   */
-  header?: React.ReactNode;
-
-  /**
-   * Descriptive paragraphs about TEDx Chennai Institute of Technology.
-   */
-  description?: React.ReactNode;
-
-  /**
    * CTA button label. Default: "APPLY TO SPEAK"
    */
   ctaText?: string;
@@ -91,34 +80,21 @@ function getEmbedUrl(src?: string): { type: 'youtube' | 'vimeo' | 'html5'; url: 
 }
 
 /**
- * AboutVideoSection — 16:9 Frame Video & Editorial Narrative
+ * AboutVideoSection — Full-Width Edge-to-Edge 50/50 Screen Section
  * for TEDx Chennai Institute of Technology.
  *
- * Left: 16:9 framed video player with interactive controls and stage fallback placeholder.
- * Right: Header, subhead, 3 elegant descriptive paragraphs, and Apply to Speak CTA button.
+ * Requirements:
+ * - Covers the entire width of screen (big 16:9 frame on left, expansive content on right).
+ * - Line 1: "ABOUT" (white)
+ * - Line 2: "TEDx" in red, with "CHENNAI INSTITUTE OF TECHNOLOGY" in a smaller font size on the SAME LINE.
+ * - Subhead: "IDEAS WORTH SPREADING. PERSPECTIVES WITHOUT LIMITS."
+ * - 3 clean readable paragraphs
+ * - "APPLY TO SPEAK ↗" CTA button
  */
 export const AboutVideoSection: React.FC<AboutVideoSectionProps> = ({
   videoSrc = '',
   posterSrc = '/images/stage-speaker-crop.jpg',
   subhead = 'IDEAS WORTH SPREADING. PERSPECTIVES WITHOUT LIMITS.',
-  header = (
-    <>
-      ABOUT <span className="text-[#EB0028] font-black">TED<sup className="text-sm -top-4 font-bold lowercase">x</sup></span> CHENNAI INSTITUTE OF TECHNOLOGY
-    </>
-  ),
-  description = (
-    <div className="space-y-4 sm:space-y-5 text-[#A0A0A5] text-[15px] sm:text-base lg:text-[17px] leading-relaxed font-normal">
-      <p>
-        TEDx Chennai Institute of Technology is an independently organized TEDx event that brings together curious minds, diverse perspectives and ideas worth sharing.
-      </p>
-      <p>
-        Inspired by TED&apos;s mission of spreading ideas, we create a platform for thought-provoking conversations, unconventional perspectives and stories that challenge the way we see the world.
-      </p>
-      <p>
-        Through speakers, experiences and meaningful exchanges, we aim to spark curiosity, inspire action and make ideas travel beyond boundaries.
-      </p>
-    </div>
-  ),
   ctaText = 'APPLY TO SPEAK',
   ctaLink = '#apply-to-speak',
   className = '',
@@ -169,23 +145,24 @@ export const AboutVideoSection: React.FC<AboutVideoSectionProps> = ({
   return (
     <section
       id="about-tedx-cit"
-      className={`w-full bg-[#000000] text-[#F5F5F2] border-t border-[#1C1C1E] py-16 sm:py-20 lg:py-24 px-6 sm:px-10 lg:px-14 xl:px-20 relative overflow-hidden ${className}`}
+      className={`w-full bg-[#000000] text-[#F5F5F2] border-t border-[#1C1C1E] py-16 sm:py-20 lg:py-24 relative overflow-hidden ${className}`}
       aria-label="About TEDx Chennai Institute of Technology"
     >
       {/* Subtle Background Glow Accent */}
       <div
-        className="absolute top-1/2 left-1/4 -translate-y-1/2 -translate-x-1/2 w-[550px] h-[550px] bg-[#EB0028]/8 rounded-full blur-[140px] pointer-events-none"
+        className="absolute top-1/2 left-1/4 -translate-y-1/2 -translate-x-1/2 w-[700px] h-[700px] bg-[#EB0028]/8 rounded-full blur-[160px] pointer-events-none"
         aria-hidden="true"
       />
 
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 sm:gap-12 lg:gap-14 xl:gap-16 items-center">
+      {/* FULL SCREEN WIDTH GRID: Covers the entire width of screen */}
+      <div className="w-full px-4 sm:px-8 lg:px-10 xl:px-14 2xl:px-16 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 xl:gap-14 items-center">
         
         {/* =========================================================================
-            LEFT COLUMN: 16:9 Frame Video / Stage Speaker Media Container
+            LEFT HALF: Big 16:9 Video Frame across the entire left width
             ========================================================================= */}
         <div className="w-full flex flex-col justify-center">
           <div
-            className="w-full aspect-video rounded-sm overflow-hidden bg-[#0A0A0A] border border-[#262626] relative group shadow-2xl shadow-black/80 flex items-center justify-center select-none"
+            className="w-full aspect-video rounded-sm overflow-hidden bg-[#0A0A0A] border border-[#292929] relative group shadow-2xl shadow-black/95 flex items-center justify-center select-none"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
           >
@@ -216,22 +193,22 @@ export const AboutVideoSection: React.FC<AboutVideoSectionProps> = ({
                 <img
                   src={posterSrc}
                   alt="TEDx Stage Speaker"
-                  className="w-full h-full object-cover object-left opacity-85 transition-opacity duration-300 group-hover:opacity-95"
+                  className="w-full h-full object-cover object-center opacity-85 transition-opacity duration-300 group-hover:opacity-95"
                   loading="lazy"
                 />
 
                 {/* Subtle dark gradient overlay */}
                 <div
-                  className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/20 pointer-events-none"
+                  className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/35 to-black/20 pointer-events-none"
                   aria-hidden="true"
                 />
 
                 {/* Central Play Button Placeholder */}
                 <div className="relative z-10 flex flex-col items-center justify-center gap-3 pointer-events-none">
-                  <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white flex items-center justify-center shadow-xl group-hover:scale-105 group-hover:border-[#EB0028] group-hover:text-[#EB0028] transition-all duration-300">
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white flex items-center justify-center shadow-2xl group-hover:scale-105 group-hover:border-[#EB0028] group-hover:text-[#EB0028] transition-all duration-300">
                     <Play className="w-6 h-6 sm:w-8 sm:h-8 fill-current ml-1" />
                   </div>
-                  <span className="text-[11px] sm:text-xs font-mono uppercase tracking-[0.2em] text-[#A0A0A5] bg-black/70 px-3 py-1 rounded-sm border border-white/10">
+                  <span className="text-[11px] sm:text-xs font-mono uppercase tracking-[0.2em] text-[#A0A0A5] bg-black/75 px-3 py-1 rounded-sm border border-white/10">
                     16:9 Video Frame
                   </span>
                 </div>
@@ -239,22 +216,22 @@ export const AboutVideoSection: React.FC<AboutVideoSectionProps> = ({
             )}
 
             {/* Video Live Badge (Top-Left) */}
-            <div className="absolute top-3.5 left-3.5 z-20 pointer-events-none flex items-center gap-2 px-2.5 py-1 bg-black/75 backdrop-blur-md border border-white/10 text-[10px] font-mono tracking-wider text-white rounded-none">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#EB0028] animate-pulse" />
-              <span>TEDx CIT</span>
+            <div className="absolute top-4 left-4 z-20 pointer-events-none flex items-center gap-2 px-3 py-1.5 bg-black/80 backdrop-blur-md border border-white/10 text-[11px] font-mono tracking-wider text-white rounded-none">
+              <span className="w-2 h-2 rounded-full bg-[#EB0028] animate-pulse" />
+              <span>TEDx CIT STAGE</span>
             </div>
 
             {/* Bottom Controls for HTML5 Video */}
             {embedInfo?.type === 'html5' && !hasVideoError && (
               <div
-                className={`absolute bottom-3 right-3 z-20 flex items-center gap-2 transition-opacity duration-300 ${
-                  isHovered || !isPlaying ? 'opacity-100' : 'opacity-80'
+                className={`absolute bottom-4 right-4 z-20 flex items-center gap-2 transition-opacity duration-300 ${
+                  isHovered || !isPlaying ? 'opacity-100' : 'opacity-85'
                 }`}
               >
                 <button
                   type="button"
                   onClick={togglePlay}
-                  className="w-8 h-8 rounded-none bg-black/75 backdrop-blur-md border border-white/20 text-white flex items-center justify-center hover:bg-[#EB0028] hover:border-[#EB0028] transition-colors cursor-pointer"
+                  className="w-9 h-9 rounded-none bg-black/80 backdrop-blur-md border border-white/20 text-white flex items-center justify-center hover:bg-[#EB0028] hover:border-[#EB0028] transition-colors cursor-pointer"
                   title={isPlaying ? 'Pause video' : 'Play video'}
                   aria-label={isPlaying ? 'Pause video' : 'Play video'}
                 >
@@ -263,7 +240,7 @@ export const AboutVideoSection: React.FC<AboutVideoSectionProps> = ({
                 <button
                   type="button"
                   onClick={toggleMute}
-                  className="w-8 h-8 rounded-none bg-black/75 backdrop-blur-md border border-white/20 text-white flex items-center justify-center hover:bg-[#EB0028] hover:border-[#EB0028] transition-colors cursor-pointer"
+                  className="w-9 h-9 rounded-none bg-black/80 backdrop-blur-md border border-white/20 text-white flex items-center justify-center hover:bg-[#EB0028] hover:border-[#EB0028] transition-colors cursor-pointer"
                   title={isMuted ? 'Unmute sound' : 'Mute sound'}
                   aria-label={isMuted ? 'Unmute sound' : 'Mute sound'}
                 >
@@ -274,9 +251,9 @@ export const AboutVideoSection: React.FC<AboutVideoSectionProps> = ({
           </div>
 
           {/* Subtext below video */}
-          <div className="mt-3 flex items-center justify-between text-[11px] font-mono text-[#8E8E93] px-1">
+          <div className="mt-3 flex items-center justify-between text-xs font-mono text-[#8E8E93] px-1">
             <span className="flex items-center gap-1.5">
-              <Film className="w-3 h-3 text-[#EB0028]" />
+              <Film className="w-3.5 h-3.5 text-[#EB0028]" />
               <span>STAGE ARCHIVE</span>
             </span>
             <span>16:9 CINEMATIC REEL</span>
@@ -284,7 +261,7 @@ export const AboutVideoSection: React.FC<AboutVideoSectionProps> = ({
         </div>
 
         {/* =========================================================================
-            RIGHT COLUMN: Header, Subhead & Description
+            RIGHT HALF: Content Column
             ========================================================================= */}
         <div className="w-full flex flex-col justify-center">
           
@@ -296,14 +273,38 @@ export const AboutVideoSection: React.FC<AboutVideoSectionProps> = ({
             </span>
           </div>
 
-          {/* 2. Main Section Header */}
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[38px] xl:text-[44px] font-bold tracking-tight text-white leading-[1.15] mb-6 font-['Inter',sans-serif]">
-            {header}
-          </h2>
+          {/* 2. Headline:
+              - Line 1: "ABOUT" (white)
+              - Line 2: "TEDx" (red) with "CHENNAI INSTITUTE OF TECHNOLOGY" (smaller size on the SAME LINE)
+          */}
+          <div className="mb-7 sm:mb-8 font-['Inter',sans-serif]">
+            {/* Line 1: ABOUT in White */}
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[44px] xl:text-6xl font-extrabold tracking-tight text-white uppercase leading-none mb-2 sm:mb-3">
+              ABOUT
+            </h2>
 
-          {/* 3. Description (3 readable paragraphs) */}
-          <div className="mb-8 sm:mb-10">
-            {description}
+            {/* Line 2: TEDx in RED with CHENNAI INSTITUTE OF TECHNOLOGY smaller on the SAME LINE */}
+            <div className="flex items-baseline gap-x-2.5 sm:gap-x-3.5 flex-nowrap overflow-hidden">
+              <span className="text-3xl sm:text-4xl md:text-5xl lg:text-[38px] xl:text-5xl font-black text-[#EB0028] tracking-tight shrink-0">
+                TED<span className="lowercase font-bold text-[0.8em]">x</span>
+              </span>
+              <span className="text-sm sm:text-lg md:text-xl lg:text-base xl:text-2xl 2xl:text-3xl font-bold text-white tracking-tight uppercase whitespace-nowrap shrink truncate sm:overflow-visible">
+                CHENNAI INSTITUTE OF TECHNOLOGY
+              </span>
+            </div>
+          </div>
+
+          {/* 3. Description (3 readable paragraphs with elegant typography) */}
+          <div className="space-y-4 sm:space-y-5 text-[#A0A0A5] text-[15px] sm:text-base lg:text-[16px] xl:text-[17px] leading-relaxed font-normal mb-8 sm:mb-10 max-w-2xl">
+            <p>
+              TEDx Chennai Institute of Technology is an independently organized TEDx event that brings together curious minds, diverse perspectives and ideas worth sharing.
+            </p>
+            <p>
+              Inspired by TED&apos;s mission of spreading ideas, we create a platform for thought-provoking conversations, unconventional perspectives and stories that challenge the way we see the world.
+            </p>
+            <p>
+              Through speakers, experiences and meaningful exchanges, we aim to spark curiosity, inspire action and make ideas travel beyond boundaries.
+            </p>
           </div>
 
           {/* 4. Action CTA Button */}
