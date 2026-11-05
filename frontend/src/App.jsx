@@ -5,6 +5,7 @@ import { WhatIsTEDxSection } from './components/sections/WhatIsTEDxSection';
 import { ScrollExpansionSection } from './components/sections/ScrollExpansionSection';
 import { AboutVideoSection } from './components/sections/AboutVideoSection';
 import { ImpactStatsSection } from './components/sections/ImpactStatsSection';
+import { PastEventsSection } from './components/sections/PastEventsSection';
 import { CinematicFramesSection } from './components/sections/CinematicFramesSection';
 import { CinematicStage } from './components/stage/CinematicStage';
 
@@ -70,6 +71,9 @@ export default function App() {
 
           {/* Dynamic Scroll Count-Up Impact Metrics Section (A Decade of Impact) */}
           <ImpactStatsSection />
+
+          {/* Past Events Glassy Cards Section (Past events. Lasting ideas.) */}
+          <PastEventsSection />
         </main>
       </div>
     </div>
