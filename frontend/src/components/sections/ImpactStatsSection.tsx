@@ -193,3 +193,4 @@ export const ImpactStatsSection: React.FC<ImpactStatsSectionProps> = ({
     </section>
   );
 };
+

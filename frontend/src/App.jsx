@@ -58,14 +58,14 @@ export default function App() {
             posterSrc="/images/stage-speaker-crop.jpg"
           />
 
-          {/* Dynamic Scroll Count-Up Impact Metrics Section */}
-          <ImpactStatsSection />
-
           {/* 3-Frame Rotating Stage Showcase Section (Cycles every 3 seconds to new 3 images) */}
           {/* USER IMAGES PROMPT:
               To supply your own custom images, pass imageSets prop or update DEFAULT_IMAGE_SETS.
           */}
           <CinematicFramesSection intervalMs={3000} />
+
+          {/* Dynamic Scroll Count-Up Impact Metrics Section (A Decade of Impact) */}
+          <ImpactStatsSection />
         </main>
       </div>
     </div>
