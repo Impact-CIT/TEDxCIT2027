@@ -3,6 +3,7 @@ import { Navbar } from './components/navigation/Navbar';
 import { Hero } from './components/hero/Hero';
 import { ScrollExpansionSection } from './components/sections/ScrollExpansionSection';
 import { AboutVideoSection } from './components/sections/AboutVideoSection';
+import { CinematicFramesSection } from './components/sections/CinematicFramesSection';
 import { CinematicStage } from './components/stage/CinematicStage';
 
 export default function App() {
@@ -55,6 +56,12 @@ export default function App() {
             videoSrc="" /* <--- PROMPT: Leave empty for placeholder, or supply your video file/URL */
             posterSrc="/images/stage-speaker-crop.jpg"
           />
+
+          {/* 3-Frame Rotating Stage Showcase Section (Cycles every 3 seconds to new 3 images) */}
+          {/* USER IMAGES PROMPT:
+              To supply your own custom images, pass imageSets prop or update DEFAULT_IMAGE_SETS.
+          */}
+          <CinematicFramesSection intervalMs={3000} />
         </main>
       </div>
     </div>
