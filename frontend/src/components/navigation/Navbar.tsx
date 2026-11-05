@@ -179,7 +179,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         {/* ========================================================
             LEFT END: Official TEDx Logo
             ======================================================== */}
-        <div className="flex items-center pl-6 sm:pl-10 lg:pl-14 xl:pl-16 pr-6 shrink-0">
+        <div className="flex items-center pl-4 sm:pl-6 lg:pl-8 xl:pl-10 pr-3 shrink-0">
           <a
             href="/"
             aria-label="TEDx Chennai Institute of Technology Home"
@@ -190,15 +190,15 @@ export const Navbar: React.FC<NavbarProps> = ({
               alt="TEDx Chennai Institute of Technology"
               width={320}
               height={42}
-              className="h-9 sm:h-10 lg:h-[38px] w-auto object-contain select-none"
+              className="h-8 sm:h-9 lg:h-[34px] xl:h-[38px] w-auto object-contain select-none"
             />
           </a>
         </div>
 
         {/* ========================================================
-            RIGHT END: Navigation Links + Enlarged Outlined CTAs
+            RIGHT END: Navigation Links + Action Buttons
             ======================================================== */}
-        <div className="hidden md:flex items-stretch shrink-0 pr-6 sm:pr-8 lg:pr-10 xl:pr-14">
+        <div className="hidden md:flex items-stretch shrink-0 pr-4 sm:pr-6 lg:pr-8">
           {/* Navigation Links with vertical dividing borders */}
           <nav
             aria-label="Primary Navigation"
@@ -215,7 +215,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   key={item.href}
                   href={item.href}
                   aria-current={isActive ? 'page' : undefined}
-                  className={`group relative flex items-center justify-center px-4 lg:px-6 xl:px-8 border-l border-[#292929] text-[13px] lg:text-[14px] font-semibold tracking-[0.06em] uppercase transition-colors duration-250 focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2B25] ${
+                  className={`group relative flex items-center justify-center px-3 lg:px-4 xl:px-5 border-l border-[#292929] text-[12px] lg:text-[13px] font-semibold tracking-[0.06em] uppercase transition-colors duration-250 focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2B25] ${
                     isActive ? 'text-[#FF2B25]' : 'text-[#F5F5F2] hover:text-[#FF2B25]'
                   }`}
                 >
@@ -234,10 +234,12 @@ export const Navbar: React.FC<NavbarProps> = ({
             })}
           </nav>
 
-          {/* Enlarged Outlined Action Buttons on the far right */}
-          <div className="flex items-center border-l border-[#292929] pl-5 lg:pl-6 xl:pl-8 space-x-3 xl:space-x-4 shrink-0">
+          {/* Action Buttons on the far right */}
+          <div className="flex items-center border-l border-[#292929] pl-3 lg:pl-4 xl:pl-5 space-x-2 lg:space-x-2.5 xl:space-x-3 shrink-0">
             {ctaButtons.map((btn) => {
               const isActive = pathname === btn.href || pathname.startsWith(`${btn.href}/`);
+              const isPrimary = btn.isPrimary || btn.label === 'REGISTER NOW';
+
               return (
                 <motion.a
                   key={btn.href}
@@ -246,16 +248,20 @@ export const Navbar: React.FC<NavbarProps> = ({
                   whileTap={{ scale: 0.975 }}
                   transition={{ duration: 0.2 }}
                   aria-current={isActive ? 'page' : undefined}
-                  className={`group relative overflow-hidden border bg-transparent px-5 sm:px-6 lg:px-6 xl:px-7 py-3 lg:py-3.5 text-xs sm:text-[13px] lg:text-[14px] font-bold tracking-[0.08em] uppercase transition-all duration-300 rounded-none whitespace-nowrap focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2B25] ${
-                    isActive
-                      ? 'border-[#FF2B25] text-[#FF2B25]'
-                      : 'border-[#292929] text-[#F5F5F2] hover:border-[#FF2B25] hover:text-white'
+                  className={`group relative overflow-hidden border px-3.5 sm:px-4 lg:px-4.5 xl:px-5 py-2.5 lg:py-3 text-[11px] sm:text-xs lg:text-[13px] font-bold tracking-[0.07em] uppercase transition-all duration-300 rounded-none whitespace-nowrap focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2B25] ${
+                    isPrimary
+                      ? 'bg-[#FF2B25] border-[#FF2B25] text-white hover:bg-[#d61e19] shadow-md shadow-[#FF2B25]/25'
+                      : isActive
+                      ? 'border-[#FF2B25] text-[#FF2B25] bg-transparent'
+                      : 'border-[#292929] text-[#F5F5F2] hover:border-[#FF2B25] hover:text-white bg-transparent'
                   }`}
                 >
-                  <span
-                    className="absolute inset-0 bg-[#FF2B25]/15 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                    aria-hidden="true"
-                  />
+                  {!isPrimary && (
+                    <span
+                      className="absolute inset-0 bg-[#FF2B25]/15 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                      aria-hidden="true"
+                    />
+                  )}
                   <span className="relative z-10">{btn.label}</span>
                 </motion.a>
               );

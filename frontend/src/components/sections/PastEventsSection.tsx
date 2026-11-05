@@ -301,3 +301,4 @@ export const PastEventsSection: React.FC<PastEventsSectionProps> = ({
     </section>
   );
 };
+

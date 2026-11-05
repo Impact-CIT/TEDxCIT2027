@@ -221,7 +221,7 @@ export const Hero: React.FC<HeroProps> = ({ className = '' }) => {
             RIGHT COLUMN — 32% Width
             Positioned down with counter-parallax float
             ======================================================== */}
-        <div className="w-full lg:w-[32%] xl:w-[32%] pl-5 sm:pl-7 lg:pl-7 xl:pl-8 pr-6 sm:pr-8 lg:pr-10 xl:pr-12 pt-16 sm:pt-20 lg:pt-[250px] xl:pt-[280px] pb-12 lg:pb-16 flex flex-col justify-start">
+        <div className="w-full lg:w-[32%] xl:w-[32%] pl-5 sm:pl-7 lg:pl-7 xl:pl-8 pr-6 sm:pr-8 lg:pr-10 xl:pr-12 pt-12 sm:pt-16 lg:pt-[170px] xl:pt-[190px] pb-12 lg:pb-16 flex flex-col justify-start">
           <motion.div
             style={{
               x: parallaxRightX,
@@ -239,19 +239,19 @@ export const Hero: React.FC<HeroProps> = ({ className = '' }) => {
               Discover unexplored perspectives, challenge what you know, and uncover ideas waiting to make an impact.
             </motion.p>
 
-            {/* Outlined Rectangular Button with interactive red sweep glow */}
+            {/* Action Buttons: PARTNER WITH US and REGISTER NOW (Side-by-Side) */}
             <motion.div
               initial={{ opacity: 0, y: 22 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.85, ease: cinematicEase, delay: 0.52 }}
-              className="mt-10 sm:mt-12 lg:mt-14"
+              className="mt-8 sm:mt-10 lg:mt-12 flex flex-row items-center gap-3 sm:gap-3.5 flex-wrap"
             >
               <motion.a
                 href="/partner-with-us"
                 whileHover={{ scale: 1.025 }}
                 whileTap={{ scale: 0.975 }}
                 transition={{ duration: 0.2 }}
-                className="group relative inline-flex items-center justify-between space-x-8 border border-[#292929] hover:border-[#FF2B25] bg-transparent px-8 py-4.5 sm:px-9 sm:py-5 text-sm sm:text-[14px] lg:text-[15px] font-bold tracking-[0.1em] uppercase text-[#F5F5F2] hover:text-white transition-all duration-300 rounded-none overflow-hidden focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2B25]"
+                className="group relative inline-flex items-center justify-between space-x-3.5 border border-[#292929] hover:border-[#FF2B25] bg-transparent px-4 sm:px-5 lg:px-5.5 py-3 sm:py-3.5 text-xs sm:text-[13px] font-bold tracking-[0.08em] uppercase text-[#F5F5F2] hover:text-white transition-all duration-300 rounded-none overflow-hidden focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2B25] whitespace-nowrap"
               >
                 {/* Subtle red background curtain sweep on hover */}
                 <span
@@ -260,7 +260,23 @@ export const Hero: React.FC<HeroProps> = ({ className = '' }) => {
                 />
                 <span className="relative z-10">PARTNER WITH US</span>
                 <span
-                  className="relative z-10 inline-block text-base sm:text-lg transition-transform duration-300 ease-out group-hover:translate-x-1.5 group-hover:-translate-y-1.5 group-hover:text-[#FF2B25]"
+                  className="relative z-10 inline-block text-sm sm:text-base transition-transform duration-300 ease-out group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:text-[#FF2B25]"
+                  aria-hidden="true"
+                >
+                  ↗
+                </span>
+              </motion.a>
+
+              <motion.a
+                href="/register"
+                whileHover={{ scale: 1.025 }}
+                whileTap={{ scale: 0.975 }}
+                transition={{ duration: 0.2 }}
+                className="group relative inline-flex items-center justify-between space-x-3.5 bg-[#FF2B25] hover:bg-[#d61e19] border border-[#FF2B25] px-4.5 sm:px-5.5 lg:px-6 py-3 sm:py-3.5 text-xs sm:text-[13px] font-bold tracking-[0.08em] uppercase text-white transition-all duration-300 rounded-none overflow-hidden shadow-lg shadow-[#FF2B25]/25 hover:shadow-[#FF2B25]/40 focus:outline-none focus-visible:ring-1 focus-visible:ring-white whitespace-nowrap"
+              >
+                <span className="relative z-10">REGISTER NOW</span>
+                <span
+                  className="relative z-10 inline-block text-sm sm:text-base transition-transform duration-300 ease-out group-hover:translate-x-1 group-hover:-translate-y-1"
                   aria-hidden="true"
                 >
                   ↗
