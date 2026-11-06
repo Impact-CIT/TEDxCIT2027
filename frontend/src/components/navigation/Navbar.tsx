@@ -160,6 +160,25 @@ export const Navbar: React.FC<NavbarProps> = ({
     menuButtonRef.current?.focus();
   }, []);
 
+  // Universal client-side navigation handler for zero-latency, reliable routing
+  const handleNavigate = useCallback(
+    (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+      if (href.startsWith('/')) {
+        e.preventDefault();
+        window.history.pushState({}, '', href);
+        window.dispatchEvent(new Event('popstate'));
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else if (href.startsWith('#')) {
+        e.preventDefault();
+        const target = document.querySelector(href);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+    },
+    []
+  );
+
   return (
     <motion.header
       initial={{ opacity: 0, y: -8 }}
@@ -182,6 +201,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         <div className="flex items-center pl-4 sm:pl-6 lg:pl-8 xl:pl-10 pr-3 shrink-0">
           <a
             href="/"
+            onClick={(e) => handleNavigate(e, '/')}
             aria-label="TEDx Chennai Institute of Technology Home"
             className="group inline-flex items-center transition-opacity duration-200 hover:opacity-90 focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2B25]"
           >
@@ -214,6 +234,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <a
                   key={item.href}
                   href={item.href}
+                  onClick={(e) => handleNavigate(e, item.href)}
                   aria-current={isActive ? 'page' : undefined}
                   className={`group relative flex items-center justify-center px-3 lg:px-4 xl:px-5 border-l border-[#292929] text-[12px] lg:text-[13px] font-semibold tracking-[0.06em] uppercase transition-colors duration-250 focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2B25] ${
                     isActive ? 'text-[#FF2B25]' : 'text-[#F5F5F2] hover:text-[#FF2B25]'
@@ -244,6 +265,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <motion.a
                   key={btn.href}
                   href={btn.href}
+                  onClick={(e) => handleNavigate(e, btn.href)}
                   whileHover={{ scale: 1.025 }}
                   whileTap={{ scale: 0.975 }}
                   transition={{ duration: 0.2 }}
@@ -329,7 +351,10 @@ export const Navbar: React.FC<NavbarProps> = ({
             <div className="flex items-center justify-between border-b border-[#292929] pb-6">
               <a
                 href="/"
-                onClick={handleCloseMenu}
+                onClick={(e) => {
+                  handleCloseMenu();
+                  handleNavigate(e, '/');
+                }}
                 aria-label="TEDx Chennai Institute of Technology Home"
                 className="inline-flex items-center focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2B25]"
               >
@@ -371,7 +396,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                     <a
                       ref={index === 0 ? firstNavLinkRef : undefined}
                       href={item.href}
-                      onClick={handleCloseMenu}
+                      onClick={(e) => {
+                        handleCloseMenu();
+                        handleNavigate(e, item.href);
+                      }}
                       aria-current={isActive ? 'page' : undefined}
                       className={`block font-sans text-2xl sm:text-3xl font-bold uppercase tracking-tight transition-colors duration-200 focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2B25] ${
                         isActive

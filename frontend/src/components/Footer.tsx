@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, MapPin, Mail, ShieldCheck } from 'lucide-react';
 
 export interface FooterProps {
   className?: string;
@@ -48,16 +48,8 @@ const YoutubeIcon: React.FC<{ className?: string }> = ({ className = 'w-4 h-4' }
 );
 
 /**
- * Footer Component matching the reference design for TEDx Chennai Institute of Technology.
- *
- * Left:
- *  - Official TEDx Chennai Institute of Technology logo / branding
- *  - License and copyright notice
- *
- * Right:
- *  - Social media icon links (Facebook, Instagram, LinkedIn, X, YouTube)
- *  - Privacy Policy link
- *  - Interactive "BACK TO TOP ↗" smooth scroll action
+ * Enhanced Global Footer for TEDx Chennai Institute of Technology.
+ * Includes complete legal policy links and contact data required for Razorpay KYC merchant verification.
  */
 export const Footer: React.FC<FooterProps> = ({
   className = '',
@@ -71,120 +63,203 @@ export const Footer: React.FC<FooterProps> = ({
     }
   };
 
+  const handleNav = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (href.startsWith('/')) {
+      e.preventDefault();
+      window.history.pushState({}, '', href);
+      window.dispatchEvent(new Event('popstate'));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   return (
     <footer
       id="site-footer"
-      className={`w-full bg-[#000000] text-[#F5F5F2] border-t border-[#1C1C1E] py-12 sm:py-16 px-6 sm:px-10 lg:px-14 xl:px-20 relative select-none ${className}`}
+      className={`w-full bg-[#000000] text-[#F5F5F2] border-t border-[#1C1C1E] pt-12 sm:pt-16 pb-12 px-6 sm:px-10 lg:px-14 xl:px-20 relative select-none ${className}`}
       role="contentinfo"
       aria-label="TEDx Chennai Institute of Technology Footer"
     >
-      <div className="max-w-[1700px] mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-8 sm:gap-10">
+      <div className="max-w-[1700px] mx-auto space-y-10">
         
-        {/* =========================================================================
-            LEFT COLUMN: Official TEDx CIT Branding & Copyright
-            ========================================================================= */}
-        <div className="flex flex-col gap-3">
-          {/* TEDx Wordmark / Logo */}
-          <a
-            href="/"
-            aria-label="TEDx Chennai Institute of Technology Home"
-            className="group inline-flex items-center gap-2 transition-opacity duration-200 hover:opacity-90"
-          >
-            <div className="flex items-baseline gap-1.5 font-['Inter',sans-serif]">
-              <span className="text-[#EB0028] font-black text-2xl sm:text-3xl tracking-tight leading-none">
-                TED<span className="lowercase font-bold text-[0.8em]">x</span>
-              </span>
-              <span className="text-white font-medium text-xl sm:text-2xl tracking-tight leading-none">
-                Chennai Institute of Technology
-              </span>
-            </div>
-          </a>
-
-          {/* Copyright & Official License Notice */}
-          <div className="text-xs text-[#8E8E93] font-normal leading-relaxed">
-            <p>© {new Date().getFullYear()} TEDx Chennai Institute of Technology. All rights reserved.</p>
-            <p className="text-[11px] text-[#6E6E73] mt-0.5">
-              This independent TEDx event is operated under license from TED.
-            </p>
-          </div>
-        </div>
-
-        {/* =========================================================================
-            RIGHT COLUMN: Social Icons, Privacy Policy & Back to Top
-            ========================================================================= */}
-        <div className="flex flex-col items-start md:items-end gap-5 sm:gap-6">
+        {/* Main Grid Section */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 sm:gap-10 items-start justify-between">
           
-          {/* Social Media Link Buttons */}
-          <div className="flex items-center gap-3 sm:gap-4">
+          {/* =========================================================================
+              LEFT COLUMN (6 cols): Official TEDx CIT Branding & Location
+              ========================================================================= */}
+          <div className="md:col-span-6 flex flex-col gap-4">
+            {/* TEDx Wordmark / Logo */}
             <a
-              href="https://facebook.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Facebook"
-              className="w-9 h-9 rounded-full border border-white/15 flex items-center justify-center text-white/80 hover:text-[#EB0028] hover:border-[#EB0028] hover:bg-white/5 transition-all duration-200"
+              href="/"
+              onClick={(e) => handleNav(e, '/')}
+              aria-label="TEDx Chennai Institute of Technology Home"
+              className="group inline-flex items-center gap-2 transition-opacity duration-200 hover:opacity-90"
             >
-              <FacebookIcon className="w-4 h-4" />
+              <div className="flex items-baseline gap-1.5 font-['Inter',sans-serif]">
+                <span className="text-[#EB0028] font-black text-2xl sm:text-3xl tracking-tight leading-none">
+                  TED<span className="lowercase font-bold text-[0.8em]">x</span>
+                </span>
+                <span className="text-white font-medium text-xl sm:text-2xl tracking-tight leading-none">
+                  Chennai Institute of Technology
+                </span>
+              </div>
             </a>
 
-            <a
-              href="https://instagram.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Instagram"
-              className="w-9 h-9 rounded-full border border-white/15 flex items-center justify-center text-white/80 hover:text-[#EB0028] hover:border-[#EB0028] hover:bg-white/5 transition-all duration-200"
-            >
-              <InstagramIcon className="w-4 h-4" />
-            </a>
+            {/* License Notice */}
+            <div className="text-xs text-[#8E8E93] font-normal leading-relaxed max-w-xl">
+              <p className="text-[11px] text-[#6E6E73]">
+                This independent TEDx event is operated under official license from TED.
+              </p>
+              <p className="mt-1">
+                Theme: <strong>UNTAPPED</strong> • Hosted by Chennai Institute of Technology, Kundrathur, Chennai.
+              </p>
+            </div>
 
-            <a
-              href="https://linkedin.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="LinkedIn"
-              className="w-9 h-9 rounded-full border border-white/15 flex items-center justify-center text-white/80 hover:text-[#EB0028] hover:border-[#EB0028] hover:bg-white/5 transition-all duration-200"
-            >
-              <LinkedinIcon className="w-4 h-4" />
-            </a>
-
-            <a
-              href="https://x.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="X (Twitter)"
-              className="w-9 h-9 rounded-full border border-white/15 flex items-center justify-center text-white/80 hover:text-[#EB0028] hover:border-[#EB0028] hover:bg-white/5 transition-all duration-200"
-            >
-              <XTwitterIcon className="w-3.5 h-3.5" />
-            </a>
-
-            <a
-              href="https://youtube.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="YouTube"
-              className="w-9 h-9 rounded-full border border-white/15 flex items-center justify-center text-white/80 hover:text-[#EB0028] hover:border-[#EB0028] hover:bg-white/5 transition-all duration-200"
-            >
-              <YoutubeIcon className="w-4 h-4" />
-            </a>
+            {/* Campus Address & Verified Contact info (Critical for Razorpay KYC) */}
+            <div className="pt-2 text-xs text-[#A1A1A6] space-y-1">
+              <div className="flex items-center gap-2">
+                <MapPin className="w-3.5 h-3.5 text-[#EB0028] shrink-0" />
+                <span>Chennai Institute of Technology, Sarathy Nagar, Kundrathur, Chennai, Tamil Nadu 600069</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Mail className="w-3.5 h-3.5 text-[#EB0028] shrink-0" />
+                <span>Helpdesk: <a href="mailto:tedx@citchennai.net" className="text-white hover:underline">tedx@citchennai.net</a></span>
+              </div>
+            </div>
           </div>
 
-          {/* Privacy Policy & Back to Top Navigation */}
-          <div className="flex items-center gap-6 sm:gap-8 text-xs font-mono uppercase tracking-[0.14em]">
-            <a
-              href="/privacy-policy"
-              className="text-[#8E8E93] hover:text-white transition-colors duration-200"
-            >
-              Privacy Policy
-            </a>
+          {/* =========================================================================
+              RIGHT COLUMN (6 cols): Socials & Back to Top
+              ========================================================================= */}
+          <div className="md:col-span-6 flex flex-col items-start md:items-end justify-between gap-6 h-full">
+            
+            {/* Social Media Link Buttons */}
+            <div className="flex items-center gap-3 sm:gap-4">
+              <a
+                href="https://facebook.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Facebook"
+                className="w-9 h-9 rounded-full border border-white/15 flex items-center justify-center text-white/80 hover:text-[#EB0028] hover:border-[#EB0028] hover:bg-white/5 transition-all duration-200"
+              >
+                <FacebookIcon className="w-4 h-4" />
+              </a>
 
+              <a
+                href="https://instagram.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram"
+                className="w-9 h-9 rounded-full border border-white/15 flex items-center justify-center text-white/80 hover:text-[#EB0028] hover:border-[#EB0028] hover:bg-white/5 transition-all duration-200"
+              >
+                <InstagramIcon className="w-4 h-4" />
+              </a>
+
+              <a
+                href="https://linkedin.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="LinkedIn"
+                className="w-9 h-9 rounded-full border border-white/15 flex items-center justify-center text-white/80 hover:text-[#EB0028] hover:border-[#EB0028] hover:bg-white/5 transition-all duration-200"
+              >
+                <LinkedinIcon className="w-4 h-4" />
+              </a>
+
+              <a
+                href="https://x.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="X (Twitter)"
+                className="w-9 h-9 rounded-full border border-white/15 flex items-center justify-center text-white/80 hover:text-[#EB0028] hover:border-[#EB0028] hover:bg-white/5 transition-all duration-200"
+              >
+                <XTwitterIcon className="w-3.5 h-3.5" />
+              </a>
+
+              <a
+                href="https://youtube.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="YouTube"
+                className="w-9 h-9 rounded-full border border-white/15 flex items-center justify-center text-white/80 hover:text-[#EB0028] hover:border-[#EB0028] hover:bg-white/5 transition-all duration-200"
+              >
+                <YoutubeIcon className="w-4 h-4" />
+              </a>
+            </div>
+
+            {/* Back to top button */}
             <button
               type="button"
               onClick={scrollToTop}
-              className="group inline-flex items-center gap-1.5 text-white hover:text-[#EB0028] transition-colors duration-200 cursor-pointer"
+              className="group inline-flex items-center gap-1.5 text-xs font-mono uppercase tracking-[0.14em] text-white hover:text-[#EB0028] transition-colors duration-200 cursor-pointer"
             >
               <span>BACK TO TOP</span>
               <ArrowUpRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
             </button>
+
           </div>
+
+        </div>
+
+        {/* =========================================================================
+            BOTTOM COMPLIANCE BAR: Mandatory Razorpay Legal Policies & Copyright
+            ========================================================================= */}
+        <div className="border-t border-[#1C1C1E] pt-8 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-5 text-xs text-[#8E8E93]">
+          
+          {/* Copyright notice */}
+          <div>
+            <p>© {new Date().getFullYear()} TEDx Chennai Institute of Technology. All rights reserved.</p>
+          </div>
+
+          {/* Mandatory Razorpay KYC Compliance Navigation Links */}
+          <nav aria-label="Legal and Compliance" className="flex flex-wrap items-center gap-y-2 gap-x-5 sm:gap-x-7 font-mono uppercase tracking-wider text-[11px]">
+            <a
+              href="/terms-and-conditions"
+              onClick={(e) => handleNav(e, '/terms-and-conditions')}
+              className="text-[#8E8E93] hover:text-white transition-colors"
+            >
+              Terms & Conditions
+            </a>
+
+            <span className="text-[#333333] hidden sm:inline" aria-hidden="true">•</span>
+
+            <a
+              href="/privacy-policy"
+              onClick={(e) => handleNav(e, '/privacy-policy')}
+              className="text-[#8E8E93] hover:text-white transition-colors"
+            >
+              Privacy Policy
+            </a>
+
+            <span className="text-[#333333] hidden sm:inline" aria-hidden="true">•</span>
+
+            <a
+              href="/cancellation-and-refund"
+              onClick={(e) => handleNav(e, '/cancellation-and-refund')}
+              className="text-[#8E8E93] hover:text-white transition-colors"
+            >
+              Cancellation & Refund
+            </a>
+
+            <span className="text-[#333333] hidden sm:inline" aria-hidden="true">•</span>
+
+            <a
+              href="/shipping-and-delivery"
+              onClick={(e) => handleNav(e, '/shipping-and-delivery')}
+              className="text-[#8E8E93] hover:text-white transition-colors"
+            >
+              Ticket Delivery
+            </a>
+
+            <span className="text-[#333333] hidden sm:inline" aria-hidden="true">•</span>
+
+            <a
+              href="/contact-us"
+              onClick={(e) => handleNav(e, '/contact-us')}
+              className="text-[#EB0028] hover:text-white font-semibold transition-colors"
+            >
+              Contact Us
+            </a>
+          </nav>
 
         </div>
 
