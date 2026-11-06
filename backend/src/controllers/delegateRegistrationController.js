@@ -6,9 +6,7 @@ import razorpayService from '../services/razorpayService.js';
  * Controller for Delegate Registration and Razorpay Payment Integration
  */
 
-// Simple email regex for validation
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-// Clean phone validation (at least 10 digits)
 const PHONE_REGEX = /^[0-9+()\-\s]{10,15}$/;
 
 /**
@@ -23,8 +21,8 @@ export async function getPasses(req, res, next) {
       data: passes,
       meta: {
         currency: 'INR',
-        note: 'Delegate passes for TEDxCIT 2027: UNTAPPED'
-      }
+        note: 'Delegate passes for TEDxCIT 2027: UNTAPPED',
+      },
     });
   } catch (err) {
     next(err);
@@ -33,7 +31,7 @@ export async function getPasses(req, res, next) {
 
 /**
  * POST /api/delegates/register
- * Initiates registration and creates Razorpay Order
+ * Initiates registration with strict pass-specific fields and creates Razorpay Order
  */
 export async function registerDelegate(req, res, next) {
   try {
@@ -41,14 +39,26 @@ export async function registerDelegate(req, res, next) {
       name,
       email,
       phone,
+      linkedin,
       passType,
-      institution,
-      designation,
-      city,
-      rollNo
+      attendedBefore,
+      heardAbout,
+      declaration,
+
+      // Student Delegate specific fields
+      collegeName,
+      department,
+      yearOfStudy,
+      section,
+
+      // Professional Delegate specific fields
+      organisationName,
+      jobDesignation,
+      industryDomain,
+      experienceYears,
     } = req.body;
 
-    // 1. Mandatory Fields Validation
+    // 1. Mandatory Common Fields Validation
     if (!name || typeof name !== 'string' || !name.trim()) {
       return res.status(400).json({
         success: false,
@@ -69,7 +79,7 @@ export async function registerDelegate(req, res, next) {
       return res.status(400).json({
         success: false,
         error: 'VALIDATION_ERROR',
-        message: 'A valid Contact Phone Number (at least 10 digits) is required',
+        message: 'A valid Mobile Number (at least 10 digits) is required',
       });
     }
 
@@ -81,7 +91,16 @@ export async function registerDelegate(req, res, next) {
       });
     }
 
-    // 2. Validate Pass Selection & Backend-enforced pricing
+    // 2. Declaration check
+    if (!declaration || declaration === false || declaration === 'false') {
+      return res.status(400).json({
+        success: false,
+        error: 'DECLARATION_REQUIRED',
+        message: 'You must confirm the declaration: "I confirm that the information provided is accurate."',
+      });
+    }
+
+    // 3. Validate Pass Selection
     const pass = getPassById(passType);
     if (!pass) {
       return res.status(400).json({
@@ -91,10 +110,50 @@ export async function registerDelegate(req, res, next) {
       });
     }
 
-    // 3. Generate Receipt identifier
+    // 4. Pass-Specific Field Validations
+    if (pass.id === 'student') {
+      if (!collegeName || !collegeName.trim()) {
+        return res.status(400).json({
+          success: false,
+          error: 'VALIDATION_ERROR',
+          message: 'College Name is required for Student Delegates',
+        });
+      }
+      if (!department || !department.trim()) {
+        return res.status(400).json({
+          success: false,
+          error: 'VALIDATION_ERROR',
+          message: 'Department is required for Student Delegates',
+        });
+      }
+      if (!yearOfStudy || !yearOfStudy.trim()) {
+        return res.status(400).json({
+          success: false,
+          error: 'VALIDATION_ERROR',
+          message: 'Year of Study is required for Student Delegates',
+        });
+      }
+    } else if (pass.id === 'professional') {
+      if (!organisationName || !organisationName.trim()) {
+        return res.status(400).json({
+          success: false,
+          error: 'VALIDATION_ERROR',
+          message: 'Organisation Name is required for Professional Delegates',
+        });
+      }
+      if (!jobDesignation || !jobDesignation.trim()) {
+        return res.status(400).json({
+          success: false,
+          error: 'VALIDATION_ERROR',
+          message: 'Job Designation is required for Professional Delegates',
+        });
+      }
+    }
+
+    // 5. Generate Receipt identifier
     const receipt = `rcpt_${pass.id}_${Date.now()}`;
 
-    // 4. Create Razorpay Order with backend-calculated amount (Paise)
+    // 6. Create Razorpay Order with backend-enforced price in paise
     const order = await razorpayService.createOrder({
       amountInPaise: pass.amountInPaise,
       currency: pass.currency,
@@ -104,21 +163,34 @@ export async function registerDelegate(req, res, next) {
         attendeeEmail: email.trim().toLowerCase(),
         passCategory: pass.category,
         passName: pass.name,
-        institution: institution?.trim() || 'N/A',
+        institutionOrOrg: (pass.id === 'student' ? collegeName : organisationName) || 'N/A',
       },
     });
 
-    // 5. Store pending registration in database
+    // 7. Store delegate registration
     const registration = store.createRegistration({
       name,
       email,
       phone,
+      linkedin,
       passType: pass.id,
       passName: pass.name,
-      institution,
-      designation,
-      city,
-      rollNo,
+      attendedBefore: attendedBefore || 'No',
+      heardAbout,
+      declaration: Boolean(declaration),
+
+      // Student fields
+      collegeName,
+      department,
+      yearOfStudy,
+      section,
+
+      // Professional fields
+      organisationName,
+      jobDesignation,
+      industryDomain,
+      experienceYears,
+
       amount: pass.price,
       amountInPaise: pass.amountInPaise,
       currency: pass.currency,
@@ -126,14 +198,14 @@ export async function registerDelegate(req, res, next) {
       orderId: order.orderId,
     });
 
-    // 6. Return Razorpay checkout payload for frontend
+    // 8. Return response
     return res.status(201).json({
       success: true,
       message: 'Registration initiated successfully. Proceed to Razorpay checkout.',
       data: {
         registrationId: registration.id,
         orderId: order.orderId,
-        amount: order.amount, // in paise (e.g. 10000 for ₹100, 20000 for ₹200)
+        amount: order.amount, // in paise (10000 for student ₹100, 20000 for pro ₹200)
         amountInRupees: pass.price,
         currency: order.currency,
         keyId: order.keyId,
@@ -150,7 +222,7 @@ export async function registerDelegate(req, res, next) {
           contact: registration.phone,
         },
         theme: {
-          color: '#FF2B25', // TED Crimson Red
+          color: '#FF2B25',
         },
       },
     });
@@ -169,7 +241,6 @@ export async function verifyPayment(req, res, next) {
       razorpay_order_id,
       razorpay_payment_id,
       razorpay_signature,
-      registrationId,
     } = req.body;
 
     const orderId = razorpay_order_id || req.body.orderId;
@@ -234,7 +305,20 @@ export async function verifyPayment(req, res, next) {
           name: registration.name,
           email: registration.email,
           phone: registration.phone,
-          institution: registration.institution,
+          linkedin: registration.linkedin,
+          ...(registration.passType === 'student'
+            ? {
+                collegeName: registration.collegeName,
+                department: registration.department,
+                yearOfStudy: registration.yearOfStudy,
+                section: registration.section,
+              }
+            : {
+                organisationName: registration.organisationName,
+                jobDesignation: registration.jobDesignation,
+                industryDomain: registration.industryDomain,
+                experienceYears: registration.experienceYears,
+              }),
         },
         amountPaid: registration.amount,
         currency: registration.currency,
@@ -255,7 +339,6 @@ export async function getRegistrationStatus(req, res, next) {
     const { id } = req.params;
     let registration = store.getRegistrationById(id);
 
-    // If not found by registration ID, check if orderId was passed
     if (!registration) {
       registration = store.getRegistrationByOrderId(id);
     }
@@ -313,8 +396,6 @@ export async function handleWebhook(req, res, next) {
     const event = req.body.event;
     const payload = req.body.payload;
 
-    console.log(`[Razorpay Webhook] Received event: ${event}`);
-
     if (event === 'payment.captured' || event === 'order.paid') {
       const paymentEntity = payload.payment?.entity;
       const orderId = paymentEntity?.order_id || payload.order?.entity?.id;
@@ -342,4 +423,3 @@ export async function handleWebhook(req, res, next) {
     return res.status(500).json({ error: 'Webhook processing error' });
   }
 }
-

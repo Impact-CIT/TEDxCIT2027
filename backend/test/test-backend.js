@@ -47,7 +47,7 @@ async function runTests() {
   console.log('   RUNNING COMPREHENSIVE BACKEND TEST SUITE        ');
   console.log('====================================================\n');
 
-  // Start test server on named pipe (bypasses Windows sandbox network port restrictions)
+  // Start test server on named pipe
   await new Promise((resolve) => {
     server = app.listen(PIPE_PATH, () => {
       console.log(`[Test Server] Listening on pipe: ${PIPE_PATH}\n`);
@@ -102,6 +102,10 @@ async function runTests() {
       email: 'sanjith@example.com',
       phone: '9876543210',
       passType: 'student',
+      declaration: true,
+      collegeName: 'CIT',
+      department: 'CSE',
+      yearOfStudy: '3rd Year',
     });
     assert.strictEqual(res.status, 400);
     assert.strictEqual(res.body.success, false);
@@ -115,21 +119,29 @@ async function runTests() {
       email: 'invalid-email',
       phone: '9876543210',
       passType: 'student',
+      declaration: true,
+      collegeName: 'CIT',
+      department: 'CSE',
+      yearOfStudy: '3rd Year',
     });
     assert.strictEqual(res.status, 400);
     assert.strictEqual(res.body.success, false);
   });
 
-  // 5. Validation: Invalid Phone
-  await test('POST /api/delegates/register rejects short/invalid phone', async () => {
+  // 5. Validation: Missing Declaration
+  await test('POST /api/delegates/register rejects unconfirmed declaration', async () => {
     const res = await makeRequest('POST', '/api/delegates/register', {
       name: 'Sanjith',
       email: 'sanjith@example.com',
-      phone: '123',
+      phone: '9876543210',
       passType: 'student',
+      declaration: false,
+      collegeName: 'CIT',
+      department: 'CSE',
+      yearOfStudy: '3rd Year',
     });
     assert.strictEqual(res.status, 400);
-    assert.strictEqual(res.body.success, false);
+    assert.strictEqual(res.body.error, 'DECLARATION_REQUIRED');
   });
 
   // 6. Validation: Invalid Pass Type
@@ -139,12 +151,13 @@ async function runTests() {
       email: 'sanjith@example.com',
       phone: '9876543210',
       passType: 'vip_gold_pass',
+      declaration: true,
     });
     assert.strictEqual(res.status, 400);
     assert.strictEqual(res.body.error, 'INVALID_PASS_TYPE');
   });
 
-  // 7. Student Pass Order Creation (₹100 = 10000 paise)
+  // 7. Student Pass Order Creation (₹100 = 10000 paise) with all required student fields
   let studentOrderId;
   let studentRegId;
   await test('POST /api/delegates/register creates Student Pass Order for ₹100 (10000 paise)', async () => {
@@ -152,9 +165,15 @@ async function runTests() {
       name: 'Sanjith Kumar',
       email: 'sanjith.cit@example.com',
       phone: '+919876543210',
+      linkedin: 'https://linkedin.com/in/sanjith',
       passType: 'student',
-      institution: 'Chennai Institute of Technology',
-      rollNo: '21CS101',
+      collegeName: 'Chennai Institute of Technology',
+      department: 'Computer Science and Engineering',
+      yearOfStudy: '3rd Year',
+      section: 'A',
+      attendedBefore: 'No',
+      heardAbout: 'Campus Posters / Banners',
+      declaration: true,
     });
 
     assert.strictEqual(res.status, 201);
@@ -169,7 +188,7 @@ async function runTests() {
     studentRegId = res.body.data.registrationId;
   });
 
-  // 8. Professional Pass Order Creation (₹200 = 20000 paise)
+  // 8. Professional Pass Order Creation (₹200 = 20000 paise) with all required professional fields
   let proOrderId;
   let proRegId;
   await test('POST /api/delegates/register creates Professional Pass Order for ₹200 (20000 paise)', async () => {
@@ -177,9 +196,15 @@ async function runTests() {
       name: 'Dr. Venkatesh R',
       email: 'venkatesh.prof@example.com',
       phone: '+919840123456',
+      linkedin: 'https://linkedin.com/in/drvenkatesh',
       passType: 'professional',
-      institution: 'Tech Corp India',
-      designation: 'Senior Architect',
+      organisationName: 'Tech Corp India',
+      jobDesignation: 'Senior Architect',
+      industryDomain: 'Information Technology',
+      experienceYears: '6 - 10 years',
+      attendedBefore: 'Yes',
+      heardAbout: 'Professional Network / Colleagues',
+      declaration: true,
     });
 
     assert.strictEqual(res.status, 201);
@@ -225,16 +250,19 @@ async function runTests() {
     assert.strictEqual(res.body.data.status, 'PAID');
     assert.strictEqual(res.body.data.paymentId, testPaymentId);
     assert.strictEqual(res.body.data.amountPaid, 100);
+    assert.strictEqual(res.body.data.attendee.collegeName, 'Chennai Institute of Technology');
     assert(res.body.data.confirmedAt);
   });
 
   // 11. Registration Lookup: By ID
-  await test('GET /api/delegates/registration/:id returns confirmed status', async () => {
+  await test('GET /api/delegates/registration/:id returns confirmed status with accurate fields', async () => {
     const res = await makeRequest('GET', `/api/delegates/registration/${studentRegId}`);
     assert.strictEqual(res.status, 200);
     assert.strictEqual(res.body.success, true);
     assert.strictEqual(res.body.data.status, 'PAID');
     assert.strictEqual(res.body.data.email, 'sanjith.cit@example.com');
+    assert.strictEqual(res.body.data.section, 'A');
+    assert.strictEqual(res.body.data.yearOfStudy, '3rd Year');
   });
 
   // 12. Registration Lookup: By Order ID
@@ -251,6 +279,10 @@ async function runTests() {
       email: 'alias@example.com',
       phone: '9876543210',
       passType: 'student',
+      collegeName: 'CIT',
+      department: 'ECE',
+      yearOfStudy: '2nd Year',
+      declaration: true,
     });
     assert.strictEqual(res.status, 201);
     assert.strictEqual(res.body.data.amount, 10000);

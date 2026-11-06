@@ -12,17 +12,30 @@ import {
 
 export default function DelegateRegistration() {
   const [selectedPass, setSelectedPass] = useState('student');
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    institution: '',
-    designation: '',
-    rollNo: '',
-  });
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [successData, setSuccessData] = useState(null);
+
+  // Common Fields
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [linkedin, setLinkedin] = useState('');
+  const [attendedBefore, setAttendedBefore] = useState('No');
+  const [heardAbout, setHeardAbout] = useState('');
+  const [declaration, setDeclaration] = useState(false);
+
+  // Student Delegate Specific Fields
+  const [collegeName, setCollegeName] = useState('');
+  const [department, setDepartment] = useState('');
+  const [yearOfStudy, setYearOfStudy] = useState('');
+  const [section, setSection] = useState('');
+
+  // Professional Delegate Specific Fields
+  const [organisationName, setOrganisationName] = useState('');
+  const [jobDesignation, setJobDesignation] = useState('');
+  const [industryDomain, setIndustryDomain] = useState('');
+  const [experienceYears, setExperienceYears] = useState('');
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -60,7 +73,7 @@ export default function DelegateRegistration() {
         'Networking Lunch with Speakers and Sponsors',
         'Digital Certificate of Attendance',
       ],
-      notice: 'Open to all corporate professionals, founders, and researchers.',
+      notice: 'Open to corporate professionals, founders, researchers, and academicians.',
     },
   };
 
@@ -69,22 +82,45 @@ export default function DelegateRegistration() {
   const handleRegister = async (e) => {
     e.preventDefault();
     setErrorMsg('');
+
+    if (!declaration) {
+      setErrorMsg('Please confirm the declaration before proceeding.');
+      return;
+    }
+
     setIsProcessing(true);
+
+    // Build payload with only requested fields
+    const payload = {
+      name,
+      email,
+      phone,
+      linkedin,
+      passType: selectedPass,
+      attendedBefore,
+      heardAbout,
+      declaration,
+      ...(selectedPass === 'student'
+        ? {
+            collegeName,
+            department,
+            yearOfStudy,
+            section,
+          }
+        : {
+            organisationName,
+            jobDesignation,
+            industryDomain,
+            experienceYears,
+          }),
+    };
 
     try {
       // 1. Create order on backend
       const response = await fetch('http://localhost:5000/api/delegates/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-          passType: selectedPass,
-          institution: formData.institution,
-          designation: formData.designation,
-          rollNo: formData.rollNo,
-        }),
+        body: JSON.stringify(payload),
       });
 
       const result = await response.json();
@@ -95,7 +131,7 @@ export default function DelegateRegistration() {
 
       const orderData = result.data;
 
-      // 2. Open Razorpay Checkout modal if Razorpay SDK script is loaded
+      // 2. Open Razorpay Checkout modal if loaded
       if (typeof window.Razorpay !== 'undefined' && !orderData.isMock) {
         const options = {
           key: orderData.keyId,
@@ -151,7 +187,7 @@ export default function DelegateRegistration() {
             registrationId: orderData.registrationId,
             passName: currentPass.name,
             amountPaid: currentPass.price,
-            attendee: { name: formData.name, email: formData.email },
+            attendee: { name, email },
           });
         }
       }
@@ -170,7 +206,13 @@ export default function DelegateRegistration() {
         <div className="mb-8">
           <a
             href="/"
-            className="inline-flex items-center gap-2 text-xs font-mono tracking-widest uppercase text-[#8E8E93] hover:text-[#FF2B25] transition-colors"
+            onClick={(e) => {
+              e.preventDefault();
+              window.history.pushState({}, '', '/');
+              window.dispatchEvent(new Event('popstate'));
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            className="inline-flex items-center gap-2 text-xs font-mono tracking-widest uppercase text-[#8E8E93] hover:text-[#FF2B25] transition-colors cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>BACK TO HOME</span>
@@ -187,7 +229,7 @@ export default function DelegateRegistration() {
             TEDxCIT 2027 Delegate Passes
           </h1>
           <p className="mt-3 text-sm sm:text-base text-[#A1A1A6]">
-            Select your delegate category and complete your registration securely via Razorpay.
+            Select your delegate category and fill in the registration details to proceed with Razorpay payment.
           </p>
         </div>
 
@@ -217,7 +259,7 @@ export default function DelegateRegistration() {
               </div>
               <div className="flex justify-between border-b border-[#2B2B2B] py-2">
                 <span className="text-[#8E8E93]">Delegate Name:</span>
-                <span className="text-white">{successData.attendee?.name || formData.name}</span>
+                <span className="text-white">{successData.attendee?.name || name}</span>
               </div>
               <div className="flex justify-between py-2">
                 <span className="text-[#8E8E93]">Amount Paid:</span>
@@ -227,12 +269,18 @@ export default function DelegateRegistration() {
 
             <p className="text-xs text-[#8E8E93] leading-relaxed">
               A digital confirmation email and entry badge details have been dispatched to{' '}
-              <strong className="text-white">{successData.attendee?.email || formData.email}</strong>.
+              <strong className="text-white">{successData.attendee?.email || email}</strong>.
             </p>
 
             <a
               href="/"
-              className="inline-block px-8 py-3 bg-[#FF2B25] hover:bg-[#d61e19] text-white font-bold text-xs uppercase tracking-wider transition-colors"
+              onClick={(e) => {
+                e.preventDefault();
+                window.history.pushState({}, '', '/');
+                window.dispatchEvent(new Event('popstate'));
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className="inline-block px-8 py-3 bg-[#FF2B25] hover:bg-[#d61e19] text-white font-bold text-xs uppercase tracking-wider transition-colors cursor-pointer"
             >
               Return to Home Page
             </a>
@@ -240,10 +288,10 @@ export default function DelegateRegistration() {
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
             
-            {/* Left 6 Cols: Pass Options */}
-            <div className="lg:col-span-6 space-y-6">
+            {/* Left Column: Pass Selection */}
+            <div className="lg:col-span-5 space-y-6">
               <div className="text-xs font-mono uppercase tracking-widest text-[#8E8E93]">
-                STEP 1: SELECT YOUR PASS TIER
+                STEP 1: CHOOSE YOUR PASS TIER
               </div>
 
               {Object.values(passes).map((pass) => {
@@ -254,7 +302,7 @@ export default function DelegateRegistration() {
                   <div
                     key={pass.id}
                     onClick={() => setSelectedPass(pass.id)}
-                    className={`relative p-6 sm:p-7 rounded-sm border cursor-pointer transition-all duration-300 ${
+                    className={`relative p-6 rounded-sm border cursor-pointer transition-all duration-300 ${
                       isSelected
                         ? 'bg-[#0E0E0E] border-[#FF2B25] shadow-lg shadow-[#FF2B25]/15'
                         : 'bg-[#0A0A0A] border-[#1F1F1F] hover:border-[#333333]'
@@ -301,150 +349,358 @@ export default function DelegateRegistration() {
                     </div>
 
                     <div className="mt-4 p-2.5 bg-[#141414] border border-[#262626] rounded-sm text-[11px] text-[#8E8E93]">
-                      <strong className="text-white">Note:</strong> {pass.notice}
+                      <strong className="text-white">Notice:</strong> {pass.notice}
                     </div>
                   </div>
                 );
               })}
+
+              {/* Price Summary Breakdown */}
+              <div className="p-5 bg-[#0A0A0A] border border-[#1F1F1F] rounded-sm space-y-2.5 font-mono text-xs">
+                <div className="text-xs font-mono uppercase tracking-widest text-[#8E8E93] mb-2">
+                  ORDER SUMMARY
+                </div>
+                <div className="flex justify-between text-[#8E8E93]">
+                  <span>Pass Type:</span>
+                  <span className="text-white">{currentPass.name}</span>
+                </div>
+                <div className="flex justify-between text-[#8E8E93]">
+                  <span>Ticket Rate:</span>
+                  <span className="text-white">₹{currentPass.price}.00</span>
+                </div>
+                <div className="flex justify-between text-[#8E8E93]">
+                  <span>Gateway Taxes:</span>
+                  <span className="text-[#28A745]">₹0.00 (Included)</span>
+                </div>
+                <div className="flex justify-between border-t border-[#262626] pt-2.5 text-sm font-bold">
+                  <span className="text-white">Total Amount:</span>
+                  <span className="text-[#FF2B25]">₹{currentPass.price}.00 INR</span>
+                </div>
+              </div>
             </div>
 
-            {/* Right 6 Cols: Registration Details Form */}
-            <div className="lg:col-span-6">
+            {/* Right Column: Delegate Registration Form */}
+            <div className="lg:col-span-7">
               <div className="bg-[#0A0A0A] border border-[#1F1F1F] p-6 sm:p-8 rounded-sm">
-                <div className="text-xs font-mono uppercase tracking-widest text-[#8E8E93] mb-4">
-                  STEP 2: DELEGATE CREDENTIALS
+                <div className="flex items-center justify-between border-b border-[#262626] pb-4 mb-6">
+                  <div>
+                    <span className="text-[10px] font-mono uppercase tracking-widest text-[#FF2B25]">
+                      STEP 2: DELEGATE INFORMATION
+                    </span>
+                    <h2 className="text-xl font-bold text-white mt-1">
+                      {selectedPass === 'student' ? 'Student Delegate Details' : 'Professional Delegate Details'}
+                    </h2>
+                  </div>
+                  <span className="px-3 py-1 bg-[#1A1A1A] text-xs font-mono text-[#8E8E93]">
+                    {selectedPass === 'student' ? '11 Required Fields' : '11 Required Fields'}
+                  </span>
                 </div>
 
                 {errorMsg && (
-                  <div className="p-3 mb-5 bg-[#2B0E0E] border border-[#7A1D1D] rounded-sm text-xs text-[#FFA8A8] flex items-center gap-2">
+                  <div className="p-3.5 mb-6 bg-[#2B0E0E] border border-[#7A1D1D] rounded-sm text-xs text-[#FFA8A8] flex items-center gap-2">
                     <AlertCircle className="w-4 h-4 shrink-0" />
                     <span>{errorMsg}</span>
                   </div>
                 )}
 
-                <form onSubmit={handleRegister} className="space-y-4 text-xs">
-                  <div>
-                    <label className="block text-[#8E8E93] uppercase font-mono tracking-wider mb-1">
-                      Full Legal Name *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="e.g. Sanjith Kumar"
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#FF2B25] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
-                    />
-                  </div>
-
+                <form onSubmit={handleRegister} className="space-y-5 text-xs">
+                  
+                  {/* Row 1: Full Name & Email Address */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-[#8E8E93] uppercase font-mono tracking-wider mb-1">
+                      <label className="block text-[#8E8E93] uppercase font-mono tracking-wider mb-1.5">
+                        Full Name *
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="e.g. Sanjith Kumar"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#FF2B25] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[#8E8E93] uppercase font-mono tracking-wider mb-1.5">
                         Email Address *
                       </label>
                       <input
                         type="email"
                         required
                         placeholder="you@example.com"
-                        value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                         className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#FF2B25] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
                       />
                     </div>
+                  </div>
 
+                  {/* Row 2: Mobile Number & LinkedIn */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-[#8E8E93] uppercase font-mono tracking-wider mb-1">
-                        Contact Number *
+                      <label className="block text-[#8E8E93] uppercase font-mono tracking-wider mb-1.5">
+                        Mobile Number *
                       </label>
                       <input
                         type="tel"
                         required
                         placeholder="+91 98765 43210"
-                        value={formData.phone}
-                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#FF2B25] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[#8E8E93] uppercase font-mono tracking-wider mb-1.5">
+                        LinkedIn Profile *
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="https://linkedin.com/in/yourprofile"
+                        value={linkedin}
+                        onChange={(e) => setLinkedin(e.target.value)}
                         className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#FF2B25] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
                       />
                     </div>
                   </div>
 
-                  <div>
-                    <label className="block text-[#8E8E93] uppercase font-mono tracking-wider mb-1">
-                      {selectedPass === 'student' ? 'College / University Name *' : 'Company / Organization Name *'}
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      placeholder={selectedPass === 'student' ? 'e.g. Chennai Institute of Technology' : 'e.g. Acme Tech Solutions'}
-                      value={formData.institution}
-                      onChange={(e) => setFormData({ ...formData, institution: e.target.value })}
-                      className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#FF2B25] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
-                    />
-                  </div>
+                  {/* ========================================================
+                      STUDENT DELEGATE SPECIFIC FIELDS
+                      College Name, Department, Year of Study, Section
+                      ======================================================== */}
+                  {selectedPass === 'student' && (
+                    <>
+                      <div>
+                        <label className="block text-[#8E8E93] uppercase font-mono tracking-wider mb-1.5">
+                          College Name *
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          placeholder="e.g. Chennai Institute of Technology"
+                          value={collegeName}
+                          onChange={(e) => setCollegeName(e.target.value)}
+                          className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#FF2B25] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
+                        />
+                      </div>
 
-                  {selectedPass === 'student' ? (
-                    <div>
-                      <label className="block text-[#8E8E93] uppercase font-mono tracking-wider mb-1">
-                        Student ID / Roll Number
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="e.g. 21CS101"
-                        value={formData.rollNo}
-                        onChange={(e) => setFormData({ ...formData, rollNo: e.target.value })}
-                        className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#FF2B25] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
-                      />
-                    </div>
-                  ) : (
-                    <div>
-                      <label className="block text-[#8E8E93] uppercase font-mono tracking-wider mb-1">
-                        Job Designation / Role
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="e.g. Product Architect / Professor"
-                        value={formData.designation}
-                        onChange={(e) => setFormData({ ...formData, designation: e.target.value })}
-                        className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#FF2B25] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
-                      />
-                    </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div>
+                          <label className="block text-[#8E8E93] uppercase font-mono tracking-wider mb-1.5">
+                            Department *
+                          </label>
+                          <input
+                            type="text"
+                            required
+                            placeholder="e.g. Computer Science"
+                            value={department}
+                            onChange={(e) => setDepartment(e.target.value)}
+                            className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#FF2B25] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-[#8E8E93] uppercase font-mono tracking-wider mb-1.5">
+                            Year of Study *
+                          </label>
+                          <select
+                            required
+                            value={yearOfStudy}
+                            onChange={(e) => setYearOfStudy(e.target.value)}
+                            className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#FF2B25] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
+                          >
+                            <option value="">Select Year</option>
+                            <option value="1st Year">1st Year</option>
+                            <option value="2nd Year">2nd Year</option>
+                            <option value="3rd Year">3rd Year</option>
+                            <option value="4th Year">4th Year</option>
+                            <option value="Postgraduate / PhD">Postgraduate / PhD</option>
+                          </select>
+                        </div>
+
+                        <div>
+                          <label className="block text-[#8E8E93] uppercase font-mono tracking-wider mb-1.5">
+                            Section *
+                          </label>
+                          <input
+                            type="text"
+                            required
+                            placeholder="e.g. A, B, C or N/A"
+                            value={section}
+                            onChange={(e) => setSection(e.target.value)}
+                            className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#FF2B25] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
+                          />
+                        </div>
+                      </div>
+                    </>
                   )}
 
-                  {/* Price Summary Breakdown */}
-                  <div className="p-4 bg-[#121212] border border-[#262626] rounded-sm space-y-2 font-mono text-xs mt-6">
-                    <div className="flex justify-between text-[#8E8E93]">
-                      <span>Selected Pass:</span>
-                      <span className="text-white">{currentPass.name}</span>
-                    </div>
-                    <div className="flex justify-between text-[#8E8E93]">
-                      <span>Base Pass Rate:</span>
-                      <span className="text-white">₹{currentPass.price}.00</span>
-                    </div>
-                    <div className="flex justify-between text-[#8E8E93]">
-                      <span>Convenience / Taxes:</span>
-                      <span className="text-[#28A745]">₹0.00 (Inclusive)</span>
-                    </div>
-                    <div className="flex justify-between border-t border-[#262626] pt-2 text-sm font-bold">
-                      <span className="text-white">Total Amount:</span>
-                      <span className="text-[#FF2B25]">₹{currentPass.price}.00 INR</span>
+                  {/* ========================================================
+                      PROFESSIONAL DELEGATE SPECIFIC FIELDS
+                      Organisation Name, Job Designation, Industry/Domain, Experience Years
+                      ======================================================== */}
+                  {selectedPass === 'professional' && (
+                    <>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-[#8E8E93] uppercase font-mono tracking-wider mb-1.5">
+                            Organisation Name *
+                          </label>
+                          <input
+                            type="text"
+                            required
+                            placeholder="e.g. Google / Infosys / Startup"
+                            value={organisationName}
+                            onChange={(e) => setOrganisationName(e.target.value)}
+                            className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#FF2B25] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-[#8E8E93] uppercase font-mono tracking-wider mb-1.5">
+                            Job Designation *
+                          </label>
+                          <input
+                            type="text"
+                            required
+                            placeholder="e.g. Senior Software Engineer"
+                            value={jobDesignation}
+                            onChange={(e) => setJobDesignation(e.target.value)}
+                            className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#FF2B25] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-[#8E8E93] uppercase font-mono tracking-wider mb-1.5">
+                            Industry / Domain *
+                          </label>
+                          <input
+                            type="text"
+                            required
+                            placeholder="e.g. Information Technology / Finance"
+                            value={industryDomain}
+                            onChange={(e) => setIndustryDomain(e.target.value)}
+                            className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#FF2B25] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-[#8E8E93] uppercase font-mono tracking-wider mb-1.5">
+                            Years of Professional Experience *
+                          </label>
+                          <select
+                            required
+                            value={experienceYears}
+                            onChange={(e) => setExperienceYears(e.target.value)}
+                            className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#FF2B25] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
+                          >
+                            <option value="">Select Experience</option>
+                            <option value="0 - 2 years">0 - 2 years</option>
+                            <option value="3 - 5 years">3 - 5 years</option>
+                            <option value="6 - 10 years">6 - 10 years</option>
+                            <option value="10+ years">10+ years</option>
+                          </select>
+                        </div>
+                      </div>
+                    </>
+                  )}
+
+                  {/* Common Field: Have you attended a TEDx event before? */}
+                  <div>
+                    <label className="block text-[#8E8E93] uppercase font-mono tracking-wider mb-1.5">
+                      Have you attended a TEDx event before? *
+                    </label>
+                    <div className="flex items-center gap-6 pt-1">
+                      <label className="flex items-center gap-2 cursor-pointer text-white">
+                        <input
+                          type="radio"
+                          name="attendedBefore"
+                          value="Yes"
+                          checked={attendedBefore === 'Yes'}
+                          onChange={(e) => setAttendedBefore(e.target.value)}
+                          className="accent-[#FF2B25] cursor-pointer"
+                        />
+                        <span>Yes</span>
+                      </label>
+                      <label className="flex items-center gap-2 cursor-pointer text-white">
+                        <input
+                          type="radio"
+                          name="attendedBefore"
+                          value="No"
+                          checked={attendedBefore === 'No'}
+                          onChange={(e) => setAttendedBefore(e.target.value)}
+                          className="accent-[#FF2B25] cursor-pointer"
+                        />
+                        <span>No</span>
+                      </label>
                     </div>
                   </div>
 
-                  {/* Payment CTA */}
-                  <button
-                    type="submit"
-                    disabled={isProcessing}
-                    className="w-full py-3.5 bg-[#FF2B25] hover:bg-[#d61e19] disabled:bg-[#551412] text-white font-bold uppercase tracking-wider text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-lg shadow-[#FF2B25]/20"
-                  >
-                    <CreditCard className="w-4 h-4" />
-                    <span>{isProcessing ? 'Connecting to Razorpay...' : `Pay ₹${currentPass.price} & Confirm Registration`}</span>
-                  </button>
+                  {/* Common Field: How did you hear about this event? */}
+                  <div>
+                    <label className="block text-[#8E8E93] uppercase font-mono tracking-wider mb-1.5">
+                      How did you hear about this event? *
+                    </label>
+                    <select
+                      required
+                      value={heardAbout}
+                      onChange={(e) => setHeardAbout(e.target.value)}
+                      className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#FF2B25] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
+                    >
+                      <option value="">Select an option</option>
+                      <option value="Social Media (Instagram / LinkedIn / Twitter)">Social Media (Instagram / LinkedIn / Twitter)</option>
+                      <option value="College / University Announcement">College / University Announcement</option>
+                      <option value="Friends / Word of Mouth">Friends / Word of Mouth</option>
+                      <option value="Campus Posters / Banners">Campus Posters / Banners</option>
+                      <option value="Professional Network / Colleagues">Professional Network / Colleagues</option>
+                      <option value="TED / TEDx Website">TED / TEDx Website</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+
+                  {/* Common Field: Declaration Checkbox */}
+                  <div className="pt-2">
+                    <label className="flex items-start gap-3 p-3.5 bg-[#141414] border border-[#262626] rounded-sm cursor-pointer select-none">
+                      <input
+                        type="checkbox"
+                        required
+                        checked={declaration}
+                        onChange={(e) => setDeclaration(e.target.checked)}
+                        className="mt-0.5 accent-[#FF2B25] w-4 h-4 cursor-pointer"
+                      />
+                      <span className="text-xs text-[#E5E5EA] leading-relaxed">
+                        <strong>Declaration:</strong> I confirm that the information provided is accurate.
+                      </span>
+                    </label>
+                  </div>
+
+                  {/* Payment CTA Button */}
+                  <div className="pt-2">
+                    <button
+                      type="submit"
+                      disabled={isProcessing}
+                      className="w-full py-4 bg-[#FF2B25] hover:bg-[#d61e19] disabled:bg-[#551412] text-white font-bold uppercase tracking-wider text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-lg shadow-[#FF2B25]/25"
+                    >
+                      <CreditCard className="w-4 h-4" />
+                      <span>
+                        {isProcessing
+                          ? 'Generating Razorpay Order...'
+                          : `Proceed to Pay ₹${currentPass.price} via Razorpay`}
+                      </span>
+                    </button>
+                  </div>
                 </form>
 
-                {/* Razorpay Trust Badges */}
+                {/* Razorpay Trust Footer */}
                 <div className="mt-6 pt-4 border-t border-[#1F1F1F] flex flex-col items-center justify-center gap-2 text-[11px] text-[#8E8E93]">
                   <div className="flex items-center gap-1.5 text-white">
                     <ShieldCheck className="w-3.5 h-3.5 text-[#28A745]" />
-                    <span>Secured by Razorpay • PCI-DSS Level 1 Compliant</span>
+                    <span>Secured by Razorpay • 256-Bit SSL • PCI-DSS Level 1 Compliant</span>
                   </div>
                   <div className="flex items-center gap-3 text-[10px] text-[#6E6E73]">
                     <a href="/terms-and-conditions" className="hover:underline">Terms</a>
@@ -467,4 +723,3 @@ export default function DelegateRegistration() {
     </div>
   );
 }
-

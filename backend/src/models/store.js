@@ -14,24 +14,45 @@ class DataStore {
   }
 
   /**
-   * Create a new delegate registration record
+   * Create a new delegate registration record with pass-specific fields
    */
   createRegistration(data) {
     const id = `REG-${Date.now().toString(36).toUpperCase()}-${crypto.randomBytes(3).toString('hex').toUpperCase()}`;
     const timestamp = new Date().toISOString();
 
+    const isStudent = data.passType === 'student';
+
     const record = {
       id,
+      passType: data.passType,
+      passName: data.passName,
+      // Common Fields
       name: data.name?.trim(),
       email: data.email?.trim().toLowerCase(),
       phone: data.phone?.trim(),
-      passType: data.passType,
-      passName: data.passName,
-      institution: data.institution?.trim() || 'N/A',
-      designation: data.designation?.trim() || 'N/A',
-      city: data.city?.trim() || 'Chennai',
-      rollNo: data.rollNo?.trim() || null,
-      amount: data.amount, // in INR
+      linkedin: data.linkedin?.trim() || null,
+      attendedBefore: data.attendedBefore || 'No',
+      heardAbout: data.heardAbout?.trim() || null,
+      declaration: Boolean(data.declaration),
+
+      // Student Delegate Specific Fields
+      ...(isStudent
+        ? {
+            collegeName: data.collegeName?.trim() || null,
+            department: data.department?.trim() || null,
+            yearOfStudy: data.yearOfStudy?.trim() || null,
+            section: data.section?.trim() || null,
+          }
+        : {
+            // Professional Delegate Specific Fields
+            organisationName: data.organisationName?.trim() || null,
+            jobDesignation: data.jobDesignation?.trim() || null,
+            industryDomain: data.industryDomain?.trim() || null,
+            experienceYears: data.experienceYears?.trim() || null,
+          }),
+
+      // Financial & Gateway Fields
+      amount: data.amount, // in INR (100 or 200)
       amountInPaise: data.amountInPaise,
       currency: data.currency || 'INR',
       receipt: data.receipt,
@@ -161,4 +182,3 @@ class DataStore {
 
 export const store = new DataStore();
 export default store;
-
