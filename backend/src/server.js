@@ -1,26 +1,104 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
+import routes from './routes/index.js';
+import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:5173',
-  credentials: true,
-}));
+// CORS configuration supporting both local Vite frontend and production origins
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:3000',
+  'http://127.0.0.1:5173',
+  process.env.CLIENT_URL,
+].filter(Boolean);
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps, curl, Postman)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV !== 'production') {
+        return callback(null, true);
+      }
+      return callback(new Error('CORS origin blocked by policy: ' + origin));
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'x-razorpay-signature'],
+  })
+);
+
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Request logging in development
+if (process.env.NODE_ENV !== 'test') {
+  app.use((req, res, next) => {
+    const start = Date.now();
+    res.on('finish', () => {
+      const duration = Date.now() - start;
+      console.log(`[API] ${req.method} ${req.originalUrl} -> ${res.statusCode} (${duration}ms)`);
+    });
+    next();
+  });
+}
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
-  res.status(200).json({ status: 'ok', message: 'TEDxCIT2027 API is running' });
+  res.status(200).json({
+    status: 'ok',
+    service: 'TEDxCIT2027 Backend API',
+    timestamp: new Date().toISOString(),
+    razorpay: {
+      configured: Boolean(
+        process.env.RAZORPAY_KEY_ID &&
+        !process.env.RAZORPAY_KEY_ID.includes('YOUR_') &&
+        !process.env.RAZORPAY_KEY_ID.includes('placeholder')
+      ),
+      mode: Boolean(
+        process.env.RAZORPAY_KEY_ID &&
+        !process.env.RAZORPAY_KEY_ID.includes('YOUR_') &&
+        !process.env.RAZORPAY_KEY_ID.includes('placeholder')
+      )
+        ? 'LIVE/TEST_ACTIVE'
+        : 'MOCK_SANDBOX (Awaiting KYC)',
+    },
+  });
 });
 
-app.listen(PORT, () => {
-  console.log(`[TEDxCIT2027] Backend server running on http://localhost:${PORT}`);
-});
+// Mount Main API Routes
+app.use('/api', routes);
+
+// 404 & Centralized Error Handler
+app.use(notFoundHandler);
+app.use(errorHandler);
+
+// Start server only when executed directly (node src/server.js), not when imported by tests
+const isMain = process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1];
+
+if (isMain) {
+  app.listen(PORT, () => {
+    console.log(`=======================================================`);
+    console.log(`  TEDxCIT 2027: UNTAPPED - Backend Server`);
+    console.log(`  Running at: http://localhost:${PORT}`);
+    console.log(`  Environment: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`  Razorpay Key ID: ${process.env.RAZORPAY_KEY_ID ? 'Configured' : 'Not set (Mock mode active)'}`);
+    console.log(`=======================================================`);
+    console.log(`  Endpoints:`);
+    console.log(`  - GET  /api/health`);
+    console.log(`  - GET  /api/delegates/passes  (₹100 Student / ₹200 Professional)`);
+    console.log(`  - POST /api/delegates/register (Creates Razorpay order)`);
+    console.log(`  - POST /api/delegates/verify-payment (Verifies HMAC signature)`);
+    console.log(`  - GET  /api/delegates/registration/:id`);
+    console.log(`  - POST /api/payment/webhook`);
+    console.log(`=======================================================`);
+  });
+}
 
 export default app;
-

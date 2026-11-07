@@ -247,7 +247,13 @@ export const Hero: React.FC<HeroProps> = ({ className = '' }) => {
               className="mt-8 sm:mt-10 lg:mt-12 flex flex-row items-center gap-3 sm:gap-3.5 flex-wrap"
             >
               <motion.a
-                href="/partner-with-us"
+                href="/contact-us"
+                onClick={(e) => {
+                  e.preventDefault();
+                  window.history.pushState({}, '', '/contact-us');
+                  window.dispatchEvent(new Event('popstate'));
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
                 whileHover={{ scale: 1.025 }}
                 whileTap={{ scale: 0.975 }}
                 transition={{ duration: 0.2 }}
@@ -269,6 +275,12 @@ export const Hero: React.FC<HeroProps> = ({ className = '' }) => {
 
               <motion.a
                 href="/register"
+                onClick={(e) => {
+                  e.preventDefault();
+                  window.history.pushState({}, '', '/register');
+                  window.dispatchEvent(new Event('popstate'));
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
                 whileHover={{ scale: 1.025 }}
                 whileTap={{ scale: 0.975 }}
                 transition={{ duration: 0.2 }}
