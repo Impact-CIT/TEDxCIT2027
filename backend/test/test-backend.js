@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import assert from 'assert';
 import http from 'http';
 import app from '../src/server.js';
@@ -288,7 +289,75 @@ async function runTests() {
     assert.strictEqual(res.body.data.amount, 10000);
   });
 
-  // 14. Speaker Application
+  // 14. Standard Razorpay Checkout: POST /api/create-order with amount < 100 rejected
+  await test('POST /api/create-order rejects amount < 100 paise with 400', async () => {
+    const res = await makeRequest('POST', '/api/create-order', {
+      amount: 50,
+      currency: 'INR',
+    });
+    assert.strictEqual(res.status, 400);
+    assert.strictEqual(res.body.error, 'INVALID_AMOUNT');
+  });
+
+  // 15. Standard Razorpay Checkout: POST /api/create-order creates order with order_id, amount, currency
+  let standardOrderId;
+  await test('POST /api/create-order creates order and returns order_id, amount, currency, key_id', async () => {
+    const res = await makeRequest('POST', '/api/create-order', {
+      amount: 10000,
+      currency: 'INR',
+      receipt: 'test_rcpt_std_1',
+    });
+    assert.strictEqual(res.status, 201);
+    assert.strictEqual(res.body.success, true);
+    assert(res.body.order_id, 'Must return order_id');
+    assert.strictEqual(res.body.amount, 10000);
+    assert.strictEqual(res.body.currency, 'INR');
+    assert(res.body.key_id, 'Must return key_id');
+    standardOrderId = res.body.order_id;
+  });
+
+  // 16. Standard Razorpay Checkout: POST /api/verify-payment rejects missing fields
+  await test('POST /api/verify-payment rejects request missing required fields with 400', async () => {
+    const res = await makeRequest('POST', '/api/verify-payment', {
+      razorpay_order_id: standardOrderId,
+      // missing razorpay_payment_id and razorpay_signature
+    });
+    assert.strictEqual(res.status, 400);
+    assert.strictEqual(res.body.error, 'MISSING_FIELDS');
+  });
+
+  // 17. Standard Razorpay Checkout: POST /api/verify-payment rejects tampered signature
+  await test('POST /api/verify-payment rejects invalid/tampered signature with 400 SIGNATURE_MISMATCH', async () => {
+    const res = await makeRequest('POST', '/api/verify-payment', {
+      razorpay_order_id: standardOrderId,
+      razorpay_payment_id: 'pay_test_tampered_789',
+      razorpay_signature: 'fake_tampered_signature_hex_000',
+    });
+    assert.strictEqual(res.status, 400);
+    assert.strictEqual(res.body.error, 'SIGNATURE_MISMATCH');
+  });
+
+  // 18. Standard Razorpay Checkout: POST /api/verify-payment validates HMAC-SHA256 signature
+  await test('POST /api/verify-payment validates HMAC-SHA256 signature and returns success', async () => {
+    const testPaymentId = 'pay_test_std_' + Date.now();
+    const validSignature = razorpayService.generateSignature(
+      standardOrderId,
+      testPaymentId,
+      process.env.RAZORPAY_KEY_SECRET || 'mock_secret'
+    );
+
+    const res = await makeRequest('POST', '/api/verify-payment', {
+      razorpay_order_id: standardOrderId,
+      razorpay_payment_id: testPaymentId,
+      razorpay_signature: validSignature,
+    });
+    assert.strictEqual(res.status, 200);
+    assert.strictEqual(res.body.success, true);
+    assert.strictEqual(res.body.order_id, standardOrderId);
+    assert.strictEqual(res.body.payment_id, testPaymentId);
+  });
+
+  // 19. Speaker Application
   await test('POST /api/speakers/apply submits application successfully', async () => {
     const res = await makeRequest('POST', '/api/speakers/apply', {
       name: 'Dr. Jane Doe',
@@ -300,7 +369,7 @@ async function runTests() {
     assert(res.body.data.id);
   });
 
-  // 15. Student Speaker Application
+  // 20. Student Speaker Application
   await test('POST /api/student-speakers/apply submits application successfully', async () => {
     const res = await makeRequest('POST', '/api/student-speakers/apply', {
       name: 'Rahul Sharma',

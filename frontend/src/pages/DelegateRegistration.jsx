@@ -116,6 +116,20 @@ export default function DelegateRegistration() {
     };
 
     try {
+      // Ensure Razorpay Checkout script is loaded
+      if (typeof window.Razorpay === 'undefined') {
+        const scriptLoaded = await new Promise((resolve) => {
+          const script = document.createElement('script');
+          script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+          script.onload = () => resolve(true);
+          script.onerror = () => resolve(false);
+          document.body.appendChild(script);
+        });
+        if (!scriptLoaded) {
+          throw new Error('Failed to load Razorpay SDK. Please check your internet connection.');
+        }
+      }
+
       // 1. Create order on backend
       const response = await fetch('http://localhost:5000/api/delegates/register', {
         method: 'POST',
@@ -126,74 +140,79 @@ export default function DelegateRegistration() {
       const result = await response.json();
 
       if (!response.ok || !result.success) {
-        throw new Error(result.message || 'Failed to create registration order');
+        throw new Error(result.message || result.error || 'Failed to create registration order');
       }
 
       const orderData = result.data;
+      const keyId = import.meta.env.VITE_RAZORPAY_KEY_ID || orderData.key_id || orderData.keyId;
 
-      // 2. Open Razorpay Checkout modal if loaded
-      if (typeof window.Razorpay !== 'undefined' && !orderData.isMock) {
-        const options = {
-          key: orderData.keyId,
-          amount: orderData.amount,
-          currency: orderData.currency,
-          name: 'TEDxCIT 2027',
-          description: orderData.pass.name,
-          order_id: orderData.orderId,
-          prefill: orderData.prefill,
-          theme: { color: '#FF2B25' },
-          handler: async function (paymentResponse) {
-            try {
-              const verifyRes = await fetch('http://localhost:5000/api/delegates/verify-payment', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  razorpay_order_id: paymentResponse.razorpay_order_id,
-                  razorpay_payment_id: paymentResponse.razorpay_payment_id,
-                  razorpay_signature: paymentResponse.razorpay_signature,
-                  registrationId: orderData.registrationId,
-                }),
+      // 2. Open Razorpay Standard Checkout Modal
+      const options = {
+        key: keyId,
+        amount: orderData.amount, // amount in paise
+        currency: orderData.currency || 'INR',
+        name: 'TEDxCIT 2027',
+        description: orderData.pass?.name || 'Delegate Pass',
+        order_id: orderData.order_id || orderData.orderId,
+        prefill: {
+          name,
+          email,
+          contact: phone,
+        },
+        theme: {
+          color: '#FF2B25',
+        },
+        handler: async function (paymentResponse) {
+          try {
+            // 3. Verify Payment Signature on Backend
+            const verifyRes = await fetch('http://localhost:5000/api/verify-payment', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                razorpay_order_id: paymentResponse.razorpay_order_id,
+                razorpay_payment_id: paymentResponse.razorpay_payment_id,
+                razorpay_signature: paymentResponse.razorpay_signature,
+              }),
+            });
+
+            const verifyResult = await verifyRes.json();
+
+            if (verifyRes.ok && verifyResult.success) {
+              setSuccessData({
+                registrationId: orderData.registrationId || verifyResult.registrationId,
+                passName: currentPass.name,
+                amountPaid: currentPass.price,
+                paymentId: paymentResponse.razorpay_payment_id,
+                attendee: { name, email },
               });
-              const verifyResult = await verifyRes.json();
-              if (verifyResult.success) {
-                setSuccessData(verifyResult.data);
-              } else {
-                setErrorMsg(verifyResult.message || 'Payment verification failed');
-              }
-            } catch (err) {
-              setErrorMsg('Verification error: ' + err.message);
+            } else {
+              setErrorMsg(verifyResult.message || verifyResult.error || 'Payment signature verification failed.');
             }
+          } catch (err) {
+            setErrorMsg('Verification error: ' + err.message);
+          } finally {
+            setIsProcessing(false);
+          }
+        },
+        modal: {
+          ondismiss: function () {
+            setIsProcessing(false);
+            setErrorMsg('Checkout was cancelled. No charges were made.');
           },
-        };
-        const rzp = new window.Razorpay(options);
-        rzp.open();
-      } else {
-        // Fallback for Mock Mode or direct test confirmation while awaiting Razorpay activation
-        const verifyRes = await fetch('http://localhost:5000/api/delegates/verify-payment', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            razorpay_order_id: orderData.orderId,
-            razorpay_payment_id: `pay_mock_${Date.now()}`,
-            razorpay_signature: 'mock_signature_success',
-            registrationId: orderData.registrationId,
-          }),
-        });
-        const verifyResult = await verifyRes.json();
-        if (verifyResult.success) {
-          setSuccessData(verifyResult.data);
-        } else {
-          setSuccessData({
-            registrationId: orderData.registrationId,
-            passName: currentPass.name,
-            amountPaid: currentPass.price,
-            attendee: { name, email },
-          });
-        }
-      }
+        },
+      };
+
+      const rzp = new window.Razorpay(options);
+
+      rzp.on('payment.failed', function (failResponse) {
+        setIsProcessing(false);
+        const reason = failResponse.error?.description || failResponse.error?.reason || 'Transaction could not be completed';
+        setErrorMsg(`Payment Failed: ${reason}`);
+      });
+
+      rzp.open();
     } catch (err) {
       setErrorMsg(err.message || 'Unable to connect to registration server. Please try again.');
-    } finally {
       setIsProcessing(false);
     }
   };
