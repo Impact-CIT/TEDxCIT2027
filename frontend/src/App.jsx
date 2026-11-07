@@ -23,6 +23,7 @@ import DeliveryPolicy from './pages/DeliveryPolicy';
 import ContactUs from './pages/ContactUs';
 import Speakers from './pages/Speakers';
 import NotFound from './pages/NotFound';
+import Organizers from './pages/Organizers';
 
 // Native Apply to Speak Flow Pages & Admin Portal
 import AnonymousVoices from './pages/AnonymousVoices';
@@ -129,6 +130,13 @@ export default function App() {
       case '/speakers':
       case '/speaker':
         return <Speakers />;
+
+      // 5. Organizers Page & Team Route
+      case '/organizers':
+      case '/organisers':
+      case '/team':
+      case '/meet-our-team':
+        return <Organizers />;
 
       // 5. Home Landing Page
       case '/apply-to-speak':
