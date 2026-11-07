@@ -10,6 +10,8 @@ import { PastEventsSection } from './components/sections/PastEventsSection';
 import { SponsorSection } from './components/sections/SponsorSection';
 import { CinematicFramesSection } from './components/sections/CinematicFramesSection';
 import { CinematicStage } from './components/stage/CinematicStage';
+import { XCometCursor } from './components/cursor/XCometCursor';
+import { SmoothScroll } from './components/scroll/SmoothScroll';
 
 export default function App() {
   // When opening the website, the cinematic stage animation plays first.
@@ -27,6 +29,12 @@ export default function App() {
 
   return (
     <div className="min-h-screen w-full bg-[#000000] text-[#F5F5F2] selection:bg-[#FF2B25] selection:text-white flex flex-col relative">
+      {/* Dynamic X Comet Cursor with continuous ember particle trail */}
+      <XCometCursor />
+
+      {/* Butter-smooth zero-lag scrolling (Lenis + GSAP ScrollTrigger sync) */}
+      <SmoothScroll enabled={!isIntroActive} />
+
       {/* 1. Cinematic 3D Stage Opening Ceremony Intro */}
       {isIntroActive && (
         <CinematicStage
@@ -71,9 +79,6 @@ export default function App() {
           />
 
           {/* 3-Frame Rotating Stage Showcase Section (Cycles every 3 seconds to new 3 images) */}
-          {/* USER IMAGES PROMPT:
-              To supply your own custom images, pass imageSets prop or update DEFAULT_IMAGE_SETS.
-          */}
           <CinematicFramesSection intervalMs={3000} />
 
           {/* Dynamic Scroll Count-Up Impact Metrics Section (A Decade of Impact) */}
