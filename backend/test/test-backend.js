@@ -1,8 +1,12 @@
 import assert from 'assert';
 import http from 'http';
-import app from '../src/server.js';
 import store from '../src/models/store.js';
 import razorpayService from '../src/services/razorpayService.js';
+
+process.env.NODE_ENV = 'test';
+process.env.MONGODB_URI = '';
+
+const { default: app } = await import('../src/server.js');
 
 const PIPE_PATH = `\\\\.\\pipe\\tedx-test-${Date.now()}`;
 let server;
@@ -430,6 +434,54 @@ async function runTests() {
     assert.strictEqual(auth.status, 200);
     assert.strictEqual(auth.body.success, true);
     assert(auth.body.counts.total >= 3);
+  });
+
+  // 21. Admin-controlled registration deadlines
+  await test('PATCH /api/admin/deadlines requires authentication', async () => {
+    const res = await makeRequest('PATCH', '/api/admin/deadlines', {
+      anonymousVoicesDeadline: '2027-01-25T18:29:59.000Z',
+      speakerNominationDeadline: null,
+    });
+    assert.strictEqual(res.status, 401);
+  });
+
+  await test('Admin can save deadlines and APIs enforce closure for both forms', async () => {
+    const deadlines = {
+      anonymousVoicesDeadline: '2000-01-01T00:00:00.000Z',
+      speakerNominationDeadline: '2000-01-01T00:00:00.000Z',
+    };
+    const saved = await makeRequest('PATCH', '/api/admin/deadlines', deadlines, {
+      'x-admin-password': 'tedxcit2027admin',
+    });
+    assert.strictEqual(saved.status, 200);
+    assert.strictEqual(saved.body.data.anonymousVoicesDeadline, deadlines.anonymousVoicesDeadline);
+    assert.strictEqual(saved.body.data.speakerNominationDeadline, deadlines.speakerNominationDeadline);
+
+    const config = await makeRequest('GET', '/api/speak/config');
+    assert.strictEqual(config.body.data.isAnonymousVoicesOpen, false);
+    assert.strictEqual(config.body.data.isSpeakerNominationOpen, false);
+
+    const anonymous = await makeRequest('POST', '/api/anonymous-voices', {});
+    assert.strictEqual(anonymous.status, 403);
+    assert.strictEqual(anonymous.body.error, 'REGISTRATIONS_CLOSED');
+
+    const speaker = await makeRequest('POST', '/api/speaker-nominations', {});
+    assert.strictEqual(speaker.status, 403);
+    assert.strictEqual(speaker.body.error, 'REGISTRATIONS_CLOSED');
+  });
+
+  await test('Admin can leave Speaker Nomination without a deadline', async () => {
+    const saved = await makeRequest('PATCH', '/api/admin/deadlines', {
+      anonymousVoicesDeadline: '2027-01-25T18:29:59.000Z',
+      speakerNominationDeadline: null,
+    }, {
+      'x-admin-password': 'tedxcit2027admin',
+    });
+    assert.strictEqual(saved.status, 200);
+
+    const config = await makeRequest('GET', '/api/speak/config');
+    assert.strictEqual(config.body.data.speakerNominationDeadline, null);
+    assert.strictEqual(config.body.data.isSpeakerNominationOpen, true);
   });
 
   // Cleanup

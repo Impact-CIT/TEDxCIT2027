@@ -2,6 +2,7 @@ import { connectDB } from '../config/db.js';
 import AnonymousVoice from '../models/AnonymousVoice.js';
 import store from '../models/store.js';
 import SPEAK_CONFIG from '../config/speakConfig.js';
+import { formatRegistrationDeadline, getRegistrationDeadlines } from '../services/registrationDeadlines.js';
 import { sanitizeInput, hashClientIp, EMAIL_REGEX, PHONE_REGEX } from '../utils/security.js';
 
 export async function submitAnonymousVoice(req, res, next) {
@@ -16,13 +17,14 @@ export async function submitAnonymousVoice(req, res, next) {
     }
 
     // 2. Check Registration Deadline
-    const deadline = new Date(SPEAK_CONFIG.anonymousVoicesDeadline);
+    const deadlines = await getRegistrationDeadlines();
+    const deadline = new Date(deadlines.anonymousVoicesDeadline);
     const now = new Date();
     if (now > deadline) {
       return res.status(403).json({
         success: false,
         error: 'REGISTRATIONS_CLOSED',
-        message: `Registrations for Anonymous Voices closed on ${SPEAK_CONFIG.anonymousVoicesDeadlineFormatted}.`,
+        message: `Registrations for Anonymous Voices closed on ${formatRegistrationDeadline(deadlines.anonymousVoicesDeadline)} IST.`,
       });
     }
 
@@ -175,28 +177,13 @@ export async function submitAnonymousVoice(req, res, next) {
       });
     }
 
-    // 6. Handle Recorded Speech (File Upload or Shareable Link)
-    let recordedSpeechType = 'link';
-    let recordedSpeechUrl = sanitizeInput(req.body.recordedSpeechUrl);
-    let recordedSpeechMeta = {
-      originalName: null,
-      size: null,
-      mimeType: null,
-    };
-
-    if (req.file) {
-      recordedSpeechType = 'upload';
-      recordedSpeechUrl = `/uploads/${req.file.filename}`;
-      recordedSpeechMeta = {
-        originalName: req.file.originalname,
-        size: req.file.size,
-        mimeType: req.file.mimetype,
-      };
-    } else if (!recordedSpeechUrl) {
+    // 6. Validate the shareable recording link
+    const recordedSpeechUrl = sanitizeInput(req.body.recordedSpeechUrl);
+    if (!recordedSpeechUrl) {
       return res.status(400).json({
         success: false,
         error: 'VALIDATION_ERROR',
-        message: 'Please provide either a shareable link (Drive/YouTube) or upload a 3-5 minute video file.',
+        message: 'Please provide a shareable link to your 3-5 minute video.',
       });
     }
 
@@ -220,9 +207,8 @@ export async function submitAnonymousVoice(req, res, next) {
       themeRelevance,
       criticismResponse,
       talkStructure,
-      recordedSpeechType,
+      recordedSpeechType: 'link',
       recordedSpeechUrl,
-      recordedSpeechMeta,
       status: 'submitted',
       submissionMeta: {
         ipHash: hashClientIp(req),
@@ -292,4 +278,3 @@ export async function submitAnonymousVoice(req, res, next) {
 export default {
   submitAnonymousVoice,
 };
-

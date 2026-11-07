@@ -1,6 +1,7 @@
 import { connectDB } from '../config/db.js';
 import SpeakerNomination from '../models/SpeakerNomination.js';
 import store from '../models/store.js';
+import { formatRegistrationDeadline, getRegistrationDeadlines } from '../services/registrationDeadlines.js';
 import { sanitizeInput, hashClientIp, EMAIL_REGEX, PHONE_REGEX } from '../utils/security.js';
 
 export async function submitSpeakerNomination(req, res, next) {
@@ -11,6 +12,16 @@ export async function submitSpeakerNomination(req, res, next) {
       return res.status(200).json({
         success: true,
         message: 'Thank you! Your nomination has been received.',
+      });
+    }
+
+    const deadlines = await getRegistrationDeadlines();
+    const deadline = deadlines.speakerNominationDeadline;
+    if (deadline && new Date() > new Date(deadline)) {
+      return res.status(403).json({
+        success: false,
+        error: 'REGISTRATIONS_CLOSED',
+        message: `Speaker nominations closed on ${formatRegistrationDeadline(deadline)} IST.`,
       });
     }
 
@@ -274,4 +285,3 @@ export async function submitSpeakerNomination(req, res, next) {
 export default {
   submitSpeakerNomination,
 };
-

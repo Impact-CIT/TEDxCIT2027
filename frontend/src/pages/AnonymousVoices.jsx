@@ -21,20 +21,43 @@ export default function AnonymousVoices() {
     themeRelevance: '',
     criticismResponse: '',
     talkStructure: '',
-    submissionMode: 'link', // 'link' | 'upload'
     recordedSpeechUrl: '',
     website_url_hp: '', // Bot honeypot
   });
 
-  const [videoFile, setVideoFile] = useState(null);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [serverError, setServerError] = useState(null);
   const [draftSavedTime, setDraftSavedTime] = useState(null);
+  const [registrationDeadline, setRegistrationDeadline] = useState(SPEAK_CONFIG.anonymousVoicesDeadline);
+  const [deadlineFormatted, setDeadlineFormatted] = useState(SPEAK_CONFIG.anonymousVoicesDeadlineFormatted);
+  const [deadlineLoaded, setDeadlineLoaded] = useState(false);
+  const [deadlineLoadError, setDeadlineLoadError] = useState(null);
 
-  // Check deadline
-  const isPastDeadline = new Date() > new Date(SPEAK_CONFIG.anonymousVoicesDeadline);
+  const isPastDeadline = deadlineLoaded && new Date() > new Date(registrationDeadline);
+
+  useEffect(() => {
+    let active = true;
+    fetch('/api/speak/config')
+      .then(async (response) => {
+        const result = await response.json();
+        if (!response.ok || !result.success) {
+          throw new Error(result.message || 'Could not load registration deadline.');
+        }
+        if (active) {
+          setRegistrationDeadline(result.data.anonymousVoicesDeadline);
+          setDeadlineFormatted(result.data.anonymousVoicesDeadlineFormatted);
+        }
+      })
+      .catch((err) => {
+        if (active) setDeadlineLoadError(err.message || 'Could not load registration deadline.');
+      })
+      .finally(() => {
+        if (active) setDeadlineLoaded(true);
+      });
+    return () => { active = false; };
+  }, []);
 
   // Restore draft from localStorage on mount
   useEffect(() => {
@@ -42,6 +65,7 @@ export default function AnonymousVoices() {
       const saved = localStorage.getItem(DRAFT_STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
+        delete parsed.submissionMode;
         setFormData((prev) => ({ ...prev, ...parsed, website_url_hp: '' }));
       }
     } catch {
@@ -70,18 +94,6 @@ export default function AnonymousVoices() {
     setFormData((prev) => ({ ...prev, [name]: value }));
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: null }));
-    }
-  };
-
-  const handleFileChange = (e) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      if (file.size > 200 * 1024 * 1024) {
-        setErrors((prev) => ({ ...prev, videoFile: 'Video file size must be less than 200MB.' }));
-        return;
-      }
-      setVideoFile(file);
-      setErrors((prev) => ({ ...prev, videoFile: null }));
     }
   };
 
@@ -130,14 +142,8 @@ export default function AnonymousVoices() {
       errs.talkStructure = 'Talk structure description is required.';
     }
 
-    if (formData.submissionMode === 'link') {
-      if (!formData.recordedSpeechUrl.trim() || !/^https?:\/\/.+/i.test(formData.recordedSpeechUrl.trim())) {
-        errs.recordedSpeechUrl = 'A valid shareable link (Drive/YouTube/Vimeo) is required.';
-      }
-    } else {
-      if (!videoFile) {
-        errs.videoFile = 'Please select a video file (MP4, MOV, or WEBM up to 200MB).';
-      }
+    if (!formData.recordedSpeechUrl.trim() || !/^https?:\/\/.+/i.test(formData.recordedSpeechUrl.trim())) {
+      errs.recordedSpeechUrl = 'A valid shareable link (Drive/YouTube/Vimeo) is required.';
     }
 
     setErrors(errs);
@@ -148,8 +154,13 @@ export default function AnonymousVoices() {
     e.preventDefault();
     setServerError(null);
 
+    if (!deadlineLoaded || deadlineLoadError) {
+      setServerError(deadlineLoadError || 'Registration settings are still loading. Please try again.');
+      return;
+    }
+
     if (isPastDeadline) {
-      setServerError(`Registrations closed on ${SPEAK_CONFIG.anonymousVoicesDeadlineFormatted}.`);
+      setServerError(`Registrations closed on ${deadlineFormatted} IST.`);
       return;
     }
 
@@ -163,20 +174,10 @@ export default function AnonymousVoices() {
     setIsSubmitting(true);
 
     try {
-      const payload = new FormData();
-      Object.keys(formData).forEach((key) => {
-        if (key !== 'videoFile') {
-          payload.append(key, formData[key]);
-        }
-      });
-
-      if (formData.submissionMode === 'upload' && videoFile) {
-        payload.append('videoFile', videoFile);
-      }
-
       const response = await fetch('/api/anonymous-voices', {
         method: 'POST',
-        body: payload,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
       });
 
       const result = await response.json();
@@ -277,15 +278,17 @@ export default function AnonymousVoices() {
           </h1>
 
           <p className="text-[#A0A0A5] text-sm sm:text-base leading-relaxed mb-6">
-            Do you have an idea waiting to be discovered? Anonymous Voices offers a unique opportunity to bring your ideas, perspectives, and stories to the TEDx stage. This year, TEDxChennai Institute of Technology explores the theme <span className="text-white font-medium">The Untapped</span>, celebrating unexplored possibilities, unheard perspectives, hidden potential, and ideas that challenge the way we see the world. If you have a powerful perspective, an unconventional idea, or a story that aligns with this theme, we want to hear from you! Please upload your 3-5 minute video for Round 1. Your submission will be reviewed by our selection panel, and shortlisted candidates will advance to Round 2.
+            Do you have an idea waiting to be discovered? Anonymous Voices offers a unique opportunity to bring your ideas, perspectives, and stories to the TEDx stage. This year, TEDxChennai Institute of Technology explores the theme <span className="text-white font-medium">The Untapped</span>, celebrating unexplored possibilities, unheard perspectives, hidden potential, and ideas that challenge the way we see the world. If you have a powerful perspective, an unconventional idea, or a story that aligns with this theme, we want to hear from you! Please share a link to your 3-5 minute video for Round 1. Your submission will be reviewed by our selection panel, and shortlisted candidates will advance to Round 2.
           </p>
 
           <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-[#1F1F1F] text-xs font-mono">
             <div>
               <span className="text-[#8E8E93]">Registration Deadline: </span>
-              <span className="text-[#E62B1E] font-bold">{SPEAK_CONFIG.anonymousVoicesDeadlineFormatted}</span>
+              <span className="text-[#E62B1E] font-bold">{deadlineFormatted} IST</span>
             </div>
-            {isPastDeadline ? (
+            {!deadlineLoaded ? (
+              <span className="text-[#A0A0A5]">CHECKING DEADLINE</span>
+            ) : isPastDeadline ? (
               <span className="text-[#E62B1E] bg-[#E62B1E]/15 px-3 py-1 font-bold">REGISTRATIONS CLOSED</span>
             ) : (
               <span className="text-emerald-400 bg-emerald-950/50 px-3 py-1 border border-emerald-800">APPLICATIONS ACTIVE</span>
@@ -293,12 +296,18 @@ export default function AnonymousVoices() {
           </div>
         </div>
 
+        {deadlineLoadError && (
+          <div className="bg-[#E62B1E]/15 border border-[#E62B1E] p-5 mb-8 text-white">
+            <p className="text-sm">{deadlineLoadError} Refresh the page before submitting.</p>
+          </div>
+        )}
+
         {/* Deadline Notice */}
         {isPastDeadline && (
           <div className="bg-[#E62B1E]/10 border border-[#E62B1E] p-6 mb-8 text-center">
             <h3 className="text-white font-bold text-lg uppercase tracking-wide mb-2">Registrations Closed</h3>
             <p className="text-[#A0A0A5] text-sm">
-              The submission deadline for Anonymous Voices was {SPEAK_CONFIG.anonymousVoicesDeadlineFormatted}. New applications are currently closed.
+              The submission deadline for Anonymous Voices was {deadlineFormatted} IST. New applications are currently closed.
             </p>
           </div>
         )}
@@ -638,76 +647,28 @@ export default function AnonymousVoices() {
             </div>
 
             <p className="text-xs sm:text-sm text-[#A0A0A5] mb-6 leading-relaxed">
-              Upload your 3-5 minute recorded video or provide a publicly accessible video link (Google Drive, YouTube unlisted, Vimeo). Make sure link permissions are set to &ldquo;Anyone with link can view&rdquo;.
+              Provide a publicly accessible link to your 3-5 minute recorded video (Google Drive, YouTube unlisted, or Vimeo). Make sure link permissions are set to &ldquo;Anyone with link can view&rdquo;.
             </p>
 
-            {/* Mode Switcher */}
-            <div className="flex gap-4 mb-6">
-              <button
-                type="button"
-                onClick={() => setFormData((p) => ({ ...p, submissionMode: 'link' }))}
-                className={`flex-1 py-3 px-4 text-xs font-mono uppercase tracking-wider border cursor-pointer transition-colors ${
-                  formData.submissionMode === 'link'
-                    ? 'border-[#E62B1E] bg-[#E62B1E]/15 text-white'
-                    : 'border-[#2B2B2B] bg-[#141414] text-[#8E8E93] hover:border-[#383838]'
-                }`}
-              >
-                Shareable Video Link (Drive / YouTube)
-              </button>
-              <button
-                type="button"
-                onClick={() => setFormData((p) => ({ ...p, submissionMode: 'upload' }))}
-                className={`flex-1 py-3 px-4 text-xs font-mono uppercase tracking-wider border cursor-pointer transition-colors ${
-                  formData.submissionMode === 'upload'
-                    ? 'border-[#E62B1E] bg-[#E62B1E]/15 text-white'
-                    : 'border-[#2B2B2B] bg-[#141414] text-[#8E8E93] hover:border-[#383838]'
-                }`}
-              >
-                Direct Video File Upload (Max 200MB)
-              </button>
+            <div>
+              <label className="block text-xs font-mono uppercase tracking-wider text-[#A0A0A5] mb-2">
+                Shareable Video Link <span className="text-[#E62B1E]">*</span>
+              </label>
+              <input
+                type="url"
+                name="recordedSpeechUrl"
+                value={formData.recordedSpeechUrl}
+                onChange={handleChange}
+                placeholder="https://drive.google.com/file/d/... or https://youtu.be/..."
+                className="w-full bg-[#141414] border border-[#2B2B2B] text-white px-4 py-3 text-sm focus:border-[#E62B1E] focus:outline-none transition-colors"
+              />
+              {errors.recordedSpeechUrl && (
+                <p className="field-error text-xs text-[#E62B1E] mt-1.5">{errors.recordedSpeechUrl}</p>
+              )}
+              <p className="text-[11px] text-[#6E6E73] mt-2 font-mono">
+                Tip: Ensure sharing permission is set to "Anyone on the internet with the link can view".
+              </p>
             </div>
-
-            {formData.submissionMode === 'link' ? (
-              <div>
-                <label className="block text-xs font-mono uppercase tracking-wider text-[#A0A0A5] mb-2">
-                  Shareable Video Link <span className="text-[#E62B1E]">*</span>
-                </label>
-                <input
-                  type="url"
-                  name="recordedSpeechUrl"
-                  value={formData.recordedSpeechUrl}
-                  onChange={handleChange}
-                  placeholder="https://drive.google.com/file/d/... or https://youtu.be/..."
-                  className="w-full bg-[#141414] border border-[#2B2B2B] text-white px-4 py-3 text-sm focus:border-[#E62B1E] focus:outline-none transition-colors"
-                />
-                {errors.recordedSpeechUrl && (
-                  <p className="field-error text-xs text-[#E62B1E] mt-1.5">{errors.recordedSpeechUrl}</p>
-                )}
-                <p className="text-[11px] text-[#6E6E73] mt-2 font-mono">
-                  Tip: Ensure sharing permission is set to "Anyone on the internet with the link can view".
-                </p>
-              </div>
-            ) : (
-              <div>
-                <label className="block text-xs font-mono uppercase tracking-wider text-[#A0A0A5] mb-2">
-                  Upload Video File (MP4, MOV, WEBM &bull; Max 200 MB) <span className="text-[#E62B1E]">*</span>
-                </label>
-                <input
-                  type="file"
-                  accept="video/mp4,video/quicktime,video/webm"
-                  onChange={handleFileChange}
-                  className="w-full bg-[#141414] border border-[#2B2B2B] text-[#A0A0A5] p-3 text-sm file:mr-4 file:py-2 file:px-4 file:border-0 file:text-xs file:font-mono file:uppercase file:bg-[#E62B1E] file:text-white file:cursor-pointer hover:border-[#383838]"
-                />
-                {videoFile && (
-                  <p className="text-xs text-emerald-400 mt-2 font-mono">
-                    Selected: {videoFile.name} ({(videoFile.size / (1024 * 1024)).toFixed(1)} MB)
-                  </p>
-                )}
-                {errors.videoFile && (
-                  <p className="field-error text-xs text-[#E62B1E] mt-1.5">{errors.videoFile}</p>
-                )}
-              </div>
-            )}
           </div>
 
           {/* Submit Action Area */}
@@ -718,9 +679,9 @@ export default function AnonymousVoices() {
 
             <button
               type="submit"
-              disabled={isSubmitting || isPastDeadline}
+              disabled={isSubmitting || !deadlineLoaded || deadlineLoadError || isPastDeadline}
               className={`w-full sm:w-auto inline-flex items-center justify-center gap-3 bg-[#E62B1E] hover:bg-[#c5231a] active:bg-[#a81c14] text-white font-bold text-xs uppercase tracking-[0.16em] px-10 py-4.5 transition-all shadow-lg shadow-[#E62B1E]/20 cursor-pointer ${
-                isSubmitting || isPastDeadline ? 'opacity-50 cursor-not-allowed' : ''
+                isSubmitting || !deadlineLoaded || deadlineLoadError || isPastDeadline ? 'opacity-50 cursor-not-allowed' : ''
               }`}
             >
               {isSubmitting ? (
@@ -742,4 +703,3 @@ export default function AnonymousVoices() {
     </div>
   );
 }
-

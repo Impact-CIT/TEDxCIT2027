@@ -1,3 +1,5 @@
+import 'dotenv/config';
+
 /**
  * Configuration for TEDxCIT 2027 Apply to Speak Flow
  * Theme: "The Untapped" | Date: 11 February 2027
@@ -7,9 +9,9 @@ export const SPEAK_CONFIG = {
   theme: 'The Untapped',
   eventDate: '11 February 2027',
   
-  // Registration deadline for Anonymous Voices (configurable via env)
+  // Default deadlines; admin-managed values are stored separately.
   anonymousVoicesDeadline: process.env.ANONYMOUS_VOICES_DEADLINE || '2027-01-25T23:59:59+05:30',
-  anonymousVoicesDeadlineFormatted: '25 January 2027, 11:59 PM IST',
+  speakerNominationDeadline: process.env.SPEAKER_NOMINATION_DEADLINE || null,
 
   // Institution Options
   institutions: [
@@ -37,11 +39,6 @@ export const SPEAK_CONFIG = {
     'CIVIL',
   ],
 
-  // Video Upload limits
-  maxVideoSizeMB: 200,
-  maxVideoSizeBytes: 200 * 1024 * 1024,
-  allowedVideoMimeTypes: ['video/mp4', 'video/quicktime', 'video/webm'],
-
   // Contact Persons for queries
   contacts: [
     { name: 'Shubhavi R V', phone: '+91 63840 93306' },
@@ -50,4 +47,3 @@ export const SPEAK_CONFIG = {
 };
 
 export default SPEAK_CONFIG;
-

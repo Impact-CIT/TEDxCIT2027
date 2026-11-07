@@ -2,6 +2,7 @@ import { connectDB } from '../config/db.js';
 import AnonymousVoice from '../models/AnonymousVoice.js';
 import SpeakerNomination from '../models/SpeakerNomination.js';
 import store from '../models/store.js';
+import { getRegistrationDeadlines } from '../services/registrationDeadlines.js';
 
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'tedxcit2027admin';
 
@@ -44,6 +45,7 @@ export async function getAdminSubmissions(req, res, next) {
     const { type = 'all', status = 'all', search = '', format = 'json' } = req.query;
 
     const dbConn = await connectDB().catch(() => null);
+    const deadlines = await getRegistrationDeadlines();
 
     let anonymousList = [];
     let speakerList = [];
@@ -133,6 +135,7 @@ export async function getAdminSubmissions(req, res, next) {
         speakerNominations: speakerList.length,
         total: anonymousList.length + speakerList.length,
       },
+      deadlines,
       data: {
         anonymousVoices: anonymousList,
         speakerNominations: speakerList,
@@ -198,4 +201,3 @@ export default {
   getAdminSubmissions,
   updateSubmissionStatus,
 };
-

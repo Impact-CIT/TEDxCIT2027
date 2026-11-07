@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import SPEAK_CONFIG from '../config/speakConfig';
 
 const DRAFT_STORAGE_KEY = 'tedx_draft_speaker_nomination';
 
@@ -40,8 +39,35 @@ export default function SpeakerNomination() {
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [serverError, setServerError] = useState(null);
   const [draftSavedTime, setDraftSavedTime] = useState(null);
+  const [registrationDeadline, setRegistrationDeadline] = useState(null);
+  const [deadlineFormatted, setDeadlineFormatted] = useState(null);
+  const [deadlineLoaded, setDeadlineLoaded] = useState(false);
+  const [deadlineLoadError, setDeadlineLoadError] = useState(null);
 
   const isSelf = formData.areYouNominatingYourself === 'Yes';
+  const isPastDeadline = deadlineLoaded && registrationDeadline && new Date() > new Date(registrationDeadline);
+
+  useEffect(() => {
+    let active = true;
+    fetch('/api/speak/config')
+      .then(async (response) => {
+        const result = await response.json();
+        if (!response.ok || !result.success) {
+          throw new Error(result.message || 'Could not load registration deadline.');
+        }
+        if (active) {
+          setRegistrationDeadline(result.data.speakerNominationDeadline);
+          setDeadlineFormatted(result.data.speakerNominationDeadlineFormatted);
+        }
+      })
+      .catch((err) => {
+        if (active) setDeadlineLoadError(err.message || 'Could not load registration deadline.');
+      })
+      .finally(() => {
+        if (active) setDeadlineLoaded(true);
+      });
+    return () => { active = false; };
+  }, []);
 
   // Restore draft from localStorage
   useEffect(() => {
@@ -150,6 +176,16 @@ export default function SpeakerNomination() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setServerError(null);
+
+    if (!deadlineLoaded || deadlineLoadError) {
+      setServerError(deadlineLoadError || 'Registration settings are still loading. Please try again.');
+      return;
+    }
+
+    if (isPastDeadline) {
+      setServerError(`Speaker nominations closed on ${deadlineFormatted} IST.`);
+      return;
+    }
 
     if (!validate()) {
       const firstError = document.querySelector('.field-error');
@@ -303,7 +339,33 @@ export default function SpeakerNomination() {
           <p className="text-[#A0A0A5] text-sm sm:text-base leading-relaxed">
             TEDxChennai Institute of Technology is back! Every individual holds an unexplored idea, an untold story, and a potential waiting to be discovered. TEDxChennai Institute of Technology returns on 11th February with the theme <span className="text-white font-medium">The Untapped</span>. We invite you to nominate a speaker whose voice carries purpose, whose journey sparks curiosity, and whose ideas have the potential to challenge perspectives and open doors to new possibilities.
           </p>
+          <div className="mt-5 pt-4 border-t border-[#1F1F1F] text-xs font-mono">
+            {!deadlineLoaded ? (
+              <span className="text-[#A0A0A5]">CHECKING DEADLINE</span>
+            ) : isPastDeadline ? (
+              <span className="text-[#E62B1E] font-bold">NOMINATIONS CLOSED: {deadlineFormatted} IST</span>
+            ) : deadlineFormatted ? (
+              <span className="text-[#A0A0A5]">Registration deadline: <span className="text-[#E62B1E] font-bold">{deadlineFormatted} IST</span></span>
+            ) : (
+              <span className="text-emerald-400">NOMINATIONS OPEN</span>
+            )}
+          </div>
         </div>
+
+        {deadlineLoadError && (
+          <div className="bg-[#E62B1E]/15 border border-[#E62B1E] p-5 mb-8 text-white">
+            <p className="text-sm">{deadlineLoadError} Refresh the page before submitting.</p>
+          </div>
+        )}
+
+        {isPastDeadline && (
+          <div className="bg-[#E62B1E]/10 border border-[#E62B1E] p-6 mb-8 text-center">
+            <h3 className="text-white font-bold text-lg uppercase tracking-wide mb-2">Nominations Closed</h3>
+            <p className="text-[#A0A0A5] text-sm">
+              Speaker nominations closed on {deadlineFormatted} IST. New nominations are currently closed.
+            </p>
+          </div>
+        )}
 
         {/* Server Error Alert */}
         {serverError && (
@@ -727,9 +789,9 @@ export default function SpeakerNomination() {
 
             <button
               type="submit"
-              disabled={isSubmitting}
+              disabled={isSubmitting || !deadlineLoaded || deadlineLoadError || isPastDeadline}
               className={`w-full sm:w-auto inline-flex items-center justify-center gap-3 bg-[#E62B1E] hover:bg-[#c5231a] active:bg-[#a81c14] text-white font-bold text-xs uppercase tracking-[0.16em] px-10 py-4.5 transition-all shadow-lg shadow-[#E62B1E]/20 cursor-pointer ${
-                isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+                isSubmitting || !deadlineLoaded || deadlineLoadError || isPastDeadline ? 'opacity-50 cursor-not-allowed' : ''
               }`}
             >
               {isSubmitting ? (
@@ -763,4 +825,3 @@ export default function SpeakerNomination() {
     </div>
   );
 }
-

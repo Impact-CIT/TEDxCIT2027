@@ -114,7 +114,7 @@ const AnonymousVoiceSchema = new mongoose.Schema(
       maxlength: [3000, 'Talk structure cannot exceed 3000 characters'],
     },
 
-    // Recorded Speech (3-5 min) - Link or uploaded media metadata (Never raw binary in Mongo)
+    // Keep upload metadata fields for compatibility with existing submissions.
     recordedSpeechType: {
       type: String,
       enum: ['link', 'upload'],
@@ -158,4 +158,3 @@ export const AnonymousVoice =
   mongoose.models.AnonymousVoice || mongoose.model('AnonymousVoice', AnonymousVoiceSchema);
 
 export default AnonymousVoice;
-

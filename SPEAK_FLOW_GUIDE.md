@@ -22,13 +22,14 @@ The "Apply to Speak" flow allows candidates and nominators to submit application
   - Full Name, Email (`@citchennai.net` recommended), Contact Number (10-digit Indian), Communication Email, Social/LinkedIn links.
   - Institution (CIT / CITAR), Graduation Year (2027–2030), Department, Section.
   - Talk Details: Talk Title, Core Message, Unique Perspective, Vision Bridge, Theme Relevance, Criticism Response, Talk Structure.
-  - Recorded Speech (3-5 min): Shareable Link (Google Drive, YouTube, Vimeo) or Direct File Upload (MP4, MOV, WEBM up to 200MB).
+  - Recorded Speech (3-5 min): Shareable Link (Google Drive, YouTube, or Vimeo).
 - **Security & UX:**
   - **Duplicate Prevention:** Unique MongoDB index on student email ensures each candidate can only apply once. Duplicate attempts receive a friendly alert.
   - **Autosave Draft:** Automatically stores drafts in `localStorage` (`tedx_draft_anonymous_voices`) so answers are never lost on accidental refresh.
 
 ### C. Form 2: Speaker Nomination (`/apply/speaker-nomination`)
 - **Theme:** "The Untapped" &bull; 11 February 2027.
+- **Deadline Enforcement:** The admin portal can set a closing date and time; nominations remain open when no deadline is set.
 - **Queries Contact:** Shubhavi R V (+91 63840 93306) | Sachin G (+91 97910 31117).
 - **Conditional Workflow:**
   - Nominator Details: Full Name, Email, Contact Number, Communication Email, Work Status (Student / Working Professional), Current Profession, Organization.
@@ -47,6 +48,7 @@ The "Apply to Speak" flow allows candidates and nominators to submit application
   - Filter by status: `submitted`, `shortlisted`, `rejected`.
   - Review full pitch details, talk structures, and candidate recordings.
   - 1-click status update buttons.
+  - Set and save closing dates and times for both forms. The Speaker Nomination deadline can be left blank to keep that form open.
   - 1-click **CSV Export** for committee deliberation.
 
 ---
@@ -112,4 +114,3 @@ Run the automated test suite covering registration, payments, native submissions
 npm run test:backend
 # Output: TEST SUMMARY: 20 PASSED, 0 FAILED
 ```
-
