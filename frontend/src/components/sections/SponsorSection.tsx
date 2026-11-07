@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
+import { motion } from 'framer-motion';
+import { ArrowUpRight, Handshake } from 'lucide-react';
 
 export interface SponsorItem {
   name: string;
@@ -43,13 +45,13 @@ const SponsorCard: React.FC<SponsorCardProps> = ({ name, logo, category, index }
       style={{ animationDelay: `${index * 0.15}s` }}
     >
       {/* 1. Gradient Border Glow on Hover (TEDx Crimson) */}
-      <div className="absolute -inset-px rounded-2xl opacity-0 blur-sm transition-all duration-500 group-hover:opacity-100 bg-gradient-to-r from-[#EB0028] via-[#FF2B25] to-[#B5001F]" />
+      <div className="absolute -inset-px rounded-2xl opacity-0 blur-sm transition-all duration-500 group-hover:opacity-100 bg-gradient-to-r from-[#EB0028] via-[#EB0028] to-[#C80022]" />
 
       {/* 2. Ambient Deep Red Glow behind Card */}
       <div className="absolute -inset-4 rounded-3xl bg-[#EB0028]/0 blur-2xl transition-all duration-500 group-hover:bg-[#EB0028]/25 pointer-events-none" />
 
       {/* 3. Glassy Card Container */}
-      <div className="sponsor-card relative overflow-hidden rounded-2xl bg-[#0A0A0A]/80 backdrop-blur-xl border border-white/10 p-7 sm:p-8 transition-all duration-500 group-hover:border-[#EB0028]/70 group-hover:-translate-y-1.5 group-hover:shadow-[0_20px_50px_-15px_rgba(235,0,40,0.4)]">
+      <div className="sponsor-card relative overflow-hidden rounded-2xl bg-[#0A0A0C]/85 backdrop-blur-xl border border-white/10 p-7 sm:p-8 transition-all duration-500 group-hover:border-[#EB0028]/70 group-hover:-translate-y-1.5 group-hover:shadow-[0_20px_50px_-15px_rgba(235,0,40,0.4)]">
         
         {/* Shimmer Light Reflection on Hover */}
         <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/10 to-transparent group-hover:animate-shimmer pointer-events-none" />
@@ -86,15 +88,10 @@ const SponsorCard: React.FC<SponsorCardProps> = ({ name, logo, category, index }
   );
 };
 
+const cinematicEase = [0.16, 1, 0.3, 1] as const;
+
 /**
- * SponsorSection — Continuous Horizontal Infinite Marquee with Entry Transition
- *
- * Implements:
- * - Exact entry transition animation (.enter-section -> .enter-active via IntersectionObserver)
- * - Exact infinite scroll ticker (.sponsor-track @keyframes scroll 30s linear infinite)
- * - Pause ticker on card hover (:has(.sponsor-item:hover))
- * - Interactive 1.15x scale zoom, corner brackets, and shimmer reflections
- * - Strict adherence to TEDx website color palette (pitch black, TED red #EB0028, crisp white)
+ * SponsorSection — Continuous Horizontal Infinite Marquee with AI Slope Architecture
  */
 export const SponsorSection: React.FC<SponsorSectionProps> = ({
   eyebrow = 'OUR SUPPORTERS & COLLABORATORS',
@@ -123,6 +120,15 @@ export const SponsorSection: React.FC<SponsorSectionProps> = ({
     return () => observer.disconnect();
   }, []);
 
+  const handleNavigate = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (href.startsWith('/')) {
+      e.preventDefault();
+      window.history.pushState({}, '', href);
+      window.dispatchEvent(new Event('popstate'));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   return (
     <section
       ref={sectionRef}
@@ -130,14 +136,20 @@ export const SponsorSection: React.FC<SponsorSectionProps> = ({
       className={`relative w-full bg-[#000000] py-24 sm:py-28 lg:py-32 border-t border-[#1C1C1E] overflow-hidden enter-section ${className}`}
       aria-label="TEDx Chennai Institute of Technology Sponsors and Partners"
     >
-      {/* Background Ambient Stage Red Hue */}
+      {/* Refined Theatrical Ambient Red Hue */}
       <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[850px] h-[450px] bg-[#EB0028]/6 rounded-full blur-[170px] pointer-events-none"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[850px] h-[450px] bg-[#EB0028]/14 rounded-full blur-[200px] pointer-events-none -z-10"
         aria-hidden="true"
       />
 
       {/* ================= SECTION TITLE ================= */}
-      <div className="relative z-10 mb-16 sm:mb-20 text-center px-4">
+      <motion.div
+        initial={{ opacity: 0, y: 25 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-10% 0px' }}
+        transition={{ duration: 0.85, ease: cinematicEase }}
+        className="relative z-10 mb-16 sm:mb-20 text-center px-4"
+      >
         {/* Monospace Eyebrow */}
         <div className="mb-4 flex items-center justify-center gap-2.5">
           <span className="w-2 h-2 rounded-full bg-[#EB0028] animate-pulse" aria-hidden="true" />
@@ -146,11 +158,11 @@ export const SponsorSection: React.FC<SponsorSectionProps> = ({
           </span>
         </div>
 
-        {/* Main Title with TED Red Underline */}
+        {/* Main Title with Two-Tone Red + White */}
         <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white font-['Inter',sans-serif]">
           <span>Our </span>
           <span className="relative inline-block">
-            <span className="text-[#EB0028]">Sponsors</span>
+            <span className="text-[#EB0028] drop-shadow-[0_4px_24px_rgba(235,0,40,0.3)]">Sponsors</span>
             {/* TED Red Underline Bar */}
             <span
               className="absolute -bottom-3 sm:-bottom-4 left-0 right-0 h-[3px] rounded-full bg-gradient-to-r from-transparent via-[#EB0028] to-transparent opacity-80"
@@ -158,38 +170,66 @@ export const SponsorSection: React.FC<SponsorSectionProps> = ({
             />
           </span>
         </h2>
-      </div>
+      </motion.div>
 
       {/* ================= INFINITE MARQUEE SLIDER ================= */}
-      <div className="relative z-10 mt-16 sm:mt-24">
+      <div className="relative z-10 mt-12 sm:mt-16">
         {/* Left and Right Edge Vignette Fades */}
-        <div className="pointer-events-none absolute left-0 top-0 z-20 h-full w-24 sm:w-36 bg-gradient-to-r from-black via-black/80 to-transparent" />
-        <div className="pointer-events-none absolute right-0 top-0 z-20 h-full w-24 sm:w-36 bg-gradient-to-l from-black via-black/80 to-transparent" />
+        <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-24 sm:w-44 z-20 bg-gradient-to-r from-black via-black/80 to-transparent" />
+        <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-24 sm:w-44 z-20 bg-gradient-to-l from-black via-black/80 to-transparent" />
 
-        {/* Marquee Track: Seamless loop duplicated twice */}
-        <div className="sponsor-track flex w-max">
-          {[...sponsors, ...sponsors].map((s, i) => (
-            <div key={i} className="sponsor-item">
-              <SponsorCard
-                name={s.name}
-                logo={s.logo}
-                category={s.category}
-                index={i}
-              />
-            </div>
-          ))}
+        <div className="sponsor-marquee-container flex overflow-hidden">
+          {/* Track 1: First continuous run */}
+          <div className="sponsor-track flex shrink-0 items-center">
+            {sponsors.map((sponsor, idx) => (
+              <div key={`track1-${idx}`} className="sponsor-item">
+                <SponsorCard
+                  name={sponsor.name}
+                  logo={sponsor.logo}
+                  category={sponsor.category}
+                  index={idx}
+                />
+              </div>
+            ))}
+          </div>
+
+          {/* Track 2: Seamless duplicate run for infinite marquee */}
+          <div className="sponsor-track flex shrink-0 items-center" aria-hidden="true">
+            {sponsors.map((sponsor, idx) => (
+              <div key={`track2-${idx}`} className="sponsor-item">
+                <SponsorCard
+                  name={sponsor.name}
+                  logo={sponsor.logo}
+                  category={sponsor.category}
+                  index={idx}
+                />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* ================= COMPONENT STYLES ================= */}
+      {/* Bottom Partnership Call to Action */}
+      <div className="relative z-10 mt-16 sm:mt-20 flex justify-center px-4">
+        <a
+          href="/partner-with-us"
+          onClick={(e) => handleNavigate(e, '/partner-with-us')}
+          className="group inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/5 border border-white/10 text-xs font-mono uppercase tracking-[0.18em] text-[#A0A0A5] hover:text-white hover:border-[#EB0028]/60 hover:bg-[#EB0028]/10 transition-all duration-300"
+        >
+          <Handshake className="w-3.5 h-3.5 text-[#EB0028]" />
+          <span>BECOME AN OFFICIAL PARTNER</span>
+          <ArrowUpRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-[#EB0028]" />
+        </a>
+      </div>
+
+      {/* ================= PURE CSS FOR 60FPS SMOOTH MARQUEE ================= */}
       <style>{`
-        /* -------- ENTRY ANIMATION -------- */
+        /* -------- SECTION ENTRY TRANSITION -------- */
         .enter-section {
           opacity: 0;
-          transform: translateY(40px);
-          transition:
-            opacity 0.9s ease,
-            transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+          transform: translateY(28px);
+          transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                      transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .enter-section.enter-active {
@@ -197,16 +237,22 @@ export const SponsorSection: React.FC<SponsorSectionProps> = ({
           transform: translateY(0);
         }
 
-        /* -------- CONTINUOUS INFINITE SCROLL -------- */
-        .sponsor-track {
-          animation: sponsorScroll 32s linear infinite;
+        /* -------- INFINITE HORIZONTAL SCROLL TICKER -------- */
+        .sponsor-marquee-container {
+          width: 100%;
+          cursor: grab;
         }
 
-        @keyframes sponsorScroll {
-          from {
-            transform: translateX(0);
+        .sponsor-track {
+          animation: marqueeScroll 32s linear infinite;
+          will-change: transform;
+        }
+
+        @keyframes marqueeScroll {
+          0% {
+            transform: translateX(0%);
           }
-          to {
+          100% {
             transform: translateX(-50%);
           }
         }
@@ -258,4 +304,3 @@ export const SponsorSection: React.FC<SponsorSectionProps> = ({
 };
 
 export default SponsorSection;
-

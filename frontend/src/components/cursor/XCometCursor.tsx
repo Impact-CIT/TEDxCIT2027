@@ -178,8 +178,8 @@ export const XCometCursor: React.FC = () => {
       targetScale = isMouseDown ? 0.85 : isHovering ? 1.55 : 1.0;
       currentScale += (targetScale - currentScale) * 0.22;
 
-      // Slow dynamic spin for visual flair, slightly faster on hover
-      currentRotation += isHovering ? 0.045 : 0.015;
+      // Fixed iconic 45° TED "X" angle (reticle orientation)
+      currentRotation = Math.PI / 4;
 
       // 3. Continuous Interpolated Emitters (Zero Gap Trail)
       if (cursorOpacity > 0.1 && (speed > 0.3 || isHovering)) {
@@ -243,8 +243,8 @@ export const XCometCursor: React.FC = () => {
 
         const glowRadius = 38 * currentScale;
         const ambientGrad = ctx.createRadialGradient(pos.x, pos.y, 0, pos.x, pos.y, glowRadius);
-        ambientGrad.addColorStop(0, isHovering ? 'rgba(255, 43, 37, 0.28)' : 'rgba(255, 43, 37, 0.15)');
-        ambientGrad.addColorStop(0.5, 'rgba(255, 43, 37, 0.05)');
+        ambientGrad.addColorStop(0, isHovering ? 'rgba(235, 0, 40, 0.28)' : 'rgba(235, 0, 40, 0.15)');
+        ambientGrad.addColorStop(0.5, 'rgba(235, 0, 40, 0.05)');
         ambientGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
 
         ctx.fillStyle = ambientGrad;
@@ -309,14 +309,14 @@ export const XCometCursor: React.FC = () => {
         const starGrad = ctx.createRadialGradient(0, 0, 0, 0, 0, starSize);
         starGrad.addColorStop(0, '#FFFFFF');
         starGrad.addColorStop(0.35, '#FFFFFF');
-        starGrad.addColorStop(0.65, '#FF2B25');
+        starGrad.addColorStop(0.65, '#EB0028');
         starGrad.addColorStop(1, '#D80020');
 
         ctx.fillStyle = starGrad;
         ctx.strokeStyle = 'rgba(255, 235, 220, 0.75)';
         ctx.lineWidth = 1;
         ctx.shadowBlur = isHovering ? 22 : 12;
-        ctx.shadowColor = 'rgba(255, 43, 37, 0.9)';
+        ctx.shadowColor = 'rgba(235, 0, 40, 0.9)';
 
         // 4-Point Faceted Cross rotated at 45° to form the sharp "X"
         ctx.beginPath();

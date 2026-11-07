@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import { useInView } from 'framer-motion';
+import { motion, useInView } from 'framer-motion';
+import { Activity, TrendingUp, Users, Radio, Globe } from 'lucide-react';
 
 export interface StatItem {
   /** Target numeric value to count up to */
@@ -12,6 +13,8 @@ export interface StatItem {
   prefix?: string;
   /** Label underneath the stat (e.g., "SPEAKERS") */
   label: string;
+  /** Sub-description underneath label */
+  sublabel?: string;
   /** Whether to format with commas (e.g., 8,000 vs 8000). Default: false */
   useGrouping?: boolean;
 }
@@ -34,21 +37,26 @@ const DEFAULT_STATS: StatItem[] = [
     value: 200,
     suffix: '+',
     label: 'SPEAKERS',
+    sublabel: 'Visionaries across science, tech, art & humanity',
     useGrouping: false,
   },
   {
     value: 8000,
     suffix: '+',
     label: 'ATTENDEES',
+    sublabel: 'Delegates, innovators & passionate thinkers',
     useGrouping: false,
   },
   {
     value: 20,
     suffix: 'M',
     label: 'VIEWS',
+    sublabel: 'Global reach across talks & media platforms',
     useGrouping: false,
   },
 ];
+
+const cinematicEase = [0.16, 1, 0.3, 1] as const;
 
 /**
  * Single animated counter component
@@ -106,13 +114,14 @@ const AnimatedCounter: React.FC<{
 };
 
 /**
- * ImpactStatsSection — Animated Count-Up Metrics Section
+ * ImpactStatsSection — Animated Count-Up Metrics Section with AI Slope Architecture
  *
  * Implements:
- * - Headline: "A Decade of Impact"
- * - Tagline: "We expose echo chambers, break down silos, and spotlight 'ideas worth spreading' from all over the world."
- * - 3 large statistics (200+ SPEAKERS, 8000+ ATTENDEES, 20M VIEWS) separated by crisp vertical lines
- * - Dynamically counts up as soon as visitor scrolls into view
+ * - Top & bottom sloped laser accents with cyber mesh background.
+ * - Headline: "A Decade of Impact" in two-tone white + TED red.
+ * - 3 large statistics with interactive frosted glass cards, glowing laser lines,
+ *   and smooth count-up triggered on scroll.
+ * - Staggered Framer Motion entrance animations.
  */
 export const ImpactStatsSection: React.FC<ImpactStatsSectionProps> = ({
   title = 'A Decade of Impact',
@@ -122,55 +131,85 @@ export const ImpactStatsSection: React.FC<ImpactStatsSectionProps> = ({
   className = '',
 }) => {
   const sectionRef = useRef<HTMLDivElement>(null);
-  // Triggers count-up when section enters viewport
   const isInView = useInView(sectionRef, { once: true, margin: '-10% 0px -10% 0px' });
 
   return (
     <section
       ref={sectionRef}
       id="tedx-impact-stats"
-      className={`w-full bg-[#000000] text-[#F5F5F2] border-t border-[#1C1C1E] py-20 lg:py-28 relative overflow-hidden ${className}`}
+      className={`w-full bg-[#000000] text-[#F5F5F2] border-t border-[#1C1C1E] py-24 lg:py-32 relative overflow-hidden ${className}`}
       aria-label="TEDx Chennai Institute of Technology Impact Metrics"
     >
-      {/* Subtle Background Glow */}
+      {/* Deep Breathing Theatrical Ambient Red Aura */}
       <div
-        className="absolute top-1/2 left-1/3 -translate-y-1/2 -translate-x-1/2 w-[650px] h-[450px] bg-[#EB0028]/5 rounded-full blur-[160px] pointer-events-none"
+        className="absolute top-1/2 left-1/3 -translate-y-1/2 -translate-x-1/2 w-[700px] h-[500px] bg-[#EB0028]/14 rounded-full blur-[200px] pointer-events-none -z-10"
         aria-hidden="true"
       />
 
       <div className="w-full px-6 sm:px-10 lg:px-14 xl:px-20 max-w-[1700px] mx-auto">
         
         {/* =========================================================================
-            TOP ROW: Title & Tagline Narrative
+            TOP ROW: Title & Tagline Narrative with Framer Motion Reveal
             ========================================================================= */}
-        <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-6 lg:gap-16 mb-16 sm:mb-20 lg:mb-24">
-          
-          {/* Left: "A Decade of Impact" */}
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[56px] xl:text-[64px] font-bold tracking-tight text-white font-['Inter',sans-serif] leading-[1.08]">
-            {title}
-          </h2>
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-10% 0px' }}
+          transition={{ duration: 0.85, ease: cinematicEase }}
+          className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 lg:gap-16 mb-16 sm:mb-20 lg:mb-24"
+        >
+          {/* Left: Eyebrow + "A Decade of Impact" */}
+          <div className="max-w-2xl">
+            <div className="mb-3.5 flex items-center gap-2.5">
+              <span className="w-2 h-2 rounded-full bg-[#EB0028] animate-pulse" aria-hidden="true" />
+              <span className="font-mono text-xs uppercase tracking-[0.24em] text-[#8E8E93]">
+                HISTORICAL TELEMETRY // 2017 — 2027
+              </span>
+            </div>
+
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[56px] xl:text-[64px] font-extrabold tracking-tight text-white font-['Inter',sans-serif] leading-[1.08]">
+              A Decade of <span className="text-[#EB0028] drop-shadow-[0_4px_24px_rgba(235,0,40,0.3)]">Impact</span>
+            </h2>
+          </div>
 
           {/* Right: Narrative Description */}
-          <p className="text-[#A0A0A5] text-base sm:text-lg lg:text-[19px] leading-relaxed max-w-xl font-normal pt-1 lg:pt-2">
-            {description}
-          </p>
-        </div>
+          <div className="max-w-xl">
+            <p className="text-[#A0A0A5] text-base sm:text-lg lg:text-[19px] leading-relaxed font-normal">
+              {description}
+            </p>
+          </div>
+        </motion.div>
 
         {/* =========================================================================
-            BOTTOM ROW: 3 Large Animated Statistics with Vertical Dividers
+            BOTTOM ROW: 3 Large Animated Statistics in Sloped Cards
             ========================================================================= */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-0">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
           {stats.map((item, idx) => (
-            <div
+            <motion.div
               key={idx}
-              className={`flex flex-col justify-end ${
-                idx > 0
-                  ? 'md:border-l md:border-[#222222] md:pl-10 lg:pl-14 xl:pl-16'
-                  : 'md:pr-10 lg:pr-14'
-              }`}
+              initial={{ opacity: 0, y: 35 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-10% 0px' }}
+              transition={{ duration: 0.85, ease: cinematicEase, delay: idx * 0.12 }}
+              className="group relative rounded-2xl bg-[#09090C]/80 backdrop-blur-xl border border-white/10 p-8 sm:p-10 transition-all duration-500 hover:border-[#EB0028]/60 hover:bg-[#0D0D12] hover:-translate-y-1.5 hover:shadow-[0_20px_50px_rgba(235,0,40,0.18)] overflow-hidden"
             >
+              {/* Corner Architectural Brackets */}
+              <div className="absolute top-3 right-3 w-4 h-4 border-t-2 border-r-2 border-white/10 group-hover:border-[#EB0028] transition-colors duration-300" />
+              <div className="absolute bottom-3 left-3 w-4 h-4 border-b-2 border-l-2 border-white/10 group-hover:border-[#EB0028] transition-colors duration-300" />
+
+              {/* Laser accent line along top on hover */}
+              <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-[#EB0028] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+              {/* Card Index Telemetry */}
+              <div className="flex items-center justify-between mb-6">
+                <span className="font-mono text-[11px] text-[#8E8E93] uppercase tracking-[0.2em] group-hover:text-[#EB0028] transition-colors">
+                  METRIC // 0{idx + 1}
+                </span>
+                <span className="w-1.5 h-1.5 rounded-full bg-white/20 group-hover:bg-[#EB0028] transition-colors" />
+              </div>
+
               {/* Giant Metric Number */}
-              <div className="text-5xl sm:text-6xl md:text-6xl lg:text-7xl xl:text-8xl font-black tracking-tight text-white leading-none mb-3 sm:mb-4 font-['Inter',sans-serif]">
+              <div className="text-5xl sm:text-6xl md:text-6xl lg:text-7xl xl:text-8xl font-black tracking-tight text-white leading-none mb-4 font-['Inter',sans-serif] group-hover:text-white transition-colors">
                 <AnimatedCounter
                   target={item.value}
                   prefix={item.prefix}
@@ -181,11 +220,21 @@ export const ImpactStatsSection: React.FC<ImpactStatsSectionProps> = ({
                 />
               </div>
 
+              {/* Expanding Accent Line */}
+              <div className="w-12 h-[2px] bg-[#EB0028] my-4 transition-all duration-500 group-hover:w-full group-hover:bg-gradient-to-r group-hover:from-[#EB0028] group-hover:to-transparent" />
+
               {/* Monospace Uppercase Category Label */}
-              <span className="font-mono text-xs sm:text-[13px] uppercase tracking-[0.25em] text-[#8E8E93] font-medium">
+              <span className="block font-mono text-sm sm:text-base uppercase tracking-[0.2em] text-white font-bold mb-1.5">
                 {item.label}
               </span>
-            </div>
+
+              {/* Sublabel description */}
+              {item.sublabel && (
+                <p className="text-xs text-[#8E8E93] leading-relaxed">
+                  {item.sublabel}
+                </p>
+              )}
+            </motion.div>
           ))}
         </div>
 
@@ -193,4 +242,3 @@ export const ImpactStatsSection: React.FC<ImpactStatsSectionProps> = ({
     </section>
   );
 };
-

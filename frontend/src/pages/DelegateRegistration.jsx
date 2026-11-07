@@ -7,7 +7,6 @@ import {
   Briefcase,
   AlertCircle,
   ArrowLeft,
-  Sparkles,
 } from 'lucide-react';
 
 export default function DelegateRegistration() {
@@ -141,7 +140,7 @@ export default function DelegateRegistration() {
           description: orderData.pass.name,
           order_id: orderData.orderId,
           prefill: orderData.prefill,
-          theme: { color: '#FF2B25' },
+          theme: { color: '#EB0028' },
           handler: async function (paymentResponse) {
             try {
               const verifyRes = await fetch('http://localhost:5000/api/delegates/verify-payment', {
@@ -199,7 +198,7 @@ export default function DelegateRegistration() {
   };
 
   return (
-    <div className="w-full min-h-screen bg-[#000000] text-[#F5F5F2] pt-28 pb-20 px-4 sm:px-8 lg:px-14 xl:px-20 font-sans selection:bg-[#FF2B25] selection:text-white">
+    <div className="w-full min-h-screen bg-[#000000] text-[#F5F5F2] pt-28 pb-20 px-4 sm:px-8 lg:px-14 xl:px-20 font-sans selection:bg-[#EB0028] selection:text-white">
       <div className="max-w-6xl mx-auto">
         
         {/* Breadcrumb */}
@@ -212,7 +211,7 @@ export default function DelegateRegistration() {
               window.dispatchEvent(new Event('popstate'));
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
-            className="inline-flex items-center gap-2 text-xs font-mono tracking-widest uppercase text-[#8E8E93] hover:text-[#FF2B25] transition-colors cursor-pointer"
+            className="inline-flex items-center gap-2 text-xs font-mono tracking-widest uppercase text-[#8E8E93] hover:text-[#EB0028] transition-colors cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>BACK TO HOME</span>
@@ -221,12 +220,12 @@ export default function DelegateRegistration() {
 
         {/* Header */}
         <div className="border-b border-[#262626] pb-8 mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#FF2B25]/10 border border-[#FF2B25]/30 text-[#FF2B25] text-xs font-mono uppercase tracking-widest mb-4">
-            <Sparkles className="w-3.5 h-3.5" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#EB0028]/10 border border-[#EB0028]/30 text-[#EB0028] text-xs font-mono uppercase tracking-widest mb-4">
+            <span className="w-2 h-2 rounded-full bg-[#EB0028] animate-pulse" />
             <span>Official Event Registration</span>
           </div>
           <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-white uppercase">
-            TEDxCIT 2027 Delegate Passes
+            TEDxCIT 2027 <span className="text-[#EB0028]">Delegate Passes</span>
           </h1>
           <p className="mt-3 text-sm sm:text-base text-[#A1A1A6]">
             Select your delegate category and fill in the registration details to proceed with Razorpay payment.
@@ -280,7 +279,7 @@ export default function DelegateRegistration() {
                 window.dispatchEvent(new Event('popstate'));
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              className="inline-block px-8 py-3 bg-[#FF2B25] hover:bg-[#d61e19] text-white font-bold text-xs uppercase tracking-wider transition-colors cursor-pointer"
+              className="inline-block px-8 py-3 bg-[#EB0028] hover:bg-[#C80022] text-white font-bold text-xs uppercase tracking-wider transition-colors cursor-pointer"
             >
               Return to Home Page
             </a>
@@ -304,7 +303,7 @@ export default function DelegateRegistration() {
                     onClick={() => setSelectedPass(pass.id)}
                     className={`relative p-6 rounded-sm border cursor-pointer transition-all duration-300 ${
                       isSelected
-                        ? 'bg-[#0E0E0E] border-[#FF2B25] shadow-lg shadow-[#FF2B25]/15'
+                        ? 'bg-[#0E0E0E] border-[#EB0028] shadow-lg shadow-[#EB0028]/15'
                         : 'bg-[#0A0A0A] border-[#1F1F1F] hover:border-[#333333]'
                     }`}
                   >
@@ -312,7 +311,7 @@ export default function DelegateRegistration() {
                       <div className="flex items-center gap-3">
                         <div
                           className={`w-10 h-10 rounded-sm flex items-center justify-center ${
-                            isSelected ? 'bg-[#FF2B25] text-white' : 'bg-[#1C1C1E] text-[#8E8E93]'
+                            isSelected ? 'bg-[#EB0028] text-white' : 'bg-[#1C1C1E] text-[#8E8E93]'
                           }`}
                         >
                           <IconComponent className="w-5 h-5" />
@@ -342,7 +341,7 @@ export default function DelegateRegistration() {
                     <div className="mt-4 pt-4 border-t border-[#1F1F1F] space-y-2">
                       {pass.benefits.map((b, i) => (
                         <div key={i} className="flex items-center gap-2 text-xs text-[#D1D1D6]">
-                          <Check className="w-3.5 h-3.5 text-[#FF2B25] shrink-0" />
+                          <Check className="w-3.5 h-3.5 text-[#EB0028] shrink-0" />
                           <span>{b}</span>
                         </div>
                       ))}
@@ -374,7 +373,7 @@ export default function DelegateRegistration() {
                 </div>
                 <div className="flex justify-between border-t border-[#262626] pt-2.5 text-sm font-bold">
                   <span className="text-white">Total Amount:</span>
-                  <span className="text-[#FF2B25]">₹{currentPass.price}.00 INR</span>
+                  <span className="text-[#EB0028]">₹{currentPass.price}.00 INR</span>
                 </div>
               </div>
             </div>
@@ -384,7 +383,7 @@ export default function DelegateRegistration() {
               <div className="bg-[#0A0A0A] border border-[#1F1F1F] p-6 sm:p-8 rounded-sm">
                 <div className="flex items-center justify-between border-b border-[#262626] pb-4 mb-6">
                   <div>
-                    <span className="text-[10px] font-mono uppercase tracking-widest text-[#FF2B25]">
+                    <span className="text-[10px] font-mono uppercase tracking-widest text-[#EB0028]">
                       STEP 2: DELEGATE INFORMATION
                     </span>
                     <h2 className="text-xl font-bold text-white mt-1">
@@ -417,7 +416,7 @@ export default function DelegateRegistration() {
                         placeholder="e.g. Sanjith Kumar"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#FF2B25] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
+                        className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#EB0028] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
                       />
                     </div>
 
@@ -431,7 +430,7 @@ export default function DelegateRegistration() {
                         placeholder="you@example.com"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#FF2B25] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
+                        className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#EB0028] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
                       />
                     </div>
                   </div>
@@ -448,7 +447,7 @@ export default function DelegateRegistration() {
                         placeholder="+91 98765 43210"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
-                        className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#FF2B25] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
+                        className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#EB0028] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
                       />
                     </div>
 
@@ -462,7 +461,7 @@ export default function DelegateRegistration() {
                         placeholder="https://linkedin.com/in/yourprofile"
                         value={linkedin}
                         onChange={(e) => setLinkedin(e.target.value)}
-                        className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#FF2B25] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
+                        className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#EB0028] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
                       />
                     </div>
                   </div>
@@ -483,7 +482,7 @@ export default function DelegateRegistration() {
                           placeholder="e.g. Chennai Institute of Technology"
                           value={collegeName}
                           onChange={(e) => setCollegeName(e.target.value)}
-                          className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#FF2B25] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
+                          className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#EB0028] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
                         />
                       </div>
 
@@ -498,7 +497,7 @@ export default function DelegateRegistration() {
                             placeholder="e.g. Computer Science"
                             value={department}
                             onChange={(e) => setDepartment(e.target.value)}
-                            className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#FF2B25] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
+                            className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#EB0028] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
                           />
                         </div>
 
@@ -510,7 +509,7 @@ export default function DelegateRegistration() {
                             required
                             value={yearOfStudy}
                             onChange={(e) => setYearOfStudy(e.target.value)}
-                            className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#FF2B25] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
+                            className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#EB0028] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
                           >
                             <option value="">Select Year</option>
                             <option value="1st Year">1st Year</option>
@@ -531,7 +530,7 @@ export default function DelegateRegistration() {
                             placeholder="e.g. A, B, C or N/A"
                             value={section}
                             onChange={(e) => setSection(e.target.value)}
-                            className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#FF2B25] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
+                            className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#EB0028] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
                           />
                         </div>
                       </div>
@@ -555,7 +554,7 @@ export default function DelegateRegistration() {
                             placeholder="e.g. Google / Infosys / Startup"
                             value={organisationName}
                             onChange={(e) => setOrganisationName(e.target.value)}
-                            className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#FF2B25] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
+                            className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#EB0028] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
                           />
                         </div>
 
@@ -569,7 +568,7 @@ export default function DelegateRegistration() {
                             placeholder="e.g. Senior Software Engineer"
                             value={jobDesignation}
                             onChange={(e) => setJobDesignation(e.target.value)}
-                            className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#FF2B25] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
+                            className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#EB0028] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
                           />
                         </div>
                       </div>
@@ -585,7 +584,7 @@ export default function DelegateRegistration() {
                             placeholder="e.g. Information Technology / Finance"
                             value={industryDomain}
                             onChange={(e) => setIndustryDomain(e.target.value)}
-                            className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#FF2B25] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
+                            className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#EB0028] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
                           />
                         </div>
 
@@ -597,7 +596,7 @@ export default function DelegateRegistration() {
                             required
                             value={experienceYears}
                             onChange={(e) => setExperienceYears(e.target.value)}
-                            className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#FF2B25] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
+                            className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#EB0028] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
                           >
                             <option value="">Select Experience</option>
                             <option value="0 - 2 years">0 - 2 years</option>
@@ -623,7 +622,7 @@ export default function DelegateRegistration() {
                           value="Yes"
                           checked={attendedBefore === 'Yes'}
                           onChange={(e) => setAttendedBefore(e.target.value)}
-                          className="accent-[#FF2B25] cursor-pointer"
+                          className="accent-[#EB0028] cursor-pointer"
                         />
                         <span>Yes</span>
                       </label>
@@ -634,7 +633,7 @@ export default function DelegateRegistration() {
                           value="No"
                           checked={attendedBefore === 'No'}
                           onChange={(e) => setAttendedBefore(e.target.value)}
-                          className="accent-[#FF2B25] cursor-pointer"
+                          className="accent-[#EB0028] cursor-pointer"
                         />
                         <span>No</span>
                       </label>
@@ -650,7 +649,7 @@ export default function DelegateRegistration() {
                       required
                       value={heardAbout}
                       onChange={(e) => setHeardAbout(e.target.value)}
-                      className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#FF2B25] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
+                      className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#EB0028] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
                     >
                       <option value="">Select an option</option>
                       <option value="Social Media (Instagram / LinkedIn / Twitter)">Social Media (Instagram / LinkedIn / Twitter)</option>
@@ -671,7 +670,7 @@ export default function DelegateRegistration() {
                         required
                         checked={declaration}
                         onChange={(e) => setDeclaration(e.target.checked)}
-                        className="mt-0.5 accent-[#FF2B25] w-4 h-4 cursor-pointer"
+                        className="mt-0.5 accent-[#EB0028] w-4 h-4 cursor-pointer"
                       />
                       <span className="text-xs text-[#E5E5EA] leading-relaxed">
                         <strong>Declaration:</strong> I confirm that the information provided is accurate.
@@ -684,7 +683,7 @@ export default function DelegateRegistration() {
                     <button
                       type="submit"
                       disabled={isProcessing}
-                      className="w-full py-4 bg-[#FF2B25] hover:bg-[#d61e19] disabled:bg-[#551412] text-white font-bold uppercase tracking-wider text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-lg shadow-[#FF2B25]/25"
+                      className="w-full py-4 bg-[#EB0028] hover:bg-[#C80022] disabled:bg-[#551412] text-white font-bold uppercase tracking-wider text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-lg shadow-[#EB0028]/25"
                     >
                       <CreditCard className="w-4 h-4" />
                       <span>

@@ -9,6 +9,7 @@ import { ImpactStatsSection } from './components/sections/ImpactStatsSection';
 import { PastEventsSection } from './components/sections/PastEventsSection';
 import { SponsorSection } from './components/sections/SponsorSection';
 import { CinematicFramesSection } from './components/sections/CinematicFramesSection';
+import { WhyUntappedSection } from './components/sections/WhyUntappedSection';
 import { CinematicStage } from './components/stage/CinematicStage';
 import { XCometCursor } from './components/cursor/XCometCursor';
 import { SmoothScroll } from './components/scroll/SmoothScroll';
@@ -20,6 +21,7 @@ import RefundPolicy from './pages/RefundPolicy';
 import DeliveryPolicy from './pages/DeliveryPolicy';
 import ContactUs from './pages/ContactUs';
 import DelegateRegistration from './pages/DelegateRegistration';
+import Speakers from './pages/Speakers';
 import NotFound from './pages/NotFound';
 
 /**
@@ -49,7 +51,7 @@ export default function App() {
 
   // When opening the home page, the cinematic stage animation plays first.
   // For legal / compliance pages or when ?skip=true is present, bypass the 3D ceremony immediately.
-  const isHomePage = currentPath === '/' || currentPath === '/home';
+  const isHomePage = currentPath === '/' || currentPath === '/home' || currentPath === '/about' || currentPath === '/about-us';
   const [isIntroActive, setIsIntroActive] = useState(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
@@ -97,8 +99,14 @@ export default function App() {
       case '/registration':
         return <DelegateRegistration />;
 
+      case '/speakers':
+      case '/speaker':
+        return <Speakers />;
+
       case '/':
       case '/home':
+      case '/about':
+      case '/about-us':
       case '':
         // Full Home Landing Page
         return (
@@ -127,14 +135,17 @@ export default function App() {
               posterSrc="/images/tedx-speaker-stage-poster.jpg"
             />
 
-            {/* 3-Frame Rotating Stage Showcase Section (Cycles every 3 seconds to new 3 images) */}
+            {/* 3-Frame Rotating Stage Showcase Section (MOMENTS THAT SPARK TRANSFORMATION) */}
             <CinematicFramesSection intervalMs={3000} />
+
+            {/* Why UNTAPPED Section (Same Design as About TEDx) */}
+            <WhyUntappedSection />
+
+            {/* Past Events Section (Past events. Lasting ideas.) */}
+            <PastEventsSection />
 
             {/* Dynamic Scroll Count-Up Impact Metrics Section (A Decade of Impact) */}
             <ImpactStatsSection />
-
-            {/* Past Events Glassy Cards Section (Past events. Lasting ideas.) */}
-            <PastEventsSection />
 
             {/* Infinite Marquee Sponsors Section (Our Sponsors) */}
             <SponsorSection />
@@ -147,7 +158,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#000000] text-[#F5F5F2] selection:bg-[#FF2B25] selection:text-white flex flex-col relative">
+    <div className="min-h-screen w-full bg-[#000000] text-[#F5F5F2] selection:bg-[#EB0028] selection:text-white flex flex-col relative">
       {/* Dynamic X Comet Cursor with continuous ember particle trail */}
       <XCometCursor />
 
