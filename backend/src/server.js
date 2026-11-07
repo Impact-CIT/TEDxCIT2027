@@ -1,9 +1,11 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
 import { fileURLToPath } from 'url';
 import routes from './routes/index.js';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
+import { connectDB, isConnected } from './config/db.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -28,7 +30,7 @@ app.use(
     },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'x-razorpay-signature'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   })
 );
 
@@ -47,25 +49,42 @@ if (process.env.NODE_ENV !== 'test') {
   });
 }
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Serve static uploads
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+
 // Health check endpoint
-app.get('/api/health', (req, res) => {
-  res.status(200).json({
+app.get('/api/health', async (req, res) => {
+  if (process.env.NODE_ENV === 'test' || !process.env.MONGODB_URI) {
+    return res.status(200).json({
+      status: 'ok',
+      service: 'TEDxCIT2027 Backend API',
+      timestamp: new Date().toISOString(),
+      mongodb: { connected: false, status: 'UNAVAILABLE' },
+    });
+  }
+
+  try {
+    await connectDB();
+    await import('mongoose').then(({ default: mongoose }) => mongoose.connection.db.admin().ping());
+  } catch (err) {
+    return res.status(503).json({
+      status: 'error',
+      service: 'TEDxCIT2027 Backend API',
+      timestamp: new Date().toISOString(),
+      mongodb: { connected: false, status: 'UNAVAILABLE' },
+    });
+  }
+
+  return res.status(200).json({
     status: 'ok',
     service: 'TEDxCIT2027 Backend API',
     timestamp: new Date().toISOString(),
-    razorpay: {
-      configured: Boolean(
-        process.env.RAZORPAY_KEY_ID &&
-        !process.env.RAZORPAY_KEY_ID.includes('YOUR_') &&
-        !process.env.RAZORPAY_KEY_ID.includes('placeholder')
-      ),
-      mode: Boolean(
-        process.env.RAZORPAY_KEY_ID &&
-        !process.env.RAZORPAY_KEY_ID.includes('YOUR_') &&
-        !process.env.RAZORPAY_KEY_ID.includes('placeholder')
-      )
-        ? 'LIVE/TEST_ACTIVE'
-        : 'MOCK_SANDBOX (Awaiting KYC)',
+    mongodb: {
+      connected: isConnected(),
+      status: isConnected() ? 'CONNECTED' : 'UNAVAILABLE',
     },
   });
 });
@@ -81,21 +100,22 @@ app.use(errorHandler);
 const isMain = process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1];
 
 if (isMain) {
-  app.listen(PORT, () => {
+  connectDB().then(() => app.listen(PORT, () => {
     console.log(`=======================================================`);
     console.log(`  TEDxCIT 2027: UNTAPPED - Backend Server`);
     console.log(`  Running at: http://localhost:${PORT}`);
     console.log(`  Environment: ${process.env.NODE_ENV || 'development'}`);
-    console.log(`  Razorpay Key ID: ${process.env.RAZORPAY_KEY_ID ? 'Configured' : 'Not set (Mock mode active)'}`);
+    console.log(`  MongoDB: ${process.env.MONGODB_URI ? 'Configured (Atlas)' : 'Not configured (startup blocked)'}`);
     console.log(`=======================================================`);
     console.log(`  Endpoints:`);
     console.log(`  - GET  /api/health`);
-    console.log(`  - GET  /api/delegates/passes  (₹100 Student / ₹200 Professional)`);
-    console.log(`  - POST /api/delegates/register (Creates Razorpay order)`);
-    console.log(`  - POST /api/delegates/verify-payment (Verifies HMAC signature)`);
-    console.log(`  - GET  /api/delegates/registration/:id`);
-    console.log(`  - POST /api/payment/webhook`);
+    console.log(`  - POST /api/anonymous-voices      (Anonymous Voices submission)`);
+    console.log(`  - POST /api/speaker-nominations   (Speaker Nomination submission)`);
+    console.log(`  - GET  /api/admin/submissions     (Admin dashboard & CSV export)`);
     console.log(`=======================================================`);
+  })).catch((err) => {
+    console.error(`[Startup] MongoDB is required: ${err.message}`);
+    process.exitCode = 1;
   });
 }
 

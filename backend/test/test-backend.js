@@ -1,4 +1,5 @@
 process.env.NODE_ENV = 'test';
+process.env.MONGODB_URI = '';
 import 'dotenv/config';
 process.env.NODE_ENV = 'test';
 import assert from 'assert';
@@ -359,29 +360,12 @@ async function runTests() {
     assert.strictEqual(res.body.payment_id, testPaymentId);
   });
 
-  // 19. Speaker Application
-  await test('POST /api/speakers/apply submits application successfully', async () => {
-    const res = await makeRequest('POST', '/api/speakers/apply', {
-      name: 'Dr. Jane Doe',
-      email: 'jane@example.com',
-      talkTitle: 'The Future of Neural Computing',
-    });
-    assert.strictEqual(res.status, 201);
+  // 19. Speak Flow Config
+  await test('GET /api/speak/config returns 200 with speak configuration', async () => {
+    const res = await makeRequest('GET', '/api/speak/config');
+    assert.strictEqual(res.status, 200);
     assert.strictEqual(res.body.success, true);
-    assert(res.body.data.id);
-  });
-
-  // 20. Student Speaker Application
-  await test('POST /api/student-speakers/apply submits application successfully', async () => {
-    const res = await makeRequest('POST', '/api/student-speakers/apply', {
-      name: 'Rahul Sharma',
-      email: 'rahul@example.com',
-      college: 'Chennai Institute of Technology',
-      talkIdea: 'Sustainable Tech in Agriculture',
-    });
-    assert.strictEqual(res.status, 201);
-    assert.strictEqual(res.body.success, true);
-    assert(res.body.data.id);
+    assert(res.body.data.theme);
   });
 
   // Cleanup

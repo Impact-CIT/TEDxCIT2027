@@ -9,16 +9,27 @@ import { ImpactStatsSection } from './components/sections/ImpactStatsSection';
 import { PastEventsSection } from './components/sections/PastEventsSection';
 import { SponsorSection } from './components/sections/SponsorSection';
 import { CinematicFramesSection } from './components/sections/CinematicFramesSection';
+import { WhyUntappedSection } from './components/sections/WhyUntappedSection';
 import { CinematicStage } from './components/stage/CinematicStage';
+import { XCometCursor } from './components/cursor/XCometCursor';
+import { SmoothScroll } from './components/scroll/SmoothScroll';
+import { ApplyToSpeakModal } from './components/ApplyToSpeakModal';
 
-// Dedicated Legal & Compliance Pages (Required for Razorpay Merchant Approval)
+// Dedicated Legal & Compliance Pages
 import TermsConditions from './pages/TermsConditions';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import RefundPolicy from './pages/RefundPolicy';
 import DeliveryPolicy from './pages/DeliveryPolicy';
 import ContactUs from './pages/ContactUs';
-import DelegateRegistration from './pages/DelegateRegistration';
+import Speakers from './pages/Speakers';
 import NotFound from './pages/NotFound';
+import Organizers from './pages/Organizers';
+
+// Native Apply to Speak Flow Pages & Admin Portal
+import AnonymousVoices from './pages/AnonymousVoices';
+import SpeakerNomination from './pages/SpeakerNomination';
+import AdminSubmissions from './pages/AdminSubmissions';
+import DelegateRegistration from './pages/DelegateRegistration';
 
 /**
  * Normalizes browser pathname for routing
@@ -26,12 +37,14 @@ import NotFound from './pages/NotFound';
 function getNormalizedPath() {
   if (typeof window === 'undefined') return '/';
   const raw = window.location.pathname.toLowerCase().trim();
-  // Strip trailing slash unless root
   return raw.length > 1 ? raw.replace(/\/+$/, '') : raw || '/';
 }
 
 export default function App() {
   const [currentPath, setCurrentPath] = useState(getNormalizedPath);
+  const [isSpeakModalOpen, setIsSpeakModalOpen] = useState(false);
+  const openSpeakModal = () => setIsSpeakModalOpen(true);
+  const closeSpeakModal = () => setIsSpeakModalOpen(false);
 
   // Listen to popstate and history navigation
   useEffect(() => {
@@ -45,26 +58,60 @@ export default function App() {
     return () => window.removeEventListener('popstate', handleLocationChange);
   }, []);
 
+  // When visiting /apply-to-speak directly, open the modal in an effect
+  useEffect(() => {
+    if (currentPath === '/apply-to-speak') {
+      setIsSpeakModalOpen(true);
+    }
+  }, [currentPath]);
+
   // When opening the home page, the cinematic stage animation plays first.
-  // For legal / compliance pages or when ?skip=true is present, bypass the 3D ceremony immediately.
-  const isHomePage = currentPath === '/' || currentPath === '/home';
+  // Bypass with ?skip=true or if not on home page
+  const isHomePage = currentPath === '/' || currentPath === '/home' || currentPath === '';
   const [isIntroActive, setIsIntroActive] = useState(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       if (params.get('skip') === 'true') {
         return false;
       }
-      // If the visitor directly accessed a legal policy page or registration, do not show stage intro
-      if (!isHomePage) {
+      const path = window.location.pathname.toLowerCase().trim();
+      if (path !== '/' && path !== '/home' && path !== '') {
         return false;
       }
+      return true;
     }
-    return isHomePage;
+    return true;
   });
 
   // Render the appropriate main content based on URL route
   const renderContent = () => {
     switch (currentPath) {
+      // 1. Apply to Speak Flow Native Pages
+      case '/apply/anonymous-voices':
+      case '/apply-to-speak/anonymous-voices':
+      case '/anonymous-voices':
+        return <AnonymousVoices />;
+
+      case '/apply/speaker-nomination':
+      case '/apply-to-speak/speaker-nomination':
+      case '/speaker-nomination':
+      case '/nominate-speaker':
+        return <SpeakerNomination />;
+
+      // 2. Admin Curation Portal
+      case '/admin':
+      case '/admin/submissions':
+      case '/curation':
+        return <AdminSubmissions />;
+
+      // 3. Delegate Registration & Passes
+      case '/register/delegates':
+      case '/register':
+      case '/delegates':
+      case '/delegate-registration':
+        return <DelegateRegistration />;
+
+      // 3. Legal & Compliance Pages
       case '/terms-and-conditions':
       case '/terms':
         return <TermsConditions />;
@@ -86,25 +133,33 @@ export default function App() {
       case '/contact-us':
       case '/contact':
       case '/partner-with-us':
-      case '/apply-to-speak':
         return <ContactUs />;
 
-      case '/register':
-      case '/delegates':
-      case '/passes':
-      case '/registration':
-        return <DelegateRegistration />;
+      // 4. Speakers Page
+      case '/speakers':
+      case '/speaker':
+        return <Speakers />;
 
+      // 5. Organizers Page & Team Route
+      case '/organizers':
+      case '/organisers':
+      case '/team':
+      case '/meet-our-team':
+        return <Organizers />;
+
+      // 5. Home Landing Page
+      case '/apply-to-speak':
       case '/':
       case '/home':
+      case '/about':
+      case '/about-us':
       case '':
-        // Full Home Landing Page
         return (
           <main className="flex-1 w-full flex flex-col">
             {/* Full-screen Edge-to-Edge UNTAPPED Hero Section */}
             <Hero />
 
-            {/* What is TEDx Section (Directly below Hero Header) */}
+            {/* What is TEDx Section */}
             <WhatIsTEDxSection />
 
             {/* Cinematic Scroll-Driven Visual Expansion Section */}
@@ -119,20 +174,24 @@ export default function App() {
               ]}
             />
 
-            {/* 50/50 Split Stage Video (16:9 Frame) & TEDx CIT Mission Section */}
+            {/* 50/50 Split Stage Video & TEDx CIT Mission Section */}
             <AboutVideoSection
               videoSrc="/videos/tedx-cit-speaker.mp4"
               posterSrc="/images/tedx-speaker-stage-poster.jpg"
+              onApplyToSpeak={openSpeakModal}
             />
 
-            {/* 3-Frame Rotating Stage Showcase Section (Cycles every 3 seconds to new 3 images) */}
+            {/* 3-Frame Rotating Stage Showcase Section (MOMENTS THAT SPARK TRANSFORMATION) */}
             <CinematicFramesSection intervalMs={3000} />
+
+            {/* Why UNTAPPED Section (Same Design as About TEDx) */}
+            <WhyUntappedSection />
+
+            {/* Past Events Section (Past events. Lasting ideas.) */}
+            <PastEventsSection />
 
             {/* Dynamic Scroll Count-Up Impact Metrics Section (A Decade of Impact) */}
             <ImpactStatsSection />
-
-            {/* Past Events Glassy Cards Section (Past events. Lasting ideas.) */}
-            <PastEventsSection />
 
             {/* Infinite Marquee Sponsors Section (Our Sponsors) */}
             <SponsorSection />
@@ -145,7 +204,16 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#000000] text-[#F5F5F2] selection:bg-[#FF2B25] selection:text-white flex flex-col relative">
+    <div className="min-h-screen w-full bg-[#000000] text-[#F5F5F2] selection:bg-[#EB0028] selection:text-white flex flex-col relative font-sans">
+      {/* Apply to Speak Accessible Modal */}
+      <ApplyToSpeakModal isOpen={isSpeakModalOpen} onClose={closeSpeakModal} />
+
+      {/* Dynamic X Comet Cursor with continuous ember particle trail */}
+      <XCometCursor />
+
+      {/* Butter-smooth zero-lag scrolling (Lenis + GSAP ScrollTrigger sync) */}
+      <SmoothScroll enabled={!isHomePage || !isIntroActive} />
+
       {/* 1. Cinematic 3D Stage Opening Ceremony Intro (Home page only) */}
       {isHomePage && isIntroActive && (
         <CinematicStage
@@ -158,19 +226,15 @@ export default function App() {
         />
       )}
 
-      {/* 2. Main Website Page Content */}
-      <div
-        className={`w-full flex flex-col transition-opacity duration-700 ${
-          isHomePage && isIntroActive ? 'opacity-0 h-0 overflow-hidden' : 'opacity-100 min-h-screen'
-        }`}
-      >
+      {/* Main Website Page Content */}
+      <div className="w-full flex flex-col min-h-screen">
         {/* Full-width Grid Architectural Navbar */}
-        <Navbar currentPath={currentPath} />
+        <Navbar currentPath={currentPath} onApplyToSpeak={openSpeakModal} />
 
         {/* Dynamic Route Content */}
         {renderContent()}
 
-        {/* Global Footer with All Mandatory Razorpay Legal Policies & Contact Info */}
+        {/* Global footer */}
         <Footer />
       </div>
     </div>

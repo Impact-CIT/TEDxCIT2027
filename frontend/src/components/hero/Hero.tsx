@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useMemo } from 'react';
+import { ArrowUpRight } from 'lucide-react';
 import {
   motion,
   useMotionValue,
@@ -53,7 +54,7 @@ export const Hero: React.FC<HeroProps> = ({ className = '' }) => {
     mouseY.set(e.clientY - rect.top);
   };
 
-  const ambientSpotlight = useMotionTemplate`radial-gradient(850px circle at ${smoothX}px ${smoothY}px, rgba(255, 43, 37, 0.085), transparent 70%)`;
+  const ambientSpotlight = useMotionTemplate`radial-gradient(850px circle at ${smoothX}px ${smoothY}px, rgba(235, 0, 40, 0.085), transparent 70%)`;
 
   // Pre-calculated ambient particles to ensure deterministic rendering
   const particles = useMemo(
@@ -100,7 +101,7 @@ export const Hero: React.FC<HeroProps> = ({ className = '' }) => {
           repeat: Infinity,
           ease: 'easeInOut',
         }}
-        className="pointer-events-none absolute left-[4%] top-[20%] -z-10 h-[480px] w-[700px] rounded-full bg-[#FF2B25]/[0.09] blur-[150px]"
+        className="pointer-events-none absolute left-[4%] top-[20%] -z-10 h-[520px] w-[750px] rounded-full bg-[#EB0028]/16 blur-[150px]"
       />
 
       {/* Floating Theater Dust Motes / Particles */}
@@ -141,34 +142,23 @@ export const Hero: React.FC<HeroProps> = ({ className = '' }) => {
             ======================================================== */}
         <div className="w-full lg:w-[68%] xl:w-[68%] flex flex-col justify-start pl-6 sm:pl-10 lg:pl-14 xl:pl-16 pr-2 sm:pr-3 lg:pr-4 pt-8 sm:pt-10 lg:pt-12 xl:pt-14 pb-12 lg:pb-16 border-b lg:border-b-0">
           {/* Eyebrow Label with pulsing live status beacon */}
-          <motion.div
-            initial={{ opacity: 0, y: -6 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.75, ease: 'easeOut', delay: 0.05 }}
-            className="mb-3 sm:mb-4 lg:mb-5 flex items-center space-x-3"
-          >
+          <div className="mb-3 sm:mb-4 lg:mb-5 flex items-center space-x-3">
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF2B25] opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#FF2B25]" />
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#EB0028] opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#EB0028]" />
             </span>
             <span className="font-mono text-[11px] sm:text-xs md:text-[13px] tracking-[0.18em] uppercase text-[#8E8E93]">
               CHENNAI / IDEAS WORTH SPREADING
             </span>
-          </motion.div>
+          </div>
 
           {/* 
             Massive UNTAPPED headline with 3D Parallax Tilt:
             - UN in off-white (#F5F5F2)
-            - TAPPED in TED red (#FF2B25)
+            - TAPPED in TED red (#EB0028)
             - 100% uncut, clean, solid glyph rendering
           */}
-          <motion.div
-            style={{
-              x: parallaxHeadlineX,
-              y: parallaxHeadlineY,
-            }}
-            className="will-change-transform"
-          >
+          <div className="will-change-transform">
             <h1 className="text-left font-black tracking-[-0.055em] sm:tracking-[-0.06em] leading-[0.82] select-none text-[clamp(5.5rem,16.8vw,18.8rem)]">
               <motion.span
                 initial={{ opacity: 0, y: 30 }}
@@ -182,27 +172,19 @@ export const Hero: React.FC<HeroProps> = ({ className = '' }) => {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.85, ease: cinematicEase, delay: 0.22 }}
-                className="block text-[#FF2B25]"
+                className="block text-[#EB0028] drop-shadow-[0_0_50px_rgba(235,0,40,0.5)]"
               >
                 TAPPED
               </motion.span>
             </h1>
-          </motion.div>
+          </div>
         </div>
 
         {/* ========================================================
             CONTAINED VERTICAL SEPARATING LINE
-            - Scales smoothly into place from top to bottom
-            - Features a periodic traveling crimson light beam
             ======================================================== */}
         <div className="hidden lg:flex flex-col justify-center items-center shrink-0 py-8 relative">
-          <motion.div
-            initial={{ scaleY: 0, opacity: 0 }}
-            animate={{ scaleY: 1, opacity: 1 }}
-            transition={{ duration: 1.15, ease: cinematicEase, delay: 0.35 }}
-            style={{ originY: 0 }}
-            className="relative w-[1px] h-[360px] xl:h-[420px] bg-[#292929] overflow-hidden"
-          >
+          <div className="relative w-[1px] h-[360px] xl:h-[420px] bg-[#292929] overflow-hidden">
             {/* Traveling laser beam along divider */}
             <motion.div
               animate={{ y: ['-100%', '250%'] }}
@@ -212,9 +194,9 @@ export const Hero: React.FC<HeroProps> = ({ className = '' }) => {
                 ease: 'easeInOut',
                 delay: 1.2,
               }}
-              className="absolute inset-x-0 h-28 bg-gradient-to-b from-transparent via-[#FF2B25] to-transparent opacity-90"
+              className="absolute inset-x-0 h-28 bg-gradient-to-b from-transparent via-[#EB0028] to-transparent opacity-90"
             />
-          </motion.div>
+          </div>
         </div>
 
         {/* ========================================================
@@ -222,30 +204,14 @@ export const Hero: React.FC<HeroProps> = ({ className = '' }) => {
             Positioned down with counter-parallax float
             ======================================================== */}
         <div className="w-full lg:w-[32%] xl:w-[32%] pl-5 sm:pl-7 lg:pl-7 xl:pl-8 pr-6 sm:pr-8 lg:pr-10 xl:pr-12 pt-12 sm:pt-16 lg:pt-[170px] xl:pt-[190px] pb-12 lg:pb-16 flex flex-col justify-start">
-          <motion.div
-            style={{
-              x: parallaxRightX,
-              y: parallaxRightY,
-            }}
-            className="max-w-md lg:max-w-[440px] xl:max-w-[490px] will-change-transform"
-          >
-            {/* Enlarged, high-impact editorial introductory copy with upward fade */}
-            <motion.p
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.9, ease: cinematicEase, delay: 0.4 }}
-              className="text-2xl sm:text-3xl lg:text-[28px] xl:text-[32px] leading-[1.28] sm:leading-[1.3] text-[#F5F5F2] font-medium tracking-[-0.025em]"
-            >
+          <div className="max-w-md lg:max-w-[440px] xl:max-w-[490px]">
+            {/* Enlarged, high-impact editorial introductory copy */}
+            <p className="text-2xl sm:text-3xl lg:text-[28px] xl:text-[32px] leading-[1.28] sm:leading-[1.3] text-[#F5F5F2] font-medium tracking-[-0.025em]">
               Discover unexplored perspectives, challenge what you know, and uncover ideas waiting to make an impact.
-            </motion.p>
+            </p>
 
             {/* Action Buttons: PARTNER WITH US and REGISTER NOW (Side-by-Side) */}
-            <motion.div
-              initial={{ opacity: 0, y: 22 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.85, ease: cinematicEase, delay: 0.52 }}
-              className="mt-8 sm:mt-10 lg:mt-12 flex flex-row items-center gap-3 sm:gap-3.5 flex-wrap"
-            >
+            <div className="mt-8 sm:mt-10 lg:mt-12 flex flex-row items-center gap-3 sm:gap-3.5 flex-wrap">
               <motion.a
                 href="/contact-us"
                 onClick={(e) => {
@@ -257,45 +223,35 @@ export const Hero: React.FC<HeroProps> = ({ className = '' }) => {
                 whileHover={{ scale: 1.025 }}
                 whileTap={{ scale: 0.975 }}
                 transition={{ duration: 0.2 }}
-                className="group relative inline-flex items-center justify-between space-x-3.5 border border-[#292929] hover:border-[#FF2B25] bg-transparent px-4 sm:px-5 lg:px-5.5 py-3 sm:py-3.5 text-xs sm:text-[13px] font-bold tracking-[0.08em] uppercase text-[#F5F5F2] hover:text-white transition-all duration-300 rounded-none overflow-hidden focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2B25] whitespace-nowrap"
+                className="group relative inline-flex items-center justify-between space-x-3.5 border border-[#292929] hover:border-[#EB0028] bg-transparent px-4 sm:px-5 lg:px-5.5 py-3 sm:py-3.5 text-xs sm:text-[13px] font-bold tracking-[0.08em] uppercase text-[#F5F5F2] hover:text-white transition-all duration-300 rounded-none overflow-hidden focus:outline-none focus-visible:ring-1 focus-visible:ring-[#EB0028] whitespace-nowrap"
               >
                 {/* Subtle red background curtain sweep on hover */}
                 <span
-                  className="absolute inset-0 bg-gradient-to-r from-[#FF2B25]/25 via-[#FF2B25]/10 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                  className="absolute inset-0 bg-gradient-to-r from-[#EB0028]/25 via-[#EB0028]/10 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"
                   aria-hidden="true"
                 />
                 <span className="relative z-10">PARTNER WITH US</span>
-                <span
-                  className="relative z-10 inline-block text-sm sm:text-base transition-transform duration-300 ease-out group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:text-[#FF2B25]"
-                  aria-hidden="true"
-                >
-                  ↗
-                </span>
+                <ArrowUpRight className="relative z-10 w-4 h-4 transition-transform duration-300 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-[#EB0028]" />
               </motion.a>
 
               <motion.a
-                href="/register"
+                href="/apply-to-speak"
                 onClick={(e) => {
                   e.preventDefault();
-                  window.history.pushState({}, '', '/register');
+                  window.history.pushState({}, '', '/apply-to-speak');
                   window.dispatchEvent(new Event('popstate'));
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
                 whileHover={{ scale: 1.025 }}
                 whileTap={{ scale: 0.975 }}
                 transition={{ duration: 0.2 }}
-                className="group relative inline-flex items-center justify-between space-x-3.5 bg-[#FF2B25] hover:bg-[#d61e19] border border-[#FF2B25] px-4.5 sm:px-5.5 lg:px-6 py-3 sm:py-3.5 text-xs sm:text-[13px] font-bold tracking-[0.08em] uppercase text-white transition-all duration-300 rounded-none overflow-hidden shadow-lg shadow-[#FF2B25]/25 hover:shadow-[#FF2B25]/40 focus:outline-none focus-visible:ring-1 focus-visible:ring-white whitespace-nowrap"
+                className="group relative inline-flex items-center justify-between space-x-3.5 bg-[#EB0028] hover:bg-[#C80022] border border-[#EB0028] px-4.5 sm:px-5.5 lg:px-6 py-3 sm:py-3.5 text-xs sm:text-[13px] font-bold tracking-[0.08em] uppercase text-white transition-all duration-300 rounded-none overflow-hidden shadow-lg shadow-[#EB0028]/25 hover:shadow-[#EB0028]/40 focus:outline-none focus-visible:ring-1 focus-visible:ring-white whitespace-nowrap cursor-pointer"
               >
-                <span className="relative z-10">REGISTER NOW</span>
-                <span
-                  className="relative z-10 inline-block text-sm sm:text-base transition-transform duration-300 ease-out group-hover:translate-x-1 group-hover:-translate-y-1"
-                  aria-hidden="true"
-                >
-                  ↗
-                </span>
+                <span className="relative z-10">APPLY TO SPEAK</span>
+                <ArrowUpRight className="relative z-10 w-4 h-4 transition-transform duration-300 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </motion.a>
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -314,10 +270,10 @@ export const Hero: React.FC<HeroProps> = ({ className = '' }) => {
           className="flex whitespace-nowrap font-mono text-[11px] sm:text-xs tracking-[0.22em] uppercase text-[#6E6E73]"
         >
           <span className="inline-block px-4">
-            TEDx Chennai Institute of Technology <span className="text-[#FF2B25] font-bold">/</span> THEME: UNTAPPED <span className="text-[#FF2B25] font-bold">/</span> DISCOVER UNEXPLORED PERSPECTIVES <span className="text-[#FF2B25] font-bold">/</span> IDEAS WORTH SPREADING <span className="text-[#FF2B25] font-bold">/</span> CIT CAMPUS CHENNAI <span className="text-[#FF2B25] font-bold">/</span>
+            TEDx Chennai Institute of Technology <span className="text-[#EB0028] font-bold">/</span> THEME: UNTAPPED <span className="text-[#EB0028] font-bold">/</span> DISCOVER UNEXPLORED PERSPECTIVES <span className="text-[#EB0028] font-bold">/</span> IDEAS WORTH SPREADING <span className="text-[#EB0028] font-bold">/</span> CIT CAMPUS CHENNAI <span className="text-[#EB0028] font-bold">/</span>
           </span>
           <span className="inline-block px-4">
-            TEDx Chennai Institute of Technology <span className="text-[#FF2B25] font-bold">/</span> THEME: UNTAPPED <span className="text-[#FF2B25] font-bold">/</span> DISCOVER UNEXPLORED PERSPECTIVES <span className="text-[#FF2B25] font-bold">/</span> IDEAS WORTH SPREADING <span className="text-[#FF2B25] font-bold">/</span> CIT CAMPUS CHENNAI <span className="text-[#FF2B25] font-bold">/</span>
+            TEDx Chennai Institute of Technology <span className="text-[#EB0028] font-bold">/</span> THEME: UNTAPPED <span className="text-[#EB0028] font-bold">/</span> DISCOVER UNEXPLORED PERSPECTIVES <span className="text-[#EB0028] font-bold">/</span> IDEAS WORTH SPREADING <span className="text-[#EB0028] font-bold">/</span> CIT CAMPUS CHENNAI <span className="text-[#EB0028] font-bold">/</span>
           </span>
         </motion.div>
       </div>

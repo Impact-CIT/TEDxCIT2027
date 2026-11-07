@@ -1,7 +1,6 @@
 import express from 'express';
 import delegateRoutes from './delegateRoutes.js';
-import speakerRoutes from './speakerRoutes.js';
-import studentSpeakerRoutes from './studentSpeakerRoutes.js';
+import speakFlowRoutes from './speakFlowRoutes.js';
 import {
   registerDelegate,
   getPasses,
@@ -29,11 +28,8 @@ paymentRouter.post('/verify-payment', verifyPayment);
 paymentRouter.post('/webhook', handleWebhook);
 router.use('/payment', paymentRouter);
 
-// 3. Speaker Applications
-router.use('/speakers', speakerRoutes);
-
-// 4. Student Speaker Applications
-router.use('/student-speakers', studentSpeakerRoutes);
+// 4. Anonymous Voices, Speaker Nominations, registration settings, and admin review
+router.use('/', speakFlowRoutes);
 
 export default router;
 
