@@ -1,0 +1,825 @@
+/* ==========================================================================
+   TEDxCIT 2027 – Cinematic Organizers Page
+   Collage-to-Grid FLIP Animation & 5x4 Showcase
+   ========================================================================== */
+
+:root {
+  --tedx-red: #E62B32;
+  --tedx-red-hover: #ff3b43;
+  --tedx-red-glow: rgba(230, 43, 50, 0.45);
+  --tedx-red-subtle: rgba(230, 43, 50, 0.08);
+  --tedx-red-border: rgba(230, 43, 50, 0.35);
+  --tedx-black: #000000;
+  --tedx-charcoal: #0e0e0e;
+  --tedx-card-bg: rgba(18, 18, 18, 0.85);
+  --tedx-card-border: rgba(255, 255, 255, 0.08);
+  --tedx-border: #222222;
+  --tedx-text-primary: #FFFFFF;
+  --tedx-text-secondary: #BDBDBD;
+  --tedx-text-muted: #888888;
+}
+
+/* Base Page Container */
+.tedx-org-page {
+  min-height: 100vh;
+  background-color: var(--tedx-black);
+  color: var(--tedx-text-primary);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  overflow-x: hidden;
+  position: relative;
+  padding-bottom: 6rem;
+  box-sizing: border-box;
+}
+
+.tedx-org-page.is-in-collage-mode {
+  height: 100vh;
+  overflow: hidden;
+}
+
+.tedx-org-page *,
+.tedx-org-page *::before,
+.tedx-org-page *::after {
+  box-sizing: border-box;
+}
+
+/* Background Ambient Lighting & Subtle Grid */
+.tedx-org-ambient-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.tedx-org-glow-orb-top {
+  position: absolute;
+  top: -200px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 900px;
+  height: 600px;
+  background: radial-gradient(ellipse at center, rgba(230, 43, 50, 0.22) 0%, rgba(230, 43, 50, 0.05) 50%, transparent 75%);
+  filter: blur(60px);
+  animation: tedxPulseGlow 9s ease-in-out infinite alternate;
+}
+
+.tedx-org-glow-orb-mid {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 1000px;
+  height: 700px;
+  background: radial-gradient(ellipse at center, rgba(230, 43, 50, 0.1) 0%, transparent 70%);
+  filter: blur(80px);
+  pointer-events: none;
+}
+
+.tedx-org-grid-overlay {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(circle at 50% 40%, black 20%, transparent 85%);
+  -webkit-mask-image: radial-gradient(circle at 50% 40%, black 20%, transparent 85%);
+}
+
+/* Content Container */
+.tedx-org-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  position: relative;
+  z-index: 2;
+}
+
+/* ==========================================================================
+   INITIAL STATE: SCATTERED COLLAGE (FULL SCREEN)
+   ========================================================================== */
+
+.tedx-org-collage-viewport {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 100;
+  overflow: hidden;
+  background-color: #000000;
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tedx-org-collage-hud {
+  position: absolute;
+  top: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  text-align: center;
+  pointer-events: auto;
+}
+
+.tedx-org-collage-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.45rem 1.1rem;
+  border-radius: 9999px;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--tedx-red-border);
+  color: var(--tedx-text-primary);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  box-shadow: 0 0 20px rgba(230, 43, 50, 0.25);
+}
+
+.tedx-org-pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--tedx-red);
+  box-shadow: 0 0 10px var(--tedx-red);
+  animation: tedxPulseDot 1.6s infinite ease-in-out;
+}
+
+.tedx-org-collage-skip-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--tedx-text-secondary);
+  font-size: 0.75rem;
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  backdrop-filter: blur(8px);
+}
+
+.tedx-org-collage-skip-btn:hover {
+  background: rgba(230, 43, 50, 0.2);
+  border-color: var(--tedx-red);
+  color: #FFFFFF;
+}
+
+/* Collage Card Styling (Initial Scattered Look) */
+.tedx-org-collage-card {
+  position: absolute;
+  border-radius: 14px;
+  overflow: hidden;
+  background-color: #141414;
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 18px 38px -10px rgba(0, 0, 0, 0.85),
+              0 0 25px -5px rgba(230, 43, 50, 0.18);
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  user-select: none;
+}
+
+.tedx-org-collage-card:hover {
+  border-color: var(--tedx-red);
+  box-shadow: 0 22px 45px -8px rgba(230, 43, 50, 0.4),
+              0 0 0 1px var(--tedx-red);
+}
+
+.tedx-org-collage-card-img-wrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.tedx-org-collage-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: contrast(1.05) brightness(0.92);
+  transition: filter 0.3s ease, transform 0.5s ease;
+}
+
+.tedx-org-collage-card:hover .tedx-org-collage-card-img {
+  filter: contrast(1.1) brightness(1);
+  transform: scale(1.04);
+}
+
+.tedx-org-collage-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 40%, rgba(0, 0, 0, 0.85) 85%, #000000 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0.85rem;
+}
+
+.tedx-org-collage-card-name {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.tedx-org-collage-card-role {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--tedx-red);
+  margin: 0.15rem 0 0 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ==========================================================================
+   FINAL STATE: ROLLING ORGANISER ROWS (CONTINUOUS MARQUEE)
+   ========================================================================== */
+
+.tedx-org-rolling-section {
+  padding: 2.5rem 0 2rem 0;
+  position: relative;
+  overflow: hidden;
+  transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.tedx-org-rolling-viewport {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  padding: 0.6rem 0;
+  mask-image: linear-gradient(to right, transparent 0%, black 7%, black 93%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 7%, black 93%, transparent 100%);
+}
+
+.tedx-org-rolling-track {
+  display: flex;
+  gap: 1.25rem;
+  width: max-content;
+  will-change: transform;
+}
+
+/* Row 1: Left to Right */
+.tedx-org-rolling-track-l2r {
+  animation: tedxMarqueeLeftToRight 42s linear infinite;
+}
+
+/* Row 2: Right to Left */
+.tedx-org-rolling-track-r2l {
+  animation: tedxMarqueeRightToLeft 44s linear infinite;
+}
+
+/* Pause animation on hover */
+.tedx-org-rolling-viewport:hover .tedx-org-rolling-track {
+  animation-play-state: paused;
+}
+
+/* Rolling Mini Card Design */
+.tedx-org-mini-card {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.65rem 1.15rem;
+  background: rgba(16, 16, 16, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 9999px;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: default;
+  user-select: none;
+}
+
+.tedx-org-mini-card:hover {
+  background: rgba(24, 24, 24, 0.95);
+  border-color: rgba(230, 43, 50, 0.5);
+  box-shadow: 0 8px 24px -4px rgba(230, 43, 50, 0.25);
+  transform: translateY(-2px);
+}
+
+.tedx-org-mini-card-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid var(--tedx-red-border);
+  flex-shrink: 0;
+}
+
+.tedx-org-mini-card-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.tedx-org-mini-card-name {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--tedx-text-primary);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.tedx-org-mini-card-role {
+  font-size: 0.72rem;
+  color: var(--tedx-text-secondary);
+  margin: 0;
+}
+
+/* ==========================================================================
+   FINAL STATE: MAIN HEADING (MEET OUR ORGANISERS)
+   ========================================================================== */
+
+.tedx-org-heading-section {
+  text-align: center;
+  padding: 3.5rem 0 2.5rem 0;
+  position: relative;
+  transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.tedx-org-main-heading {
+  font-size: clamp(2.5rem, 6.5vw, 5.2rem);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  text-transform: uppercase;
+  margin: 0 0 1.25rem 0;
+  color: var(--tedx-text-primary);
+}
+
+.tedx-org-red-highlight {
+  color: var(--tedx-red);
+  text-shadow: 0 0 35px rgba(230, 43, 50, 0.5);
+}
+
+.tedx-org-main-subtitle {
+  font-size: clamp(1.1rem, 2vw, 1.4rem);
+  color: var(--tedx-text-secondary);
+  font-weight: 400;
+  max-width: 650px;
+  margin: 0 auto;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+}
+
+/* Subtle Red Center Divider */
+.tedx-org-main-divider {
+  width: 140px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--tedx-red), transparent);
+  margin: 2rem auto 0 auto;
+}
+
+/* ==========================================================================
+   FINAL STATE: ORGANISER PROFILE GRID (5 COLUMNS x 4 ROWS ON DESKTOP)
+   ========================================================================== */
+
+.tedx-org-grid-section {
+  padding: 1.5rem 0 4rem 0;
+  position: relative;
+}
+
+.tedx-org-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 1.5rem;
+  align-items: stretch;
+}
+
+/* Organiser Card in Grid */
+.tedx-org-card {
+  background-color: var(--tedx-card-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--tedx-card-border);
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  outline: none;
+  cursor: pointer;
+  user-select: none;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.35s ease;
+}
+
+/* Top Subtle Glow */
+.tedx-org-card-glow-mesh {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle at top right, rgba(230, 43, 50, 0.15) 0%, transparent 70%);
+  pointer-events: none;
+  opacity: 0.4;
+  transition: opacity 0.35s ease;
+  z-index: 1;
+}
+
+/* Card Portrait Photo Area */
+.tedx-org-card-photo-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 4.6;
+  overflow: hidden;
+  background-color: #161616;
+}
+
+.tedx-org-card-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: contrast(1.04) brightness(0.95);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), filter 0.35s ease;
+}
+
+.tedx-org-card-photo-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 50%, rgba(18, 18, 18, 0.95) 100%);
+  pointer-events: none;
+}
+
+.tedx-org-card-dept-tag {
+  position: absolute;
+  top: 0.85rem;
+  left: 0.85rem;
+  z-index: 2;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--tedx-red);
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--tedx-red-border);
+  padding: 0.25rem 0.55rem;
+  border-radius: 4px;
+}
+
+/* Card Content Body */
+.tedx-org-card-body {
+  padding: 1.15rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  position: relative;
+  z-index: 2;
+}
+
+.tedx-org-card-name {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--tedx-text-primary);
+  margin: 0 0 0.3rem 0;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+}
+
+.tedx-org-card-role {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--tedx-red);
+  margin: 0 0 0.65rem 0;
+  line-height: 1.35;
+}
+
+.tedx-org-card-description {
+  font-size: 0.78rem;
+  color: var(--tedx-text-secondary);
+  line-height: 1.5;
+  margin: 0 0 0.85rem 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Revealable Extended Details */
+.tedx-org-card-details {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease, margin 0.35s ease;
+  margin-bottom: 0;
+}
+
+.tedx-org-card-bio {
+  font-size: 0.75rem;
+  color: var(--tedx-text-secondary);
+  line-height: 1.45;
+  padding: 0.6rem 0.75rem;
+  background-color: rgba(0, 0, 0, 0.4);
+  border-left: 2px solid var(--tedx-red);
+  border-radius: 0 6px 6px 0;
+  margin-bottom: 0.65rem;
+}
+
+.tedx-org-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-bottom: 0.75rem;
+}
+
+.tedx-org-focus-tag {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--tedx-text-muted);
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+}
+
+/* Card Actions (LinkedIn & Socials) */
+.tedx-org-card-actions {
+  margin-top: auto;
+  padding-top: 0.85rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.tedx-org-linkedin-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  background-color: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--tedx-text-primary);
+  text-decoration: none;
+  font-size: 0.75rem;
+  font-weight: 600;
+  transition: all 0.25s ease;
+  flex-grow: 1;
+}
+
+.tedx-org-linkedin-btn:hover {
+  background-color: var(--tedx-red);
+  border-color: var(--tedx-red);
+  color: #FFFFFF;
+  box-shadow: 0 4px 15px rgba(230, 43, 50, 0.35);
+}
+
+.tedx-org-social-icon {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+  flex-shrink: 0;
+}
+
+.tedx-org-arrow-icon {
+  width: 13px;
+  height: 13px;
+  margin-left: auto;
+  transition: transform 0.25s ease;
+  color: var(--tedx-text-muted);
+}
+
+.tedx-org-linkedin-btn:hover .tedx-org-arrow-icon {
+  transform: translate(2px, -2px);
+  color: #FFFFFF;
+}
+
+.tedx-org-icon-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--tedx-text-muted);
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.tedx-org-icon-link:hover {
+  background-color: rgba(230, 43, 50, 0.15);
+  border-color: var(--tedx-red-border);
+  color: var(--tedx-red);
+}
+
+/* ==========================================================================
+   INTERACTIVE HOVER & ACTIVE STATES (GRID CARDS)
+   ========================================================================== */
+
+.tedx-org-card:hover,
+.tedx-org-card:focus-visible,
+.tedx-org-card.is-active {
+  transform: translateY(-6px) scale(1.02);
+  border-color: rgba(230, 43, 50, 0.65);
+  background-color: rgba(22, 22, 22, 0.95);
+  box-shadow: 0 16px 36px -8px rgba(230, 43, 50, 0.32),
+              0 0 0 1px rgba(230, 43, 50, 0.45);
+}
+
+.tedx-org-card:hover .tedx-org-card-photo,
+.tedx-org-card:focus-visible .tedx-org-card-photo,
+.tedx-org-card.is-active .tedx-org-card-photo {
+  transform: scale(1.05);
+  filter: contrast(1.08) brightness(1.02);
+}
+
+.tedx-org-card:hover .tedx-org-card-glow-mesh,
+.tedx-org-card:focus-visible .tedx-org-card-glow-mesh,
+.tedx-org-card.is-active .tedx-org-card-glow-mesh {
+  opacity: 1;
+}
+
+.tedx-org-card:hover .tedx-org-card-details,
+.tedx-org-card:focus-visible .tedx-org-card-details,
+.tedx-org-card.is-active .tedx-org-card-details {
+  max-height: 220px;
+  opacity: 1;
+  margin-bottom: 0.5rem;
+}
+
+/* Floating Replay Button */
+.tedx-org-replay-fab {
+  position: fixed;
+  bottom: 1.75rem;
+  right: 1.75rem;
+  z-index: 90;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.15rem;
+  border-radius: 9999px;
+  background: rgba(18, 18, 18, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--tedx-red-border);
+  color: var(--tedx-text-primary);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 15px rgba(230, 43, 50, 0.25);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.tedx-org-replay-fab:hover {
+  background: var(--tedx-red);
+  border-color: var(--tedx-red);
+  color: #FFFFFF;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(230, 43, 50, 0.45);
+}
+
+/* ==========================================================================
+   KEYFRAME ANIMATIONS
+   ========================================================================== */
+
+/* Row 1: Left to Right */
+@keyframes tedxMarqueeLeftToRight {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* Row 2: Right to Left */
+@keyframes tedxMarqueeRightToLeft {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes tedxPulseGlow {
+  0% {
+    opacity: 0.35;
+    transform: translateX(-50%) scale(1);
+  }
+  100% {
+    opacity: 0.75;
+    transform: translateX(-50%) scale(1.08);
+  }
+}
+
+@keyframes tedxPulseDot {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(0.85);
+  }
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN (DESKTOP 5-COL, TABLET 2-3 COL, MOBILE 1-2 COL)
+   ========================================================================== */
+
+/* Large Tablets & Small Laptops (1200px and below) */
+@media (max-width: 1200px) {
+  .tedx-org-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+}
+
+/* Tablets (960px and below) */
+@media (max-width: 960px) {
+  .tedx-org-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+
+  .tedx-org-heading-section {
+    padding: 2.5rem 0 1.5rem 0;
+  }
+}
+
+/* Small Tablets & Large Phones (680px and below) */
+@media (max-width: 680px) {
+  .tedx-org-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .tedx-org-card-body {
+    padding: 0.9rem;
+  }
+
+  .tedx-org-card-name {
+    font-size: 0.95rem;
+  }
+
+  .tedx-org-card-role {
+    font-size: 0.75rem;
+  }
+
+  .tedx-org-card-description {
+    display: none;
+  }
+
+  .tedx-org-card-details {
+    display: none;
+  }
+
+  .tedx-org-card-actions {
+    padding-top: 0.6rem;
+  }
+}
+
+/* Mobile Phones (460px and below) */
+@media (max-width: 460px) {
+  .tedx-org-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .tedx-org-card-photo-wrapper {
+    aspect-ratio: 16 / 11;
+  }
+
+  .tedx-org-main-heading {
+    font-size: 2.2rem;
+  }
+
+  .tedx-org-replay-fab {
+    bottom: 1rem;
+    right: 1rem;
+    padding: 0.5rem 0.9rem;
+    font-size: 0.72rem;
+  }
+}
+
+/* Reduced Motion Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .tedx-org-rolling-track-l2r,
+  .tedx-org-rolling-track-r2l,
+  .tedx-org-glow-orb-top,
+  .tedx-org-pulse-dot {
+    animation: none !important;
+  }
+
+  .tedx-org-card,
+  .tedx-org-collage-card {
+    transition: none !important;
+  }
+}
