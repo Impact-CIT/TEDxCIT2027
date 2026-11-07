@@ -10,6 +10,7 @@ import { PastEventsSection } from './components/sections/PastEventsSection';
 import { SponsorSection } from './components/sections/SponsorSection';
 import { CinematicFramesSection } from './components/sections/CinematicFramesSection';
 import { CinematicStage } from './components/stage/CinematicStage';
+import { ApplyToSpeakModal } from './components/ApplyToSpeakModal';
 
 // Dedicated Legal & Compliance Pages (Required for Razorpay Merchant Approval)
 import TermsConditions from './pages/TermsConditions';
@@ -32,6 +33,9 @@ function getNormalizedPath() {
 
 export default function App() {
   const [currentPath, setCurrentPath] = useState(getNormalizedPath);
+  const [isSpeakModalOpen, setIsSpeakModalOpen] = useState(false);
+  const openSpeakModal = () => setIsSpeakModalOpen(true);
+  const closeSpeakModal = () => setIsSpeakModalOpen(false);
 
   // Listen to popstate and history navigation
   useEffect(() => {
@@ -86,8 +90,37 @@ export default function App() {
       case '/contact-us':
       case '/contact':
       case '/partner-with-us':
-      case '/apply-to-speak':
         return <ContactUs />;
+
+      case '/apply-to-speak':
+        // Open the modal on the current page instead of navigating to ContactUs
+        if (!isSpeakModalOpen) openSpeakModal();
+        // Fall back to home so there's always a page behind the modal
+        return (
+          <main className="flex-1 w-full flex flex-col">
+            <Hero />
+            <WhatIsTEDxSection />
+            <ScrollExpansionSection
+              images={[
+                '/images/beyond-seen-1.jpg',
+                '/images/beyond-seen-2.jpg',
+              ]}
+              imageLabels={[
+                'Organizing Committee',
+                'Team & Crew',
+              ]}
+            />
+            <AboutVideoSection
+              videoSrc="/videos/tedx-cit-speaker.mp4"
+              posterSrc="/images/tedx-speaker-stage-poster.jpg"
+              onApplyToSpeak={openSpeakModal}
+            />
+            <CinematicFramesSection intervalMs={3000} />
+            <ImpactStatsSection />
+            <PastEventsSection />
+            <SponsorSection />
+          </main>
+        );
 
       case '/register':
       case '/delegates':
@@ -123,6 +156,7 @@ export default function App() {
             <AboutVideoSection
               videoSrc="/videos/tedx-cit-speaker.mp4"
               posterSrc="/images/tedx-speaker-stage-poster.jpg"
+              onApplyToSpeak={openSpeakModal}
             />
 
             {/* 3-Frame Rotating Stage Showcase Section (Cycles every 3 seconds to new 3 images) */}
@@ -146,6 +180,8 @@ export default function App() {
 
   return (
     <div className="min-h-screen w-full bg-[#000000] text-[#F5F5F2] selection:bg-[#FF2B25] selection:text-white flex flex-col relative">
+      {/* Apply to Speak Modal — available on every page */}
+      <ApplyToSpeakModal isOpen={isSpeakModalOpen} onClose={closeSpeakModal} />
       {/* 1. Cinematic 3D Stage Opening Ceremony Intro (Home page only) */}
       {isHomePage && isIntroActive && (
         <CinematicStage
@@ -165,7 +201,7 @@ export default function App() {
         }`}
       >
         {/* Full-width Grid Architectural Navbar */}
-        <Navbar currentPath={currentPath} />
+        <Navbar currentPath={currentPath} onApplyToSpeak={openSpeakModal} />
 
         {/* Dynamic Route Content */}
         {renderContent()}

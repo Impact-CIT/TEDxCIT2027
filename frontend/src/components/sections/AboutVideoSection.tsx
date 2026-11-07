@@ -34,8 +34,15 @@ export interface AboutVideoSectionProps {
 
   /**
    * CTA button link destination. Default: "#apply-to-speak"
+   * Ignored when onApplyToSpeak is provided.
    */
   ctaLink?: string;
+
+  /**
+   * When provided, the CTA button opens the Apply to Speak modal
+   * instead of navigating to ctaLink.
+   */
+  onApplyToSpeak?: () => void;
 
   /**
    * Optional custom CSS class for the section wrapper.
@@ -97,6 +104,7 @@ export const AboutVideoSection: React.FC<AboutVideoSectionProps> = ({
   subhead = 'IDEAS WORTH SPREADING. PERSPECTIVES WITHOUT LIMITS.',
   ctaText = 'APPLY TO SPEAK',
   ctaLink = '#apply-to-speak',
+  onApplyToSpeak,
   className = '',
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -309,13 +317,24 @@ export const AboutVideoSection: React.FC<AboutVideoSectionProps> = ({
 
           {/* 4. Action CTA Button */}
           <div className="pt-1">
-            <a
-              href={ctaLink}
-              className="group inline-flex items-center gap-3 bg-[#EB0028] hover:bg-[#D00024] active:bg-[#B5001F] text-white font-semibold text-xs sm:text-sm uppercase tracking-[0.14em] px-8 py-4.5 rounded-none transition-all duration-200 cursor-pointer shadow-lg shadow-[#EB0028]/25 hover:shadow-[#EB0028]/40 hover:-translate-y-0.5"
-            >
-              <span>{ctaText}</span>
-              <ArrowUpRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-            </a>
+            {onApplyToSpeak ? (
+              <button
+                type="button"
+                onClick={onApplyToSpeak}
+                className="group inline-flex items-center gap-3 bg-[#EB0028] hover:bg-[#D00024] active:bg-[#B5001F] text-white font-semibold text-xs sm:text-sm uppercase tracking-[0.14em] px-8 py-4.5 rounded-none transition-all duration-200 cursor-pointer shadow-lg shadow-[#EB0028]/25 hover:shadow-[#EB0028]/40 hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#EB0028] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+              >
+                <span>{ctaText}</span>
+                <ArrowUpRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </button>
+            ) : (
+              <a
+                href={ctaLink}
+                className="group inline-flex items-center gap-3 bg-[#EB0028] hover:bg-[#D00024] active:bg-[#B5001F] text-white font-semibold text-xs sm:text-sm uppercase tracking-[0.14em] px-8 py-4.5 rounded-none transition-all duration-200 cursor-pointer shadow-lg shadow-[#EB0028]/25 hover:shadow-[#EB0028]/40 hover:-translate-y-0.5"
+              >
+                <span>{ctaText}</span>
+                <ArrowUpRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </a>
+            )}
           </div>
 
         </div>

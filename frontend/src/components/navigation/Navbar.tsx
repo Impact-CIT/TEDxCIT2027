@@ -14,6 +14,8 @@ export interface NavbarProps {
   logoSrc?: string;
   /** Optional override for current path (useful in testing or router contexts) */
   currentPath?: string;
+  /** Called when the user clicks "Apply to Speak" — opens the modal */
+  onApplyToSpeak?: () => void;
 }
 
 /**
@@ -100,6 +102,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   className = '',
   logoSrc = '/tedx-logo.svg',
   currentPath,
+  onApplyToSpeak,
 }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -260,17 +263,26 @@ export const Navbar: React.FC<NavbarProps> = ({
             {ctaButtons.map((btn) => {
               const isActive = pathname === btn.href || pathname.startsWith(`${btn.href}/`);
               const isPrimary = btn.isPrimary || btn.label === 'REGISTER NOW';
+              const isApplyToSpeak = btn.href === '/apply-to-speak';
 
               return (
                 <motion.a
                   key={btn.href}
-                  href={btn.href}
-                  onClick={(e) => handleNavigate(e, btn.href)}
+                  href={isApplyToSpeak ? undefined : btn.href}
+                  onClick={(e) => {
+                    if (isApplyToSpeak) {
+                      e.preventDefault();
+                      onApplyToSpeak?.();
+                    } else {
+                      handleNavigate(e, btn.href);
+                    }
+                  }}
+                  role={isApplyToSpeak ? 'button' : undefined}
                   whileHover={{ scale: 1.025 }}
                   whileTap={{ scale: 0.975 }}
                   transition={{ duration: 0.2 }}
                   aria-current={isActive ? 'page' : undefined}
-                  className={`group relative overflow-hidden border px-3.5 sm:px-4 lg:px-4.5 xl:px-5 py-2.5 lg:py-3 text-[11px] sm:text-xs lg:text-[13px] font-bold tracking-[0.07em] uppercase transition-all duration-300 rounded-none whitespace-nowrap focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2B25] ${
+                  className={`group relative overflow-hidden border px-3.5 sm:px-4 lg:px-4.5 xl:px-5 py-2.5 lg:py-3 text-[11px] sm:text-xs lg:text-[13px] font-bold tracking-[0.07em] uppercase transition-all duration-300 rounded-none whitespace-nowrap focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2B25] cursor-pointer ${
                     isPrimary
                       ? 'bg-[#FF2B25] border-[#FF2B25] text-white hover:bg-[#d61e19] shadow-md shadow-[#FF2B25]/25'
                       : isActive
@@ -390,18 +402,26 @@ export const Navbar: React.FC<NavbarProps> = ({
                   item.href === '/'
                     ? pathname === '/'
                     : pathname === item.href || pathname.startsWith(`${item.href}/`);
+                const isApplyToSpeak = item.href === '/apply-to-speak';
 
                 return (
                   <motion.div key={item.href} variants={linkItemVariants}>
                     <a
                       ref={index === 0 ? firstNavLinkRef : undefined}
-                      href={item.href}
+                      href={isApplyToSpeak ? undefined : item.href}
+                      role={isApplyToSpeak ? 'button' : undefined}
                       onClick={(e) => {
-                        handleCloseMenu();
-                        handleNavigate(e, item.href);
+                        if (isApplyToSpeak) {
+                          e.preventDefault();
+                          handleCloseMenu();
+                          onApplyToSpeak?.();
+                        } else {
+                          handleCloseMenu();
+                          handleNavigate(e, item.href);
+                        }
                       }}
                       aria-current={isActive ? 'page' : undefined}
-                      className={`block font-sans text-2xl sm:text-3xl font-bold uppercase tracking-tight transition-colors duration-200 focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2B25] ${
+                      className={`block font-sans text-2xl sm:text-3xl font-bold uppercase tracking-tight transition-colors duration-200 focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2B25] cursor-pointer ${
                         isActive
                           ? 'text-[#FF2B25]'
                           : 'text-[#F5F5F2] hover:text-[#FF2B25]'
