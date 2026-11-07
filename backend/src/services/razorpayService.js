@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import Razorpay from 'razorpay';
 import crypto from 'crypto';
 
@@ -72,8 +73,10 @@ class RazorpayService {
    * @param {Object} options.notes - Metadata dictionary
    */
   async createOrder({ amountInPaise, currency = 'INR', receipt, notes = {} }) {
-    if (!amountInPaise || amountInPaise <= 0) {
-      throw new Error('Valid order amount in paise is required');
+    if (typeof amountInPaise !== 'number' || isNaN(amountInPaise) || amountInPaise < 100) {
+      const err = new Error('Amount must be at least 100 paise');
+      err.statusCode = 400;
+      throw err;
     }
 
     // 1. Live/Test Razorpay API mode
@@ -87,29 +90,40 @@ class RazorpayService {
         });
 
         return {
+          order_id: order.id,
           orderId: order.id,
           amount: order.amount,
           currency: order.currency,
           receipt: order.receipt,
           status: order.status,
+          key_id: this.keyId,
           keyId: this.keyId,
           isMock: false,
           raw: order,
         };
       } catch (err) {
         console.error('[RazorpayService] Razorpay order creation failed:', err);
-        throw new Error(`Razorpay API Error: ${err.error?.description || err.message}`);
+        const apiError = new Error(`Razorpay API Error: ${err.error?.description || err.message}`);
+        // Handle auth failures (return 401) vs server errors (return 500)
+        apiError.statusCode =
+          err.statusCode === 401 ||
+          (err.error?.code === 'BAD_REQUEST_ERROR' && err.error?.description?.toLowerCase().includes('auth'))
+            ? 401
+            : 500;
+        throw apiError;
       }
     }
 
     // 2. Mock / Sandbox simulation mode (when awaiting Razorpay KYC approval)
     const mockOrderId = `order_mock_${crypto.randomBytes(8).toString('hex')}`;
     return {
+      order_id: mockOrderId,
       orderId: mockOrderId,
       amount: Math.round(amountInPaise),
       currency,
       receipt: receipt || `rcpt_mock_${Date.now()}`,
       status: 'created',
+      key_id: this.keyId || 'rzp_test_mock_key',
       keyId: this.keyId || 'rzp_test_mock_key',
       isMock: true,
       raw: {
