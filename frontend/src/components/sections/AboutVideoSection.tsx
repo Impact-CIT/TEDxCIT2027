@@ -1,39 +1,20 @@
 'use client';
 
 import React, { useRef, useState, useEffect } from 'react';
-import { Volume2, VolumeX, Play, Pause, ArrowUpRight, Film } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Volume2, VolumeX, ArrowUpRight, Film } from 'lucide-react';
 
 export interface AboutVideoSectionProps {
-  /**
-   * Video source path or URL.
-   * Can be:
-   *  1. Local MP4 in `frontend/public/videos/` (e.g. `"/videos/my-tedx-video.mp4"`)
-   *  2. Direct MP4/WebM URL
-   *  3. YouTube URL or Video ID
-   *  4. Vimeo URL
-   * Leave blank/undefined to display the 16:9 stage video placeholder.
-   */
+  /** Video source path or URL */
   videoSrc?: string;
-
-  /**
-   * Optional custom poster image to display before/while the video plays.
-   * Default: "/images/stage-speaker-crop.jpg"
-   */
+  /** Optional custom poster image to display before/while the video plays */
   posterSrc?: string;
-
-  /**
-   * Small subhead / eyebrow label.
-   * Default: "IDEAS WORTH SPREADING. PERSPECTIVES WITHOUT LIMITS."
-   */
+  /** Small subhead / eyebrow label */
   subhead?: string;
-
-  /**
-   * CTA button label. Default: "APPLY TO SPEAK"
-   */
+  /** CTA button label. Default: "APPLY TO SPEAK" */
   ctaText?: string;
-
   /**
-   * CTA button link destination. Default: "#apply-to-speak"
+   * CTA button link destination. Default: "/apply-to-speak"
    * Ignored when onApplyToSpeak is provided.
    */
   ctaLink?: string;
@@ -49,6 +30,8 @@ export interface AboutVideoSectionProps {
    */
   className?: string;
 }
+
+const transitionEase = [0.16, 1, 0.3, 1] as const;
 
 /**
  * Parses potential YouTube or Vimeo video identifiers
@@ -87,23 +70,21 @@ function getEmbedUrl(src?: string): { type: 'youtube' | 'vimeo' | 'html5'; url: 
 }
 
 /**
- * AboutVideoSection — Full-Width Edge-to-Edge 50/50 Screen Section
+ * AboutVideoSection — Full-Width Edge-to-Edge 50/50 Stage Section
  * for TEDx Chennai Institute of Technology.
  *
- * Requirements:
- * - Covers the entire width of screen (big 16:9 frame on left, expansive content on right).
- * - Line 1: "ABOUT" (white)
- * - Line 2: "TEDx" in red, with "CHENNAI INSTITUTE OF TECHNOLOGY" in a smaller font size on the SAME LINE.
- * - Subhead: "IDEAS WORTH SPREADING. PERSPECTIVES WITHOUT LIMITS."
- * - 3 clean readable paragraphs
- * - "APPLY TO SPEAK ↗" CTA button
+ * Implements:
+ * - 50/50 responsive layout covering the screen with an immersive 16:9 stage reel.
+ * - Seamless automatic background playback (muted by default with user sound toggle).
+ * - Two-Tone Headline: "ABOUT" (white) + "TEDx" (red) + "CHENNAI INSTITUTE OF TECHNOLOGY" (white, wrapping gracefully).
+ * - Smooth scroll-driven Framer Motion entrance reveals.
  */
 export const AboutVideoSection: React.FC<AboutVideoSectionProps> = ({
   videoSrc = '',
   posterSrc = '/images/stage-speaker-crop.jpg',
   subhead = 'IDEAS WORTH SPREADING. PERSPECTIVES WITHOUT LIMITS.',
   ctaText = 'APPLY TO SPEAK',
-  ctaLink = '#apply-to-speak',
+  ctaLink = '/apply-to-speak',
   onApplyToSpeak,
   className = '',
 }) => {
@@ -114,16 +95,6 @@ export const AboutVideoSection: React.FC<AboutVideoSectionProps> = ({
   const [isHovered, setIsHovered] = useState<boolean>(false);
 
   const embedInfo = getEmbedUrl(videoSrc);
-
-  const togglePlay = () => {
-    if (!videoRef.current) return;
-    if (isPlaying) {
-      videoRef.current.pause();
-      setIsPlaying(false);
-    } else {
-      videoRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
-    }
-  };
 
   const toggleMute = () => {
     if (!videoRef.current) return;
@@ -150,27 +121,43 @@ export const AboutVideoSection: React.FC<AboutVideoSectionProps> = ({
     };
   }, [embedInfo]);
 
+  // Client navigation handler
+  const handleNavigate = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (href.startsWith('/')) {
+      e.preventDefault();
+      window.history.pushState({}, '', href);
+      window.dispatchEvent(new Event('popstate'));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   return (
     <section
       id="about-tedx-cit"
-      className={`w-full bg-[#000000] text-[#F5F5F2] border-t border-[#1C1C1E] py-16 sm:py-20 lg:py-24 relative overflow-hidden ${className}`}
+      className={`w-full bg-[#000000] text-[#F5F5F2] border-t border-[#1C1C1E] py-24 sm:py-28 lg:py-36 relative overflow-hidden ${className}`}
       aria-label="About TEDx Chennai Institute of Technology"
     >
       {/* Subtle Background Glow Accent */}
       <div
-        className="absolute top-1/2 left-1/4 -translate-y-1/2 -translate-x-1/2 w-[700px] h-[700px] bg-[#EB0028]/8 rounded-full blur-[160px] pointer-events-none"
+        className="absolute top-1/2 left-1/4 -translate-y-1/2 -translate-x-1/2 w-[700px] h-[700px] bg-[#EB0028]/14 rounded-full blur-[200px] pointer-events-none -z-10"
         aria-hidden="true"
       />
 
       {/* FULL SCREEN WIDTH GRID: Covers the entire width of screen */}
-      <div className="w-full px-4 sm:px-8 lg:px-10 xl:px-14 2xl:px-16 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 xl:gap-14 items-center">
+      <div className="w-full px-5 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 xl:gap-24 items-center">
         
         {/* =========================================================================
-            LEFT HALF: Big 16:9 Video Frame across the entire left width
+            LEFT HALF: Big 16:9 Video Frame
             ========================================================================= */}
-        <div className="w-full flex flex-col justify-center">
+        <motion.div
+          initial={{ opacity: 0, y: 32 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.25 }}
+          transition={{ duration: 0.85, ease: transitionEase }}
+          className="w-full flex flex-col justify-center"
+        >
           <div
-            className="w-full aspect-video rounded-sm overflow-hidden bg-[#0A0A0A] border border-[#292929] relative group shadow-2xl shadow-black/95 flex items-center justify-center select-none"
+            className="w-full aspect-video rounded-2xl overflow-hidden bg-[#0A0A0C] border border-white/10 relative group shadow-[0_24px_80px_rgba(0,0,0,0.9)] flex items-center justify-center select-none transition-all duration-500 hover:border-[#EB0028]/50 hover:shadow-[0_30px_90px_rgba(235,0,40,0.18)]"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
           >
@@ -201,35 +188,33 @@ export const AboutVideoSection: React.FC<AboutVideoSectionProps> = ({
                 <img
                   src={posterSrc}
                   alt="TEDx Stage Speaker"
-                  className="w-full h-full object-cover object-center opacity-85 transition-opacity duration-300 group-hover:opacity-95"
+                  className="w-full h-full object-cover object-center opacity-85 transition-transform duration-700 group-hover:scale-105"
                   loading="lazy"
                 />
 
                 {/* Subtle dark gradient overlay */}
                 <div
-                  className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/35 to-black/20 pointer-events-none"
+                  className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/20 pointer-events-none"
                   aria-hidden="true"
                 />
 
-                {/* Central Play Button Placeholder */}
-                <div className="relative z-10 flex flex-col items-center justify-center gap-3 pointer-events-none">
-                  <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white flex items-center justify-center shadow-2xl group-hover:scale-105 group-hover:border-[#EB0028] group-hover:text-[#EB0028] transition-all duration-300">
-                    <Play className="w-6 h-6 sm:w-8 sm:h-8 fill-current ml-1" />
-                  </div>
-                  <span className="text-[11px] sm:text-xs font-mono uppercase tracking-[0.2em] text-[#A0A0A5] bg-black/75 px-3 py-1 rounded-sm border border-white/10">
-                    16:9 Video Frame
+                {/* Central Stage Badge */}
+                <div className="relative z-10 flex flex-col items-center justify-center gap-2 pointer-events-none">
+                  <span className="text-xs font-mono uppercase tracking-[0.22em] text-white/90 bg-black/80 backdrop-blur-md px-4 py-2 rounded-full border border-white/15 shadow-xl flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-[#EB0028] animate-pulse" />
+                    <span>TEDx CIT STAGE BROADCAST</span>
                   </span>
                 </div>
               </div>
             )}
 
             {/* Video Live Badge (Top-Left) */}
-            <div className="absolute top-4 left-4 z-20 pointer-events-none flex items-center gap-2 px-3 py-1.5 bg-black/80 backdrop-blur-md border border-white/10 text-[11px] font-mono tracking-wider text-white rounded-none">
+            <div className="absolute top-4 left-4 z-20 pointer-events-none flex items-center gap-2 px-3 py-1.5 bg-black/80 backdrop-blur-md border border-white/15 text-[11px] font-mono tracking-wider text-white rounded-lg shadow-lg">
               <span className="w-2 h-2 rounded-full bg-[#EB0028] animate-pulse" />
-              <span>TEDx CIT STAGE</span>
+              <span>STAGE ARCHIVE</span>
             </div>
 
-            {/* Bottom Controls for HTML5 Video */}
+            {/* Bottom Controls for HTML5 Video (Audio Toggle - Autoplays) */}
             {embedInfo?.type === 'html5' && !hasVideoError && (
               <div
                 className={`absolute bottom-4 right-4 z-20 flex items-center gap-2 transition-opacity duration-300 ${
@@ -238,72 +223,65 @@ export const AboutVideoSection: React.FC<AboutVideoSectionProps> = ({
               >
                 <button
                   type="button"
-                  onClick={togglePlay}
-                  className="w-9 h-9 rounded-none bg-black/80 backdrop-blur-md border border-white/20 text-white flex items-center justify-center hover:bg-[#EB0028] hover:border-[#EB0028] transition-colors cursor-pointer"
-                  title={isPlaying ? 'Pause video' : 'Play video'}
-                  aria-label={isPlaying ? 'Pause video' : 'Play video'}
-                >
-                  {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 fill-current ml-0.5" />}
-                </button>
-                <button
-                  type="button"
                   onClick={toggleMute}
-                  className="w-9 h-9 rounded-none bg-black/80 backdrop-blur-md border border-white/20 text-white flex items-center justify-center hover:bg-[#EB0028] hover:border-[#EB0028] transition-colors cursor-pointer"
+                  className="w-10 h-10 rounded-xl bg-black/80 backdrop-blur-md border border-white/20 text-white flex items-center justify-center hover:bg-[#EB0028] hover:border-[#EB0028] transition-all cursor-pointer shadow-lg"
                   title={isMuted ? 'Unmute sound' : 'Mute sound'}
                   aria-label={isMuted ? 'Unmute sound' : 'Mute sound'}
                 >
-                  {isMuted ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5" />}
+                  {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
                 </button>
               </div>
             )}
           </div>
 
-          {/* Subtext below video */}
-          <div className="mt-3 flex items-center justify-between text-xs font-mono text-[#8E8E93] px-1">
-            <span className="flex items-center gap-1.5">
+          {/* Subtext below video with high-tech status readout */}
+          <div className="mt-3.5 flex items-center justify-between text-xs font-mono text-[#8E8E93] px-1">
+            <span className="flex items-center gap-2">
               <Film className="w-3.5 h-3.5 text-[#EB0028]" />
-              <span>STAGE ARCHIVE</span>
+              <span>OFFICIAL HIGHLIGHT RECORD</span>
             </span>
-            <span>16:9 CINEMATIC REEL</span>
+            <span className="tracking-widest">16:9 CINEMATIC 4K REEL</span>
           </div>
-        </div>
+        </motion.div>
 
         {/* =========================================================================
-            RIGHT HALF: Content Column
+            RIGHT HALF: Content Column with Framer Motion Reveal
             ========================================================================= */}
-        <div className="w-full flex flex-col justify-center">
-          
-          {/* 1. Small Subhead / Eyebrow */}
+        <motion.div
+          initial={{ opacity: 0, y: 32 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.25 }}
+          transition={{ duration: 0.85, ease: transitionEase, delay: 0.12 }}
+          className="w-full flex flex-col justify-center"
+        >
+          {/* Eyebrow Label */}
           <div className="mb-4 sm:mb-5 flex items-center gap-2.5">
-            <span className="w-2 h-2 rounded-full bg-[#EB0028]" aria-hidden="true" />
-            <span className="font-mono text-xs sm:text-[13px] uppercase tracking-[0.2em] text-[#8E8E93]">
+            <span className="w-2 h-2 rounded-full bg-[#EB0028] animate-pulse" aria-hidden="true" />
+            <span className="font-mono text-xs sm:text-[13px] uppercase tracking-[0.22em] text-[#8E8E93]">
               {subhead}
             </span>
           </div>
 
-          {/* 2. Headline:
-              - Line 1: "ABOUT" (white)
-              - Line 2: "TEDx" (red) with "CHENNAI INSTITUTE OF TECHNOLOGY" (smaller size on the SAME LINE)
-          */}
-          <div className="mb-7 sm:mb-8 font-['Inter',sans-serif]">
-            {/* Line 1: ABOUT in White */}
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[44px] xl:text-6xl font-extrabold tracking-tight text-white uppercase leading-none mb-2 sm:mb-3">
+          {/* Two-Tone Headline */}
+          <div className="mb-8 font-['Inter',sans-serif]">
+            {/* Line 1: ABOUT in White (Upper Line) */}
+            <h2 className="text-[22px] min-[390px]:text-[24px] sm:text-[28px] md:text-[32px] lg:text-[34px] xl:text-[40px] font-extrabold tracking-tight text-white uppercase leading-none mb-2 sm:mb-2.5">
               ABOUT
             </h2>
 
-            {/* Line 2: TEDx in RED with CHENNAI INSTITUTE OF TECHNOLOGY smaller on the SAME LINE */}
-            <div className="flex items-baseline gap-x-2.5 sm:gap-x-3.5 flex-nowrap overflow-hidden">
-              <span className="text-3xl sm:text-4xl md:text-5xl lg:text-[38px] xl:text-5xl font-black text-[#EB0028] tracking-tight shrink-0">
+            {/* Line 2: TEDx in RED (Same bigger font size as ABOUT) + CHENNAI INSTITUTE OF TECHNOLOGY (Half the font size of TEDx) on the SAME LINE */}
+            <div className="flex flex-nowrap items-baseline gap-x-2 sm:gap-x-2.5 lg:gap-x-3 whitespace-nowrap text-[22px] min-[390px]:text-[24px] sm:text-[28px] md:text-[32px] lg:text-[34px] xl:text-[40px] leading-none">
+              <span className="font-black text-[#EB0028] tracking-tight shrink-0 leading-none drop-shadow-[0_4px_24px_rgba(235,0,40,0.25)]">
                 TED<span className="lowercase font-bold text-[0.8em]">x</span>
               </span>
-              <span className="text-sm sm:text-lg md:text-xl lg:text-base xl:text-2xl 2xl:text-3xl font-bold text-white tracking-tight uppercase whitespace-nowrap shrink truncate sm:overflow-visible">
+              <span className="text-[0.48em] sm:text-[0.5em] font-bold text-white tracking-tight uppercase leading-none shrink-0">
                 CHENNAI INSTITUTE OF TECHNOLOGY
               </span>
             </div>
           </div>
 
-          {/* 3. Description (3 readable paragraphs with elegant typography) */}
-          <div className="space-y-4 sm:space-y-5 text-[#A0A0A5] text-[15px] sm:text-base lg:text-[16px] xl:text-[17px] leading-relaxed font-normal mb-8 sm:mb-10 max-w-2xl">
+          {/* Description Paragraphs */}
+          <div className="space-y-4 sm:space-y-5 text-[#A0A0A5] text-[15px] sm:text-base lg:text-[16px] xl:text-[17px] leading-relaxed font-normal mb-10 max-w-2xl">
             <p>
               TEDx Chennai Institute of Technology is an independently organized TEDx event that brings together curious minds, diverse perspectives and ideas worth sharing.
             </p>
@@ -315,29 +293,30 @@ export const AboutVideoSection: React.FC<AboutVideoSectionProps> = ({
             </p>
           </div>
 
-          {/* 4. Action CTA Button */}
-          <div className="pt-1">
+          {/* Action CTA Button */}
+          <div className="pt-2">
             {onApplyToSpeak ? (
               <button
                 type="button"
                 onClick={onApplyToSpeak}
-                className="group inline-flex items-center gap-3 bg-[#EB0028] hover:bg-[#D00024] active:bg-[#B5001F] text-white font-semibold text-xs sm:text-sm uppercase tracking-[0.14em] px-8 py-4.5 rounded-none transition-all duration-200 cursor-pointer shadow-lg shadow-[#EB0028]/25 hover:shadow-[#EB0028]/40 hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#EB0028] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+                className="group relative inline-flex items-center gap-3 bg-[#EB0028] hover:bg-[#C80022] active:bg-[#C80022] text-white font-bold text-xs sm:text-sm uppercase tracking-[0.16em] px-8 py-4.5 rounded-xl transition-all duration-300 cursor-pointer shadow-lg shadow-[#EB0028]/25 hover:shadow-[#EB0028]/45 hover:-translate-y-0.5 overflow-hidden"
               >
-                <span>{ctaText}</span>
-                <ArrowUpRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                <span className="relative z-10">{ctaText}</span>
+                <ArrowUpRight className="relative z-10 w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </button>
             ) : (
               <a
                 href={ctaLink}
-                className="group inline-flex items-center gap-3 bg-[#EB0028] hover:bg-[#D00024] active:bg-[#B5001F] text-white font-semibold text-xs sm:text-sm uppercase tracking-[0.14em] px-8 py-4.5 rounded-none transition-all duration-200 cursor-pointer shadow-lg shadow-[#EB0028]/25 hover:shadow-[#EB0028]/40 hover:-translate-y-0.5"
+                onClick={(e) => handleNavigate(e, ctaLink)}
+                className="group relative inline-flex items-center gap-3 bg-[#EB0028] hover:bg-[#C80022] active:bg-[#C80022] text-white font-bold text-xs sm:text-sm uppercase tracking-[0.16em] px-8 py-4.5 rounded-xl transition-all duration-300 cursor-pointer shadow-lg shadow-[#EB0028]/25 hover:shadow-[#EB0028]/45 hover:-translate-y-0.5 overflow-hidden"
               >
-                <span>{ctaText}</span>
-                <ArrowUpRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                <span className="relative z-10">{ctaText}</span>
+                <ArrowUpRight className="relative z-10 w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </a>
             )}
           </div>
 
-        </div>
+        </motion.div>
 
       </div>
     </section>

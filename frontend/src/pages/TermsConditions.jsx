@@ -7,14 +7,14 @@ export default function TermsConditions() {
   }, []);
 
   return (
-    <div className="w-full min-h-screen bg-[#000000] text-[#F5F5F2] pt-28 pb-20 px-4 sm:px-8 lg:px-14 xl:px-20 font-sans selection:bg-[#FF2B25] selection:text-white">
+    <div className="w-full min-h-screen bg-[#000000] text-[#F5F5F2] pt-28 pb-20 px-4 sm:px-8 lg:px-14 xl:px-20 font-sans selection:bg-[#EB0028] selection:text-white">
       <div className="max-w-4xl mx-auto">
         
         {/* Navigation Breadcrumb */}
         <div className="mb-8">
           <a
             href="/"
-            className="inline-flex items-center gap-2 text-xs font-mono tracking-widest uppercase text-[#8E8E93] hover:text-[#FF2B25] transition-colors"
+            className="inline-flex items-center gap-2 text-xs font-mono tracking-widest uppercase text-[#8E8E93] hover:text-[#EB0028] transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>BACK TO HOME</span>
@@ -23,12 +23,12 @@ export default function TermsConditions() {
 
         {/* Header */}
         <div className="border-b border-[#262626] pb-8 mb-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#FF2B25]/10 border border-[#FF2B25]/30 text-[#FF2B25] text-xs font-mono uppercase tracking-widest mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#EB0028]/10 border border-[#EB0028]/30 text-[#EB0028] text-xs font-mono uppercase tracking-widest mb-4">
             <FileText className="w-3.5 h-3.5" />
             <span>Legal Documentation</span>
           </div>
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white uppercase">
-            Terms & Conditions
+            Terms & <span className="text-[#EB0028]">Conditions</span>
           </h1>
           <p className="mt-3 text-sm font-mono text-[#8E8E93]">
             Last Updated: November 2026 • Effective for TEDxCIT 2027: UNTAPPED
@@ -41,7 +41,7 @@ export default function TermsConditions() {
           {/* Section 1 */}
           <section className="bg-[#0A0A0A] border border-[#1F1F1F] p-6 sm:p-8 rounded-sm">
             <h2 className="text-lg sm:text-xl font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
-              <span className="text-[#FF2B25] font-mono">01.</span> About the Event & Licensing
+              <span className="text-[#EB0028] font-mono">01.</span> About the Event & Licensing
             </h2>
             <p className="mb-3">
               <strong>TEDxCIT 2027</strong> (&quot;Event&quot;) is an independently organized TEDx event operated under official license granted by TED Conferences LLC. The event is organized and hosted by <strong>Chennai Institute of Technology</strong>, located at Sarathy Nagar, Kundrathur, Chennai, Tamil Nadu 600069, India.
@@ -54,16 +54,16 @@ export default function TermsConditions() {
           {/* Section 2 */}
           <section className="bg-[#0A0A0A] border border-[#1F1F1F] p-6 sm:p-8 rounded-sm">
             <h2 className="text-lg sm:text-xl font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
-              <span className="text-[#FF2B25] font-mono">02.</span> Delegate Pass Categories & Eligibility
+              <span className="text-[#EB0028] font-mono">02.</span> Delegate Pass Categories & Eligibility
             </h2>
             <div className="space-y-4">
-              <div className="border-l-2 border-[#FF2B25] pl-4">
+              <div className="border-l-2 border-[#EB0028] pl-4">
                 <h3 className="font-semibold text-white">Student Delegate Pass (₹100)</h3>
                 <p className="text-xs sm:text-sm text-[#A1A1A6] mt-1">
                   Applicable strictly to bona fide school, college, and university students. Attendees booking a Student Delegate Pass <strong>must present a valid student identity card</strong> during physical check-in at the registration desk on the event day. Failure to produce a valid ID may result in denial of entry without refund.
                 </p>
               </div>
-              <div className="border-l-2 border-[#FF2B25] pl-4">
+              <div className="border-l-2 border-[#EB0028] pl-4">
                 <h3 className="font-semibold text-white">Professional Delegate Pass (₹200)</h3>
                 <p className="text-xs sm:text-sm text-[#A1A1A6] mt-1">
                   Open to corporate professionals, academicians, entrepreneurs, researchers, and general delegates. Includes priority seating, access to executive networking zones, and premium delegate kit.
@@ -75,7 +75,7 @@ export default function TermsConditions() {
           {/* Section 3 */}
           <section className="bg-[#0A0A0A] border border-[#1F1F1F] p-6 sm:p-8 rounded-sm">
             <h2 className="text-lg sm:text-xl font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
-              <span className="text-[#FF2B25] font-mono">03.</span> Payment Gateway & Pricing Transparency
+              <span className="text-[#EB0028] font-mono">03.</span> Payment Gateway & Pricing Transparency
             </h2>
             <ul className="list-disc list-inside space-y-2 text-[#D1D1D6]">
               <li>All payments are securely routed and processed through <strong>Razorpay Payment Gateway</strong> (Razorpay Software Private Limited).</li>
@@ -87,7 +87,7 @@ export default function TermsConditions() {
           {/* Section 4 */}
           <section className="bg-[#0A0A0A] border border-[#1F1F1F] p-6 sm:p-8 rounded-sm">
             <h2 className="text-lg sm:text-xl font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
-              <span className="text-[#FF2B25] font-mono">04.</span> Entry & Venue Protocol
+              <span className="text-[#EB0028] font-mono">04.</span> Entry & Venue Protocol
             </h2>
             <div className="space-y-3">
               <p>
@@ -105,7 +105,7 @@ export default function TermsConditions() {
           {/* Section 5 */}
           <section className="bg-[#0A0A0A] border border-[#1F1F1F] p-6 sm:p-8 rounded-sm">
             <h2 className="text-lg sm:text-xl font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
-              <span className="text-[#FF2B25] font-mono">05.</span> Event Schedule & Postponement
+              <span className="text-[#EB0028] font-mono">05.</span> Event Schedule & Postponement
             </h2>
             <p>
               While every effort is made to maintain the scheduled roster of speakers and performances, organizers reserve the right to alter speaker lineups, timings, or session agendas due to unforeseen circumstances or emergencies beyond our reasonable control. In case of event postponement, passes will remain valid for the rescheduled date.
@@ -115,7 +115,7 @@ export default function TermsConditions() {
           {/* Section 6 */}
           <section className="bg-[#0A0A0A] border border-[#1F1F1F] p-6 sm:p-8 rounded-sm">
             <h2 className="text-lg sm:text-xl font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
-              <span className="text-[#FF2B25] font-mono">06.</span> Governing Law & Jurisdiction
+              <span className="text-[#EB0028] font-mono">06.</span> Governing Law & Jurisdiction
             </h2>
             <p>
               These Terms and Conditions shall be governed by and construed in accordance with the laws of the Republic of India. Any legal dispute, controversy, or claim arising out of or relating to this contract shall be subject to the exclusive jurisdiction of the competent courts situated in <strong>Chennai, Tamil Nadu, India</strong>.
@@ -130,7 +130,7 @@ export default function TermsConditions() {
             </div>
             <a
               href="/contact-us"
-              className="px-5 py-2.5 bg-[#FF2B25] hover:bg-[#d61e19] text-white text-xs font-bold uppercase tracking-wider transition-colors"
+              className="px-5 py-2.5 bg-[#EB0028] hover:bg-[#C80022] text-white text-xs font-bold uppercase tracking-wider transition-colors"
             >
               Contact Support
             </a>

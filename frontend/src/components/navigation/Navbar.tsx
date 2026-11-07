@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence, type Variants } from 'framer-motion';
+import { X } from 'lucide-react';
 import { NAV_ITEMS, type NavItem } from './navConfig';
 
 export type { NavItem };
@@ -203,7 +204,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             href="/"
             onClick={(e) => handleNavigate(e, '/')}
             aria-label="TEDx Chennai Institute of Technology Home"
-            className="group inline-flex items-center transition-opacity duration-200 hover:opacity-90 focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2B25]"
+            className="group inline-flex items-center transition-opacity duration-200 hover:opacity-90 focus:outline-none focus-visible:ring-1 focus-visible:ring-[#EB0028]"
           >
             <img
               src={logoSrc}
@@ -236,15 +237,15 @@ export const Navbar: React.FC<NavbarProps> = ({
                   href={item.href}
                   onClick={(e) => handleNavigate(e, item.href)}
                   aria-current={isActive ? 'page' : undefined}
-                  className={`group relative flex items-center justify-center px-3 lg:px-4 xl:px-5 border-l border-[#292929] text-[12px] lg:text-[13px] font-semibold tracking-[0.06em] uppercase transition-colors duration-250 focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2B25] ${
-                    isActive ? 'text-[#FF2B25]' : 'text-[#F5F5F2] hover:text-[#FF2B25]'
+                  className={`group relative flex items-center justify-center px-3 lg:px-4 xl:px-5 border-l border-[#292929] text-[12px] lg:text-[13px] font-semibold tracking-[0.06em] uppercase transition-colors duration-250 focus:outline-none focus-visible:ring-1 focus-visible:ring-[#EB0028] ${
+                    isActive ? 'text-[#EB0028]' : 'text-[#F5F5F2] hover:text-[#EB0028]'
                   }`}
                 >
                   <span className="relative py-1.5">
                     {item.label}
                     {/* Animated thin red underline */}
                     <span
-                      className={`absolute bottom-0 left-0 h-[2px] bg-[#FF2B25] transition-all duration-300 ease-out ${
+                      className={`absolute bottom-0 left-0 h-[2px] bg-[#EB0028] transition-all duration-300 ease-out ${
                         isActive ? 'w-full' : 'w-0 group-hover:w-full'
                       }`}
                       aria-hidden="true"
@@ -279,17 +280,17 @@ export const Navbar: React.FC<NavbarProps> = ({
                   whileTap={{ scale: 0.975 }}
                   transition={{ duration: 0.2 }}
                   aria-current={isActive ? 'page' : undefined}
-                  className={`group relative overflow-hidden border px-3.5 sm:px-4 lg:px-4.5 xl:px-5 py-2.5 lg:py-3 text-[11px] sm:text-xs lg:text-[13px] font-bold tracking-[0.07em] uppercase transition-all duration-300 rounded-none whitespace-nowrap focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2B25] cursor-pointer ${
+                  className={`group relative overflow-hidden border px-3.5 sm:px-4 lg:px-4.5 xl:px-5 py-2.5 lg:py-3 text-[11px] sm:text-xs lg:text-[13px] font-bold tracking-[0.07em] uppercase transition-all duration-300 rounded-none whitespace-nowrap focus:outline-none focus-visible:ring-1 focus-visible:ring-[#EB0028] cursor-pointer ${
                     isPrimary
-                      ? 'bg-[#FF2B25] border-[#FF2B25] text-white hover:bg-[#d61e19] shadow-md shadow-[#FF2B25]/25'
+                      ? 'bg-[#EB0028] border-[#EB0028] text-white hover:bg-[#C80022] shadow-md shadow-[#EB0028]/25'
                       : isActive
-                      ? 'border-[#FF2B25] text-[#FF2B25] bg-transparent'
-                      : 'border-[#292929] text-[#F5F5F2] hover:border-[#FF2B25] hover:text-white bg-transparent'
+                      ? 'border-[#EB0028] text-[#EB0028] bg-transparent'
+                      : 'border-[#292929] text-[#F5F5F2] hover:border-[#EB0028] hover:text-white bg-transparent'
                   }`}
                 >
                   {!isPrimary && (
                     <span
-                      className="absolute inset-0 bg-[#FF2B25]/15 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                      className="absolute inset-0 bg-[#EB0028]/15 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                       aria-hidden="true"
                     />
                   )}
@@ -309,12 +310,12 @@ export const Navbar: React.FC<NavbarProps> = ({
             aria-label={isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
             aria-expanded={isMobileMenuOpen}
             aria-controls="mobile-navigation-menu"
-            className="relative z-50 flex h-11 w-11 flex-col items-center justify-center space-y-1.5 p-2 text-[#F5F5F2] transition-colors hover:text-[#FF2B25] focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2B25]"
+            className="relative z-50 flex h-11 w-11 flex-col items-center justify-center space-y-1.5 p-2 text-[#F5F5F2] transition-colors hover:text-[#EB0028] focus:outline-none focus-visible:ring-1 focus-visible:ring-[#EB0028]"
           >
             <motion.span
               animate={
                 isMobileMenuOpen
-                  ? { rotate: 45, y: 7.5, backgroundColor: '#FF2B25' }
+                  ? { rotate: 45, y: 7.5, backgroundColor: '#EB0028' }
                   : { rotate: 0, y: 0, backgroundColor: '#F5F5F2' }
               }
               transition={{ duration: 0.25, ease: 'easeOut' }}
@@ -332,7 +333,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <motion.span
               animate={
                 isMobileMenuOpen
-                  ? { rotate: -45, y: -7.5, backgroundColor: '#FF2B25' }
+                  ? { rotate: -45, y: -7.5, backgroundColor: '#EB0028' }
                   : { rotate: 0, y: 0, backgroundColor: '#F5F5F2' }
               }
               transition={{ duration: 0.25, ease: 'easeOut' }}
@@ -365,7 +366,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   handleNavigate(e, '/');
                 }}
                 aria-label="TEDx Chennai Institute of Technology Home"
-                className="inline-flex items-center focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2B25]"
+                className="inline-flex items-center focus:outline-none focus-visible:ring-1 focus-visible:ring-[#EB0028]"
               >
                 <img
                   src={logoSrc}
@@ -379,9 +380,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                 type="button"
                 onClick={handleCloseMenu}
                 aria-label="Close navigation overlay"
-                className="flex h-10 w-10 items-center justify-center rounded-none border border-[#292929] text-[#F5F5F2] transition-colors hover:border-[#FF2B25] hover:text-[#FF2B25] focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2B25]"
+                className="flex h-10 w-10 items-center justify-center rounded-none border border-[#292929] text-[#F5F5F2] transition-colors hover:border-[#EB0028] hover:text-[#EB0028] focus:outline-none focus-visible:ring-1 focus-visible:ring-[#EB0028]"
               >
-                <span className="text-xl leading-none">✕</span>
+                <X className="w-5 h-5" />
               </button>
             </div>
 
@@ -418,17 +419,17 @@ export const Navbar: React.FC<NavbarProps> = ({
                         }
                       }}
                       aria-current={isActive ? 'page' : undefined}
-                      className={`block font-sans text-2xl sm:text-3xl font-bold uppercase tracking-tight transition-colors duration-200 focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2B25] cursor-pointer ${
+                      className={`block font-sans text-2xl sm:text-3xl font-bold uppercase tracking-tight transition-colors duration-200 focus:outline-none focus-visible:ring-1 focus-visible:ring-[#EB0028] cursor-pointer ${
                         isActive
-                          ? 'text-[#FF2B25]'
-                          : 'text-[#F5F5F2] hover:text-[#FF2B25]'
+                          ? 'text-[#EB0028]'
+                          : 'text-[#F5F5F2] hover:text-[#EB0028]'
                       }`}
                     >
                       <span className="flex items-center justify-between">
                         <span>{item.label}</span>
                         {isActive && (
                           <span
-                            className="h-2 w-2 rounded-full bg-[#FF2B25]"
+                            className="h-2 w-2 rounded-full bg-[#EB0028]"
                             aria-hidden="true"
                           />
                         )}

@@ -9,6 +9,10 @@ import { ImpactStatsSection } from './components/sections/ImpactStatsSection';
 import { PastEventsSection } from './components/sections/PastEventsSection';
 import { SponsorSection } from './components/sections/SponsorSection';
 import { CinematicFramesSection } from './components/sections/CinematicFramesSection';
+import { WhyUntappedSection } from './components/sections/WhyUntappedSection';
+import { CinematicStage } from './components/stage/CinematicStage';
+import { XCometCursor } from './components/cursor/XCometCursor';
+import { SmoothScroll } from './components/scroll/SmoothScroll';
 import { ApplyToSpeakModal } from './components/ApplyToSpeakModal';
 
 // Dedicated Legal & Compliance Pages
@@ -17,6 +21,7 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 import RefundPolicy from './pages/RefundPolicy';
 import DeliveryPolicy from './pages/DeliveryPolicy';
 import ContactUs from './pages/ContactUs';
+import Speakers from './pages/Speakers';
 import NotFound from './pages/NotFound';
 import Organizers from './pages/Organizers';
 
@@ -58,6 +63,23 @@ export default function App() {
       setIsSpeakModalOpen(true);
     }
   }, [currentPath]);
+
+  // When opening the home page, the cinematic stage animation plays first.
+  // For legal / compliance pages or when ?skip=true is present, bypass the 3D ceremony immediately.
+  const isHomePage = currentPath === '/' || currentPath === '/home' || currentPath === '/about' || currentPath === '/about-us';
+  const [isIntroActive, setIsIntroActive] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('skip') === 'true') {
+        return false;
+      }
+      // If the visitor directly accessed a subpage, do not show stage intro
+      if (!isHomePage) {
+        return false;
+      }
+    }
+    return false;
+  });
 
   // Render the appropriate main content based on URL route
   const renderContent = () => {
@@ -104,7 +126,12 @@ export default function App() {
       case '/partner-with-us':
         return <ContactUs />;
 
-      // 4. Organizers Page & Team Route
+      // 4. Speakers Page
+      case '/speakers':
+      case '/speaker':
+        return <Speakers />;
+
+      // 5. Organizers Page & Team Route
       case '/organizers':
       case '/organisers':
       case '/team':
@@ -115,6 +142,8 @@ export default function App() {
       case '/apply-to-speak':
       case '/':
       case '/home':
+      case '/about':
+      case '/about-us':
       case '':
         return (
           <main className="flex-1 w-full flex flex-col">
@@ -143,16 +172,19 @@ export default function App() {
               onApplyToSpeak={openSpeakModal}
             />
 
-            {/* 3-Frame Rotating Stage Showcase Section */}
+            {/* 3-Frame Rotating Stage Showcase Section (MOMENTS THAT SPARK TRANSFORMATION) */}
             <CinematicFramesSection intervalMs={3000} />
 
-            {/* Dynamic Scroll Count-Up Impact Metrics Section */}
-            <ImpactStatsSection />
+            {/* Why UNTAPPED Section (Same Design as About TEDx) */}
+            <WhyUntappedSection />
 
-            {/* Past Events Glassy Cards Section */}
+            {/* Past Events Section (Past events. Lasting ideas.) */}
             <PastEventsSection />
 
-            {/* Infinite Marquee Sponsors Section */}
+            {/* Dynamic Scroll Count-Up Impact Metrics Section (A Decade of Impact) */}
+            <ImpactStatsSection />
+
+            {/* Infinite Marquee Sponsors Section (Our Sponsors) */}
             <SponsorSection />
           </main>
         );
@@ -163,9 +195,27 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#000000] text-[#F5F5F2] selection:bg-[#FF2B25] selection:text-white flex flex-col relative font-sans">
+    <div className="min-h-screen w-full bg-[#000000] text-[#F5F5F2] selection:bg-[#EB0028] selection:text-white flex flex-col relative font-sans">
       {/* Apply to Speak Accessible Modal */}
       <ApplyToSpeakModal isOpen={isSpeakModalOpen} onClose={closeSpeakModal} />
+
+      {/* Dynamic X Comet Cursor with continuous ember particle trail */}
+      <XCometCursor />
+
+      {/* Butter-smooth zero-lag scrolling (Lenis + GSAP ScrollTrigger sync) */}
+      <SmoothScroll enabled={!isHomePage || !isIntroActive} />
+
+      {/* 1. Cinematic 3D Stage Opening Ceremony Intro (Home page only) */}
+      {isHomePage && isIntroActive && (
+        <CinematicStage
+          onComplete={() => {
+            setIsIntroActive(false);
+            if (typeof window !== 'undefined') {
+              window.scrollTo(0, 0);
+            }
+          }}
+        />
+      )}
 
       {/* Main Website Page Content */}
       <div className="w-full flex flex-col min-h-screen">
