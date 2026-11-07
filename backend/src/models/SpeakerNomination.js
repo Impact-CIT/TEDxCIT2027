@@ -138,3 +138,4 @@ export const SpeakerNomination =
   mongoose.model('SpeakerNomination', SpeakerNominationSchema);
 
 export default SpeakerNomination;
+

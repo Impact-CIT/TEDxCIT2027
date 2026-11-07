@@ -44,3 +44,4 @@ export default {
   PHONE_REGEX,
   URL_REGEX,
 };
+

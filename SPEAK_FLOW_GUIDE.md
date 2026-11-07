@@ -112,3 +112,4 @@ Run the automated test suite covering registration, payments, native submissions
 npm run test:backend
 # Output: TEST SUMMARY: 20 PASSED, 0 FAILED
 ```
+

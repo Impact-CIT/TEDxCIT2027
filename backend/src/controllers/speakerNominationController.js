@@ -274,3 +274,4 @@ export async function submitSpeakerNomination(req, res, next) {
 export default {
   submitSpeakerNomination,
 };
+

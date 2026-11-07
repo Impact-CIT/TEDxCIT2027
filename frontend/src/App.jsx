@@ -9,7 +9,6 @@ import { ImpactStatsSection } from './components/sections/ImpactStatsSection';
 import { PastEventsSection } from './components/sections/PastEventsSection';
 import { SponsorSection } from './components/sections/SponsorSection';
 import { CinematicFramesSection } from './components/sections/CinematicFramesSection';
-import { CinematicStage } from './components/stage/CinematicStage';
 import { ApplyToSpeakModal } from './components/ApplyToSpeakModal';
 
 // Dedicated Legal & Compliance Pages
@@ -53,26 +52,12 @@ export default function App() {
     return () => window.removeEventListener('popstate', handleLocationChange);
   }, []);
 
-  // When visiting /apply-to-speak directly, open the modal in an effect (not during render!)
+  // When visiting /apply-to-speak directly, open the modal in an effect
   useEffect(() => {
     if (currentPath === '/apply-to-speak') {
       setIsSpeakModalOpen(true);
     }
   }, [currentPath]);
-
-  // Opening ceremony intro state (Bypass by default or if ?skip=true to ensure localhost is never blank)
-  const isHomePage = currentPath === '/' || currentPath === '/home';
-  const [isIntroActive, setIsIntroActive] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search);
-      // Play 3D intro only if specifically requested via ?intro=true
-      if (params.get('intro') === 'true') {
-        return true;
-      }
-      return false;
-    }
-    return false;
-  });
 
   // Render the appropriate main content based on URL route
   const renderContent = () => {
@@ -126,7 +111,7 @@ export default function App() {
       case '/partner-with-us':
         return <ContactUs />;
 
-      // 5. Home Landing Page (also rendered when modal opens over /apply-to-speak)
+      // 5. Home Landing Page
       case '/apply-to-speak':
       case '/':
       case '/home':
@@ -136,7 +121,7 @@ export default function App() {
             {/* Full-screen Edge-to-Edge UNTAPPED Hero Section */}
             <Hero />
 
-            {/* What is TEDx Section (Directly below Hero Header) */}
+            {/* What is TEDx Section */}
             <WhatIsTEDxSection />
 
             {/* Cinematic Scroll-Driven Visual Expansion Section */}
@@ -182,24 +167,8 @@ export default function App() {
       {/* Apply to Speak Accessible Modal */}
       <ApplyToSpeakModal isOpen={isSpeakModalOpen} onClose={closeSpeakModal} />
 
-      {/* Optional Cinematic 3D Stage Opening Ceremony (triggered if ?intro=true) */}
-      {isHomePage && isIntroActive && (
-        <CinematicStage
-          onComplete={() => {
-            setIsIntroActive(false);
-            if (typeof window !== 'undefined') {
-              window.scrollTo(0, 0);
-            }
-          }}
-        />
-      )}
-
       {/* Main Website Page Content */}
-      <div
-        className={`w-full flex flex-col transition-opacity duration-700 ${
-          isHomePage && isIntroActive ? 'opacity-0 h-0 overflow-hidden' : 'opacity-100 min-h-screen'
-        }`}
-      >
+      <div className="w-full flex flex-col min-h-screen">
         {/* Full-width Grid Architectural Navbar */}
         <Navbar currentPath={currentPath} onApplyToSpeak={openSpeakModal} />
 

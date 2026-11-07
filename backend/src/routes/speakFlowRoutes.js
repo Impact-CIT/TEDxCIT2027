@@ -58,3 +58,4 @@ router.get('/admin/submissions', requireAdminAuth, getAdminSubmissions);
 router.patch('/admin/submissions/:type/:id/status', requireAdminAuth, updateSubmissionStatus);
 
 export default router;
+

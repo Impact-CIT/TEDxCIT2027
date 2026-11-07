@@ -50,3 +50,4 @@ export const SPEAK_CONFIG = {
 };
 
 export default SPEAK_CONFIG;
+

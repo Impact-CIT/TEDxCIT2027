@@ -8,8 +8,17 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Mona+Sans:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
+    <script>
+      window.addEventListener('error', function(e) {
+        console.error('GLOBAL WINDOW ERROR:', e.error || e.message);
+        var d = document.getElementById('root');
+        if (d && (!d.children || d.children.length === 0)) {
+          d.innerHTML = '<div style="background:#0a0a0a;color:#ff4444;padding:32px;font-family:monospace;min-height:100vh;box-sizing:border-box;"><h2 style="color:#E62B1E;margin-top:0;">TEDxCIT Startup Error:</h2><p style="color:#eee;">' + (e.message || 'Unknown runtime error') + '</p><pre style="background:#141414;padding:16px;border:1px solid #333;overflow:auto;color:#ff8888;">' + (e.error && e.error.stack ? e.error.stack : e.filename + ':' + e.lineno) + '</pre></div>';
+        }
+      });
+    </script>
   </head>
-  <body>
+  <body style="background-color: #000000; color: #f5f5f2; margin: 0; padding: 0;">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
