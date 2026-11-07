@@ -65,20 +65,21 @@ export default function App() {
   }, [currentPath]);
 
   // When opening the home page, the cinematic stage animation plays first.
-  // For legal / compliance pages or when ?skip=true is present, bypass the 3D ceremony immediately.
-  const isHomePage = currentPath === '/' || currentPath === '/home' || currentPath === '/about' || currentPath === '/about-us';
+  // Bypass with ?skip=true or if not on home page
+  const isHomePage = currentPath === '/' || currentPath === '/home' || currentPath === '';
   const [isIntroActive, setIsIntroActive] = useState(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       if (params.get('skip') === 'true') {
         return false;
       }
-      // If the visitor directly accessed a subpage, do not show stage intro
-      if (!isHomePage) {
+      const path = window.location.pathname.toLowerCase().trim();
+      if (path !== '/' && path !== '/home' && path !== '') {
         return false;
       }
+      return true;
     }
-    return false;
+    return true;
   });
 
   // Render the appropriate main content based on URL route
