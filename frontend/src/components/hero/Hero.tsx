@@ -210,28 +210,23 @@ export const Hero: React.FC<HeroProps> = ({ className = '' }) => {
               Discover unexplored perspectives, challenge what you know, and uncover ideas waiting to make an impact.
             </p>
 
-            {/* Action Buttons: PARTNER WITH US and REGISTER NOW (Side-by-Side) */}
+            {/* Action Buttons: REGISTER NOW, APPLY TO SPEAK, and PARTNER WITH US */}
             <div className="mt-8 sm:mt-10 lg:mt-12 flex flex-row items-center gap-3 sm:gap-3.5 flex-wrap">
               <motion.a
-                href="/contact-us"
+                href="/register"
                 onClick={(e) => {
                   e.preventDefault();
-                  window.history.pushState({}, '', '/contact-us');
+                  window.history.pushState({}, '', '/register');
                   window.dispatchEvent(new Event('popstate'));
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
                 whileHover={{ scale: 1.025 }}
                 whileTap={{ scale: 0.975 }}
                 transition={{ duration: 0.2 }}
-                className="group relative inline-flex items-center justify-between space-x-3.5 border border-[#292929] hover:border-[#EB0028] bg-transparent px-4 sm:px-5 lg:px-5.5 py-3 sm:py-3.5 text-xs sm:text-[13px] font-bold tracking-[0.08em] uppercase text-[#F5F5F2] hover:text-white transition-all duration-300 rounded-none overflow-hidden focus:outline-none focus-visible:ring-1 focus-visible:ring-[#EB0028] whitespace-nowrap"
+                className="group relative inline-flex items-center justify-between space-x-3.5 bg-[#EB0028] hover:bg-[#C80022] border border-[#EB0028] px-4.5 sm:px-5.5 lg:px-6 py-3 sm:py-3.5 text-xs sm:text-[13px] font-bold tracking-[0.08em] uppercase text-white transition-all duration-300 rounded-none overflow-hidden shadow-lg shadow-[#EB0028]/25 hover:shadow-[#EB0028]/40 focus:outline-none focus-visible:ring-1 focus-visible:ring-white whitespace-nowrap cursor-pointer"
               >
-                {/* Subtle red background curtain sweep on hover */}
-                <span
-                  className="absolute inset-0 bg-gradient-to-r from-[#EB0028]/25 via-[#EB0028]/10 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                  aria-hidden="true"
-                />
-                <span className="relative z-10">PARTNER WITH US</span>
-                <ArrowUpRight className="relative z-10 w-4 h-4 transition-transform duration-300 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-[#EB0028]" />
+                <span className="relative z-10">REGISTER NOW</span>
+                <ArrowUpRight className="relative z-10 w-4 h-4 transition-transform duration-300 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </motion.a>
 
               <motion.a
@@ -245,10 +240,36 @@ export const Hero: React.FC<HeroProps> = ({ className = '' }) => {
                 whileHover={{ scale: 1.025 }}
                 whileTap={{ scale: 0.975 }}
                 transition={{ duration: 0.2 }}
-                className="group relative inline-flex items-center justify-between space-x-3.5 bg-[#EB0028] hover:bg-[#C80022] border border-[#EB0028] px-4.5 sm:px-5.5 lg:px-6 py-3 sm:py-3.5 text-xs sm:text-[13px] font-bold tracking-[0.08em] uppercase text-white transition-all duration-300 rounded-none overflow-hidden shadow-lg shadow-[#EB0028]/25 hover:shadow-[#EB0028]/40 focus:outline-none focus-visible:ring-1 focus-visible:ring-white whitespace-nowrap cursor-pointer"
+                className="group relative inline-flex items-center justify-between space-x-3.5 border border-[#292929] hover:border-[#EB0028] bg-transparent px-4 sm:px-5 lg:px-5.5 py-3 sm:py-3.5 text-xs sm:text-[13px] font-bold tracking-[0.08em] uppercase text-[#F5F5F2] hover:text-white transition-all duration-300 rounded-none overflow-hidden focus:outline-none focus-visible:ring-1 focus-visible:ring-[#EB0028] whitespace-nowrap cursor-pointer"
               >
+                <span
+                  className="absolute inset-0 bg-gradient-to-r from-[#EB0028]/25 via-[#EB0028]/10 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                  aria-hidden="true"
+                />
                 <span className="relative z-10">APPLY TO SPEAK</span>
-                <ArrowUpRight className="relative z-10 w-4 h-4 transition-transform duration-300 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                <ArrowUpRight className="relative z-10 w-4 h-4 transition-transform duration-300 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-[#EB0028]" />
+              </motion.a>
+
+              <motion.a
+                href="/contact-us"
+                onClick={(e) => {
+                  e.preventDefault();
+                  window.history.pushState({}, '', '/contact-us');
+                  window.dispatchEvent(new Event('popstate'));
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                whileHover={{ scale: 1.025 }}
+                whileTap={{ scale: 0.975 }}
+                transition={{ duration: 0.2 }}
+                className="group relative inline-flex items-center justify-between space-x-3.5 border border-[#292929] hover:border-[#EB0028] bg-transparent px-4 sm:px-5 lg:px-5.5 py-3 sm:py-3.5 text-xs sm:text-[13px] font-bold tracking-[0.08em] uppercase text-[#F5F5F2] hover:text-white transition-all duration-300 rounded-none overflow-hidden focus:outline-none focus-visible:ring-1 focus-visible:ring-[#EB0028] whitespace-nowrap cursor-pointer"
+              >
+                {/* Subtle red background curtain sweep on hover */}
+                <span
+                  className="absolute inset-0 bg-gradient-to-r from-[#EB0028]/25 via-[#EB0028]/10 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                  aria-hidden="true"
+                />
+                <span className="relative z-10">PARTNER WITH US</span>
+                <ArrowUpRight className="relative z-10 w-4 h-4 transition-transform duration-300 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-[#EB0028]" />
               </motion.a>
             </div>
           </div>

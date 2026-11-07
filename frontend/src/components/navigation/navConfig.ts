@@ -24,4 +24,5 @@ export const NAV_ITEMS: readonly NavItem[] = [
   { label: 'MEET OUR TEAM', href: '/team' },
   { label: 'APPLY TO SPEAK', href: '/apply-to-speak', isButton: true },
   { label: 'PARTNER WITH US', href: '/partner-with-us', isButton: true },
+  { label: 'REGISTER NOW', href: '/register', isButton: true, isPrimary: true },
 ] as const;
