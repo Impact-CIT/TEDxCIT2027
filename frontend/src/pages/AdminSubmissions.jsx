@@ -143,14 +143,19 @@ export default function AdminSubmissions() {
   const [counts, setCounts] = useState({ anonymousVoices: 0, speakerNominations: 0, total: 0 });
   const [statusFilter, setStatusFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [deadlines, setDeadlines] = useState({ anonymousVoicesDeadline: '', speakerNominationDeadline: '' });
+  const [deadlines, setDeadlines] = useState({
+    anonymousVoicesDeadline: '',
+    speakerNominationDeadline: '',
+    anonymousVoicesOpen: true,
+    speakerNominationOpen: true,
+  });
   const [isSavingDeadlines, setIsSavingDeadlines] = useState(false);
   const [deadlineMessage, setDeadlineMessage] = useState(null);
   const [statusError, setStatusError] = useState(null);
 
-  const fetchSubmissions = async (adminPwd) => {
+  const fetchSubmissions = async (showError = false) => {
     setIsLoading(true);
     setAuthError(null);
     try {
@@ -160,15 +165,13 @@ export default function AdminSubmissions() {
       });
 
       const res = await fetch(`/api/admin/submissions?${query.toString()}`, {
-        headers: {
-          'x-admin-password': adminPwd || password,
-        },
+        credentials: 'same-origin',
       });
 
       const data = await res.json();
 
       if (!res.ok || !data.success) {
-        throw new Error(data.message || 'Authentication failed. Please verify the admin password.');
+        throw new Error(data.message || 'Could not load submissions.');
       }
 
       setSubmissions(data.data);
@@ -176,12 +179,12 @@ export default function AdminSubmissions() {
       setDeadlines({
         anonymousVoicesDeadline: toLocalDateTime(data.deadlines.anonymousVoicesDeadline),
         speakerNominationDeadline: toLocalDateTime(data.deadlines.speakerNominationDeadline),
+        anonymousVoicesOpen: data.deadlines.anonymousVoicesOpen,
+        speakerNominationOpen: data.deadlines.speakerNominationOpen,
       });
       setIsAuthenticated(true);
-      // Cache password in session
-      sessionStorage.setItem('tedx_admin_token', adminPwd || password);
     } catch (err) {
-      setAuthError(err.message);
+      if (showError) setAuthError(err.message);
       setIsAuthenticated(false);
     } finally {
       setIsLoading(false);
@@ -189,11 +192,34 @@ export default function AdminSubmissions() {
   };
 
   useEffect(() => {
-    const cached = sessionStorage.getItem('tedx_admin_token');
-    if (cached) {
-      setPassword(cached);
-      fetchSubmissions(cached);
-    }
+    let active = true;
+    fetch('/api/admin/submissions', { credentials: 'same-origin' })
+      .then(async (res) => {
+        const data = await res.json();
+        if (!active || res.status === 401) return;
+        if (!res.ok || !data.success) {
+          throw new Error(data.message || 'Could not verify the admin session.');
+        }
+        setSubmissions(data.data);
+        setCounts(data.counts);
+        setDeadlines({
+          anonymousVoicesDeadline: toLocalDateTime(data.deadlines.anonymousVoicesDeadline),
+          speakerNominationDeadline: toLocalDateTime(data.deadlines.speakerNominationDeadline),
+          anonymousVoicesOpen: data.deadlines.anonymousVoicesOpen,
+          speakerNominationOpen: data.deadlines.speakerNominationOpen,
+        });
+        setIsAuthenticated(true);
+      })
+      .catch((err) => {
+        if (active) setAuthError(err.message || 'Could not verify the admin session.');
+      })
+      .finally(() => {
+        if (active) setIsLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
   }, []);
 
   useEffect(() => {
@@ -212,24 +238,47 @@ export default function AdminSubmissions() {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    fetchSubmissions(password);
+    setIsLoading(true);
+    setAuthError(null);
+    fetch('/api/admin/login', {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password }),
+    })
+      .then(async (res) => {
+        const result = await res.json();
+        if (!res.ok || !result.success) {
+          throw new Error(result.message || 'Could not sign in.');
+        }
+        setPassword('');
+        await fetchSubmissions(true);
+      })
+      .catch((err) => setAuthError(err.message || 'Could not sign in.'))
+      .finally(() => setIsLoading(false));
   };
 
   const handleSaveDeadlines = async (e) => {
     e.preventDefault();
+    await saveRegistrationSettings(deadlines, 'Registration deadlines saved.');
+  };
+
+  const saveRegistrationSettings = async (nextDeadlines, successMessage) => {
     setIsSavingDeadlines(true);
     setDeadlineMessage(null);
 
     try {
       const res = await fetch('/api/admin/deadlines', {
         method: 'PATCH',
+        credentials: 'same-origin',
         headers: {
           'Content-Type': 'application/json',
-          'x-admin-password': password,
         },
         body: JSON.stringify({
-          anonymousVoicesDeadline: toUtcIso(deadlines.anonymousVoicesDeadline),
-          speakerNominationDeadline: toUtcIso(deadlines.speakerNominationDeadline),
+          anonymousVoicesDeadline: toUtcIso(nextDeadlines.anonymousVoicesDeadline),
+          speakerNominationDeadline: toUtcIso(nextDeadlines.speakerNominationDeadline),
+          anonymousVoicesOpen: nextDeadlines.anonymousVoicesOpen,
+          speakerNominationOpen: nextDeadlines.speakerNominationOpen,
         }),
       });
       const result = await res.json();
@@ -240,13 +289,30 @@ export default function AdminSubmissions() {
       setDeadlines({
         anonymousVoicesDeadline: toLocalDateTime(result.data.anonymousVoicesDeadline),
         speakerNominationDeadline: toLocalDateTime(result.data.speakerNominationDeadline),
+        anonymousVoicesOpen: result.data.anonymousVoicesOpen,
+        speakerNominationOpen: result.data.speakerNominationOpen,
       });
-      setDeadlineMessage('Registration deadlines saved.');
+      setDeadlineMessage(successMessage);
+      return true;
     } catch (err) {
       setDeadlineMessage(err.message || 'Failed to save registration deadlines.');
+      return false;
     } finally {
       setIsSavingDeadlines(false);
     }
+  };
+
+  const handleFormToggle = async (enabledKey, checked, title) => {
+    const previous = deadlines;
+    const next = { ...deadlines, [enabledKey]: checked };
+    setDeadlines(next);
+
+    const saved = await saveRegistrationSettings(
+      next,
+      `${title} is now ${checked ? 'visible and accepting applications' : 'hidden and closed'}.`
+    );
+
+    if (!saved) setDeadlines(previous);
   };
 
   const handleUpdateStatus = async (type, id, newStatus) => {
@@ -254,9 +320,9 @@ export default function AdminSubmissions() {
     try {
       const res = await fetch(`/api/admin/submissions/${type}/${id}/status`, {
         method: 'PATCH',
+        credentials: 'same-origin',
         headers: {
           'Content-Type': 'application/json',
-          'x-admin-password': password,
         },
         body: JSON.stringify({ status: newStatus }),
       });
@@ -266,7 +332,7 @@ export default function AdminSubmissions() {
         throw new Error(result.message || 'Could not update submission status.');
       }
       setSelectedItem((prev) => (prev ? { ...prev, status: newStatus } : null));
-      await fetchSubmissions(password);
+      await fetchSubmissions(true);
     } catch (err) {
       setStatusError(err.message || 'Failed to update submission status.');
     }
@@ -275,11 +341,12 @@ export default function AdminSubmissions() {
   const handleExportCSV = () => {
     const url = `/api/admin/submissions?format=csv&status=${statusFilter}&search=${encodeURIComponent(searchQuery)}`;
     fetch(url, {
-      headers: {
-        'x-admin-password': password,
-      },
+      credentials: 'same-origin',
     })
-      .then((res) => res.blob())
+      .then((res) => {
+        if (!res.ok) throw new Error('Could not export submissions. Please sign in again.');
+        return res.blob();
+      })
       .then((blob) => {
         const downloadUrl = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -377,8 +444,13 @@ export default function AdminSubmissions() {
             </button>
             <button
               onClick={() => {
-                sessionStorage.removeItem('tedx_admin_token');
-                setIsAuthenticated(false);
+                fetch('/api/admin/logout', {
+                  method: 'POST',
+                  credentials: 'same-origin',
+                }).finally(() => {
+                  setIsAuthenticated(false);
+                  setSubmissions({ anonymousVoices: [], speakerNominations: [] });
+                });
               }}
               className="inline-flex items-center gap-2 text-xs text-[#9A9AA2] hover:text-white font-semibold px-3 py-2 cursor-pointer"
             >
@@ -410,7 +482,7 @@ export default function AdminSubmissions() {
           <summary className="list-none cursor-pointer px-5 py-4 flex items-center justify-between gap-4 [&::-webkit-details-marker]:hidden">
             <div>
               <h2 className="text-sm font-semibold text-white">Registration deadlines</h2>
-              <p className="text-xs text-[#777780] mt-1">Manage when each application form closes.</p>
+              <p className="text-xs text-[#777780] mt-1">Control form visibility and closing dates.</p>
             </div>
             <span className="flex items-center gap-2 text-xs text-[#A0A0A8] group-open:text-white">
               Manage
@@ -421,28 +493,60 @@ export default function AdminSubmissions() {
           </summary>
           <form onSubmit={handleSaveDeadlines} className="border-t border-white/[0.08] p-5 sm:p-6">
             <p className="text-xs text-[#777780] mb-5">
-              Times use your local timezone. Leave Speaker Nomination blank to keep it open without a deadline.
+              Turning a form off hides it from the public application choices and blocks submissions. Times use your local timezone; leave Speaker Nomination blank for no deadline.
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              <label className="block text-xs font-medium text-[#A0A0A8]">
-                Anonymous Voices
-                <input
-                  type="datetime-local"
-                  required
-                  value={deadlines.anonymousVoicesDeadline}
-                  onChange={(e) => setDeadlines((prev) => ({ ...prev, anonymousVoicesDeadline: e.target.value }))}
-                  className="mt-2 w-full bg-[#080808] border border-white/10 text-white px-4 py-3 text-sm focus:border-[#E62B1E] focus:outline-none"
-                />
-              </label>
-              <label className="block text-xs font-medium text-[#A0A0A8]">
-                Speaker Nomination
-                <input
-                  type="datetime-local"
-                  value={deadlines.speakerNominationDeadline}
-                  onChange={(e) => setDeadlines((prev) => ({ ...prev, speakerNominationDeadline: e.target.value }))}
-                  className="mt-2 w-full bg-[#080808] border border-white/10 text-white px-4 py-3 text-sm focus:border-[#E62B1E] focus:outline-none"
-                />
-              </label>
+              {[
+                {
+                  title: 'Anonymous Voices',
+                  enabledKey: 'anonymousVoicesOpen',
+                  deadlineKey: 'anonymousVoicesDeadline',
+                  required: true,
+                },
+                {
+                  title: 'Speaker Nomination',
+                  enabledKey: 'speakerNominationOpen',
+                  deadlineKey: 'speakerNominationDeadline',
+                  required: false,
+                },
+              ].map((form) => (
+                <div key={form.enabledKey} className="border border-white/[0.08] bg-[#0A0A0A] p-4">
+                  <div className="flex items-center justify-between gap-4">
+                    <span className="text-xs font-medium text-[#A0A0A8]">{form.title}</span>
+                    <label className="inline-flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={deadlines[form.enabledKey]}
+                        onChange={(e) => handleFormToggle(
+                          form.enabledKey,
+                          e.target.checked,
+                          form.title
+                        )}
+                        disabled={isSavingDeadlines}
+                        aria-label={`Open ${form.title} form`}
+                        className="peer sr-only"
+                      />
+                      <span className="relative h-6 w-11 rounded-full bg-[#39393D] transition-colors peer-checked:bg-emerald-700 peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-[#E62B1E] after:absolute after:left-1 after:top-1 after:h-4 after:w-4 after:rounded-full after:bg-white after:transition-transform peer-checked:after:translate-x-5" />
+                      <span className={`min-w-10 text-right text-[10px] font-semibold uppercase tracking-wide ${deadlines[form.enabledKey] ? 'text-emerald-400' : 'text-[#88888F]'}`}>
+                        {deadlines[form.enabledKey] ? 'Open' : 'Off'}
+                      </span>
+                    </label>
+                  </div>
+                  <label className="mt-4 block text-xs text-[#777780]">
+                    Closing date and time {form.required ? '(required)' : '(optional)'}
+                    <input
+                      type="datetime-local"
+                      required={form.required}
+                      value={deadlines[form.deadlineKey]}
+                      onChange={(e) => setDeadlines((prev) => ({
+                        ...prev,
+                        [form.deadlineKey]: e.target.value,
+                      }))}
+                      className="mt-2 w-full bg-[#080808] border border-white/10 text-white px-4 py-3 text-sm focus:border-[#E62B1E] focus:outline-none"
+                    />
+                  </label>
+                </div>
+              ))}
             </div>
             <div className="mt-5 flex flex-wrap items-center gap-4">
               <button
@@ -492,7 +596,7 @@ export default function AdminSubmissions() {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && fetchSubmissions(password)}
+              onKeyDown={(e) => e.key === 'Enter' && fetchSubmissions(true)}
               placeholder="Search by name, email, or talk title"
               className="w-full bg-[#101010] border border-white/10 text-white pl-10 pr-4 py-3 text-sm focus:border-white/25 focus:outline-none"
             />
@@ -502,7 +606,7 @@ export default function AdminSubmissions() {
               value={statusFilter}
               onChange={(e) => {
                 setStatusFilter(e.target.value);
-                setTimeout(() => fetchSubmissions(password), 50);
+                setTimeout(() => fetchSubmissions(true), 50);
               }}
               className="bg-[#101010] border border-white/10 text-white px-4 py-3 text-xs cursor-pointer"
             >
@@ -512,7 +616,7 @@ export default function AdminSubmissions() {
               <option value="rejected">Rejected</option>
             </select>
             <button
-              onClick={() => fetchSubmissions(password)}
+              onClick={() => fetchSubmissions(true)}
               className="bg-white/[0.06] hover:bg-white/10 border border-white/10 text-white text-xs font-semibold px-4 py-3 cursor-pointer transition-colors"
             >
               Apply filters

@@ -15,8 +15,7 @@ export async function connectDB() {
   const uri = process.env.MONGODB_URI;
 
   if (!uri) {
-    console.warn('[MongoDB] WARNING: MONGODB_URI is not set in environment. Submissions will use in-memory store until configured.');
-    return null;
+    throw new Error('MONGODB_URI is required; refusing to start without persistent storage.');
   }
 
   if (cached.conn) {
@@ -27,7 +26,10 @@ export async function connectDB() {
     const opts = {
       bufferCommands: false,
       maxPoolSize: 10,
-      serverSelectionTimeoutMS: 5000,
+      minPoolSize: 1,
+      serverSelectionTimeoutMS: 10000,
+      socketTimeoutMS: 45000,
+      heartbeatFrequencyMS: 10000,
     };
 
     cached.promise = mongoose.connect(uri, opts).then((mongooseInstance) => {
@@ -36,6 +38,7 @@ export async function connectDB() {
     }).catch((err) => {
       console.error('[MongoDB] Connection failed:', err.message);
       cached.promise = null;
+      err.statusCode = 503;
       throw err;
     });
   }
@@ -53,6 +56,16 @@ export async function connectDB() {
 export function isConnected() {
   return mongoose.connection.readyState === 1;
 }
+
+mongoose.connection.on('disconnected', () => {
+  cached.conn = null;
+  cached.promise = null;
+  console.warn('[MongoDB] Connection interrupted; the driver will reconnect on the next operation.');
+});
+
+mongoose.connection.on('error', (err) => {
+  console.error('[MongoDB] Connection error:', err.message);
+});
 
 export default connectDB;
 

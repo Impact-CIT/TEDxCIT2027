@@ -1,38 +1,129 @@
+import 'dotenv/config';
+import crypto from 'node:crypto';
 import { connectDB } from '../config/db.js';
 import AnonymousVoice from '../models/AnonymousVoice.js';
 import SpeakerNomination from '../models/SpeakerNomination.js';
-import store from '../models/store.js';
 import { getRegistrationDeadlines } from '../services/registrationDeadlines.js';
 
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'tedxcit2027admin';
+const ADMIN_SESSION_COOKIE = 'tedx_admin_session';
+const ADMIN_SESSION_TTL_SECONDS = 8 * 60 * 60;
 
-/**
- * Middleware: Protects Admin Endpoints
- */
-export function requireAdminAuth(req, res, next) {
-  const authHeader = req.headers['authorization'];
-  const customHeader = req.headers['x-admin-password'];
+function safeEqual(left, right) {
+  if (!left || !right) return false;
+  const leftHash = crypto.createHash('sha256').update(left).digest();
+  const rightHash = crypto.createHash('sha256').update(right).digest();
+  return crypto.timingSafeEqual(leftHash, rightHash);
+}
 
-  let providedPassword = customHeader;
+function getAdminSecrets() {
+  return {
+    password: process.env.ADMIN_PASSWORD,
+    sessionSecret: process.env.ADMIN_SESSION_SECRET,
+  };
+}
 
-  if (!providedPassword && authHeader) {
-    if (authHeader.startsWith('Bearer ')) {
-      providedPassword = authHeader.substring(7);
-    } else if (authHeader.startsWith('Basic ')) {
-      const decoded = Buffer.from(authHeader.substring(6), 'base64').toString('utf8');
-      const parts = decoded.split(':');
-      providedPassword = parts[1] || parts[0];
-    }
+function getSessionCookie(req) {
+  const cookieHeader = req.headers.cookie || '';
+  const cookie = cookieHeader.split(';').map((part) => part.trim())
+    .find((part) => part.startsWith(`${ADMIN_SESSION_COOKIE}=`));
+  return cookie ? cookie.slice(ADMIN_SESSION_COOKIE.length + 1) : '';
+}
+
+function signSession(payload, secret) {
+  return crypto.createHmac('sha256', secret).update(payload).digest('base64url');
+}
+
+function getSessionSigningSecret(password, sessionSecret) {
+  return crypto.createHmac('sha256', sessionSecret).update(password).digest();
+}
+
+function createSessionToken(secret) {
+  const payload = Buffer.from(JSON.stringify({
+    expiresAt: Date.now() + ADMIN_SESSION_TTL_SECONDS * 1000,
+  })).toString('base64url');
+  return `${payload}.${signSession(payload, secret)}`;
+}
+
+function isValidSession(token, secret) {
+  if (!token || !secret) return false;
+  const [payload, signature, extra] = token.split('.');
+  if (!payload || !signature || extra) return false;
+  if (!safeEqual(signature, signSession(payload, secret))) return false;
+
+  try {
+    const session = JSON.parse(Buffer.from(payload, 'base64url').toString('utf8'));
+    return Number.isFinite(session.expiresAt) && session.expiresAt > Date.now();
+  } catch {
+    return false;
+  }
+}
+
+function serializeSessionCookie(value, maxAge) {
+  const attributes = [
+    `${ADMIN_SESSION_COOKIE}=${value}`,
+    'Path=/api/admin',
+    'HttpOnly',
+    'SameSite=Strict',
+    `Max-Age=${maxAge}`,
+  ];
+  if (process.env.NODE_ENV === 'production') attributes.push('Secure');
+  return attributes.join('; ');
+}
+
+export function loginAdmin(req, res) {
+  const { password, sessionSecret } = getAdminSecrets();
+  if (!password || !sessionSecret) {
+    return res.status(503).json({
+      success: false,
+      error: 'ADMIN_AUTH_NOT_CONFIGURED',
+      message: 'Admin authentication is not configured on the server.',
+    });
   }
 
-  if (providedPassword === ADMIN_PASSWORD) {
+  if (typeof req.body?.password !== 'string' || !safeEqual(req.body.password, password)) {
+    return res.status(401).json({
+      success: false,
+      error: 'UNAUTHORIZED',
+      message: 'Invalid admin credentials.',
+    });
+  }
+
+  res.setHeader(
+    'Set-Cookie',
+    serializeSessionCookie(
+      createSessionToken(getSessionSigningSecret(password, sessionSecret)),
+      ADMIN_SESSION_TTL_SECONDS
+    )
+  );
+  return res.status(200).json({ success: true });
+}
+
+export function logoutAdmin(req, res) {
+  res.setHeader('Set-Cookie', serializeSessionCookie('', 0));
+  return res.status(200).json({ success: true });
+}
+
+export function requireAdminAuth(req, res, next) {
+  const { password, sessionSecret } = getAdminSecrets();
+  if (!password || !sessionSecret) {
+    return res.status(503).json({
+      success: false,
+      error: 'ADMIN_AUTH_NOT_CONFIGURED',
+      message: 'Admin authentication is not configured on the server.',
+    });
+  }
+
+  if (isValidSession(
+    getSessionCookie(req),
+    getSessionSigningSecret(password, sessionSecret)
+  )) {
     return next();
   }
 
   return res.status(401).json({
     success: false,
     error: 'UNAUTHORIZED',
-    message: 'Invalid or missing admin credentials.',
+    message: 'Admin session is missing or expired. Please sign in again.',
   });
 }
 
@@ -44,69 +135,37 @@ export async function getAdminSubmissions(req, res, next) {
   try {
     const { type = 'all', status = 'all', search = '', format = 'json' } = req.query;
 
-    const dbConn = await connectDB().catch(() => null);
+    await connectDB();
     const deadlines = await getRegistrationDeadlines();
 
     let anonymousList = [];
     let speakerList = [];
 
-    if (dbConn) {
-      const avQuery = {};
-      const snQuery = {};
+    const avQuery = {};
+    const snQuery = {};
 
-      if (status !== 'all') {
-        avQuery.status = status;
-        snQuery.status = status;
-      }
+    if (status !== 'all') {
+      avQuery.status = status;
+      snQuery.status = status;
+    }
 
-      if (search) {
-        const regex = new RegExp(search, 'i');
-        avQuery.$or = [{ fullName: regex }, { email: regex }, { talkTitle: regex }];
-        snQuery.$or = [
-          { 'nominatorDetails.fullName': regex },
-          { 'nominatorDetails.email': regex },
-          { 'nominee.nomineeName': regex },
-        ];
-      }
+    if (search) {
+      const escapedSearch = search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const regex = new RegExp(escapedSearch, 'i');
+      avQuery.$or = [{ fullName: regex }, { email: regex }, { talkTitle: regex }];
+      snQuery.$or = [
+        { 'nominatorDetails.fullName': regex },
+        { 'nominatorDetails.email': regex },
+        { 'nominee.nomineeName': regex },
+      ];
+    }
 
-      if (type === 'all' || type === 'anonymous') {
-        anonymousList = await AnonymousVoice.find(avQuery).sort({ createdAt: -1 }).lean();
-      }
+    if (type === 'all' || type === 'anonymous') {
+      anonymousList = await AnonymousVoice.find(avQuery).sort({ createdAt: -1 }).lean();
+    }
 
-      if (type === 'all' || type === 'speaker') {
-        speakerList = await SpeakerNomination.find(snQuery).sort({ createdAt: -1 }).lean();
-      }
-    } else {
-      // In-Memory Fallback
-      if (type === 'all' || type === 'anonymous') {
-        anonymousList = store.anonymousVoices.filter((item) => {
-          if (status !== 'all' && item.status !== status) return false;
-          if (search) {
-            const s = search.toLowerCase();
-            return (
-              item.fullName?.toLowerCase().includes(s) ||
-              item.email?.toLowerCase().includes(s) ||
-              item.talkTitle?.toLowerCase().includes(s)
-            );
-          }
-          return true;
-        });
-      }
-
-      if (type === 'all' || type === 'speaker') {
-        speakerList = store.speakerNominations.filter((item) => {
-          if (status !== 'all' && item.status !== status) return false;
-          if (search) {
-            const s = search.toLowerCase();
-            return (
-              item.nominatorDetails?.fullName?.toLowerCase().includes(s) ||
-              item.nominatorDetails?.email?.toLowerCase().includes(s) ||
-              item.nominee?.nomineeName?.toLowerCase().includes(s)
-            );
-          }
-          return true;
-        });
-      }
+    if (type === 'all' || type === 'speaker') {
+      speakerList = await SpeakerNomination.find(snQuery).sort({ createdAt: -1 }).lean();
     }
 
     if (format === 'csv') {
@@ -163,34 +222,22 @@ export async function updateSubmissionStatus(req, res, next) {
       });
     }
 
-    const dbConn = await connectDB().catch(() => null);
+    await connectDB();
 
-    if (dbConn) {
-      let updated;
-      if (type === 'anonymous') {
-        updated = await AnonymousVoice.findByIdAndUpdate(id, { status }, { new: true });
-      } else if (type === 'speaker') {
-        updated = await SpeakerNomination.findByIdAndUpdate(id, { status }, { new: true });
-      } else {
-        return res.status(400).json({ success: false, message: 'Invalid type parameter' });
-      }
-
-      if (!updated) {
-        return res.status(404).json({ success: false, message: 'Submission not found' });
-      }
-
-      return res.status(200).json({ success: true, data: updated });
+    let updated;
+    if (type === 'anonymous') {
+      updated = await AnonymousVoice.findByIdAndUpdate(id, { status }, { new: true });
+    } else if (type === 'speaker') {
+      updated = await SpeakerNomination.findByIdAndUpdate(id, { status }, { new: true });
     } else {
-      // In-Memory
-      const list = type === 'anonymous' ? store.anonymousVoices : store.speakerNominations;
-      const item = list.find((x) => (x._id === id || x.id === id));
-      if (!item) {
-        return res.status(404).json({ success: false, message: 'Submission not found' });
-      }
-      item.status = status;
-      item.updatedAt = new Date().toISOString();
-      return res.status(200).json({ success: true, data: item });
+      return res.status(400).json({ success: false, message: 'Invalid type parameter' });
     }
+
+    if (!updated) {
+      return res.status(404).json({ success: false, message: 'Submission not found' });
+    }
+
+    return res.status(200).json({ success: true, data: updated });
   } catch (err) {
     next(err);
   }

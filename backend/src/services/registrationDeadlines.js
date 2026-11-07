@@ -4,14 +4,16 @@ import RegistrationSettings from '../models/RegistrationSettings.js';
 
 const SETTINGS_KEY = 'registration-deadlines';
 
-const defaultDeadlines = {
+const defaultSettings = {
   anonymousVoicesDeadline: new Date(SPEAK_CONFIG.anonymousVoicesDeadline).toISOString(),
   speakerNominationDeadline: SPEAK_CONFIG.speakerNominationDeadline
     ? new Date(SPEAK_CONFIG.speakerNominationDeadline).toISOString()
     : null,
+  anonymousVoicesOpen: true,
+  speakerNominationOpen: true,
 };
 
-let memoryDeadlines = { ...defaultDeadlines };
+let memorySettings = { ...defaultSettings };
 
 function toISOStringOrNull(value) {
   return value ? new Date(value).toISOString() : null;
@@ -23,21 +25,23 @@ export async function getRegistrationDeadlines() {
     dbConn = await connectDB();
   } catch (err) {
     console.warn(`[RegistrationSettings] Could not load saved deadlines; using defaults: ${err.message}`);
-    return { ...memoryDeadlines };
+    return { ...memorySettings };
   }
 
   if (!dbConn) {
-    return { ...memoryDeadlines };
+    return { ...memorySettings };
   }
 
   const settings = await RegistrationSettings.findOne({ key: SETTINGS_KEY }).lean();
   if (!settings) {
-    return { ...defaultDeadlines };
+    return { ...defaultSettings };
   }
 
   return {
     anonymousVoicesDeadline: toISOStringOrNull(settings.anonymousVoicesDeadline),
     speakerNominationDeadline: toISOStringOrNull(settings.speakerNominationDeadline),
+    anonymousVoicesOpen: settings.anonymousVoicesOpen ?? true,
+    speakerNominationOpen: settings.speakerNominationOpen ?? true,
   };
 }
 
@@ -57,17 +61,41 @@ export function validateRegistrationDeadlines(input) {
     deadlines[field] = new Date(value).toISOString();
   }
 
+  for (const field of ['anonymousVoicesOpen', 'speakerNominationOpen']) {
+    if (input?.[field] !== undefined && typeof input[field] !== 'boolean') {
+      throw new Error(`${field} must be a boolean.`);
+    }
+  }
+
   return deadlines;
 }
 
-export async function saveRegistrationDeadlines(deadlines) {
-  const normalized = validateRegistrationDeadlines(deadlines);
+export async function saveRegistrationDeadlines(input) {
+  const normalizedDeadlines = validateRegistrationDeadlines(input);
   const dbConn = await connectDB();
 
   if (!dbConn) {
-    memoryDeadlines = normalized;
-    return { ...memoryDeadlines };
+    memorySettings = {
+      ...memorySettings,
+      ...normalizedDeadlines,
+      anonymousVoicesOpen: input.anonymousVoicesOpen ?? memorySettings.anonymousVoicesOpen,
+      speakerNominationOpen: input.speakerNominationOpen ?? memorySettings.speakerNominationOpen,
+    };
+    return { ...memorySettings };
   }
+
+  const currentSettings = await RegistrationSettings.findOne({ key: SETTINGS_KEY }).lean();
+  const current = currentSettings
+    ? {
+        anonymousVoicesOpen: currentSettings.anonymousVoicesOpen ?? true,
+        speakerNominationOpen: currentSettings.speakerNominationOpen ?? true,
+      }
+    : defaultSettings;
+  const normalized = {
+    ...normalizedDeadlines,
+    anonymousVoicesOpen: input.anonymousVoicesOpen ?? current.anonymousVoicesOpen,
+    speakerNominationOpen: input.speakerNominationOpen ?? current.speakerNominationOpen,
+  };
 
   const settings = await RegistrationSettings.findOneAndUpdate(
     { key: SETTINGS_KEY },
@@ -77,6 +105,8 @@ export async function saveRegistrationDeadlines(deadlines) {
         speakerNominationDeadline: normalized.speakerNominationDeadline
           ? new Date(normalized.speakerNominationDeadline)
           : null,
+        anonymousVoicesOpen: normalized.anonymousVoicesOpen,
+        speakerNominationOpen: normalized.speakerNominationOpen,
       },
     },
     { new: true, upsert: true, runValidators: true, setDefaultsOnInsert: true }
@@ -85,6 +115,8 @@ export async function saveRegistrationDeadlines(deadlines) {
   return {
     anonymousVoicesDeadline: toISOStringOrNull(settings.anonymousVoicesDeadline),
     speakerNominationDeadline: toISOStringOrNull(settings.speakerNominationDeadline),
+    anonymousVoicesOpen: settings.anonymousVoicesOpen,
+    speakerNominationOpen: settings.speakerNominationOpen,
   };
 }
 

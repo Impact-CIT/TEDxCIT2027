@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useCallback } from 'react';
+import React, { useEffect, useRef, useCallback, useState } from 'react';
 
 const CARDS = [
   {
@@ -23,6 +23,36 @@ const FOCUSABLE =
 export function ApplyToSpeakModal({ isOpen, onClose }) {
   const dialogRef = useRef(null);
   const closeBtnRef = useRef(null);
+  const [availability, setAvailability] = useState(null);
+  const [availabilityError, setAvailabilityError] = useState(null);
+
+  useEffect(() => {
+    if (!isOpen) return undefined;
+    let active = true;
+    fetch('/api/speak/config')
+      .then(async (response) => {
+        const result = await response.json();
+        if (!response.ok || !result.success) {
+          throw new Error(result.message || 'Could not load application availability.');
+        }
+        if (active) {
+          setAvailability({
+            'anonymous-voices': result.data.anonymousVoicesEnabled,
+            'speaker-nomination': result.data.speakerNominationEnabled,
+          });
+        }
+      })
+      .catch((err) => {
+        if (active) setAvailabilityError(err.message || 'Could not load application availability.');
+      });
+    return () => { active = false; };
+  }, [isOpen]);
+
+  const handleClose = useCallback(() => {
+      setAvailability(null);
+      setAvailabilityError(null);
+      onClose();
+  }, [onClose]);
 
   // Focus trap
   useEffect(() => {
@@ -64,9 +94,9 @@ export function ApplyToSpeakModal({ isOpen, onClose }) {
   // Escape key handler
   const handleKeyDown = useCallback(
     (e) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') handleClose();
     },
-    [onClose]
+    [handleClose]
   );
 
   useEffect(() => {
@@ -81,11 +111,15 @@ export function ApplyToSpeakModal({ isOpen, onClose }) {
   }, [isOpen, handleKeyDown]);
 
   const handleBackdropClick = (e) => {
-    if (e.target === e.currentTarget) onClose();
+    if (e.target === e.currentTarget) handleClose();
   };
 
+  const availableCards = availability
+    ? CARDS.filter((card) => availability[card.id])
+    : [];
+
   const handleSelectOption = (route) => {
-    onClose();
+    handleClose();
     if (typeof window !== 'undefined') {
       window.history.pushState({}, '', route);
       window.dispatchEvent(new Event('popstate'));
@@ -132,7 +166,7 @@ export function ApplyToSpeakModal({ isOpen, onClose }) {
           <button
             ref={closeBtnRef}
             type="button"
-            onClick={onClose}
+            onClick={handleClose}
             aria-label="Close modal"
             className="mt-0.5 shrink-0 w-10 h-10 flex items-center justify-center border border-[#2A2A2A] text-[#A0A0A5] hover:border-[#E62B1E] hover:text-white active:bg-[#E62B1E]/15 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#E62B1E] cursor-pointer"
           >
@@ -150,8 +184,21 @@ export function ApplyToSpeakModal({ isOpen, onClose }) {
             <span className="text-[10px] font-mono uppercase tracking-wider text-[#777780]">Theme: The Untapped</span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {CARDS.map((card, index) => (
+          {availabilityError ? (
+            <p role="alert" className="border border-[#E62B1E]/30 bg-[#E62B1E]/10 p-5 text-sm text-[#F5B0AD]">
+              {availabilityError}
+            </p>
+          ) : !availability ? (
+            <p role="status" className="border border-white/10 bg-white/[0.03] p-5 text-sm text-[#A0A0A8]">
+              Loading application options...
+            </p>
+          ) : availableCards.length === 0 ? (
+            <p className="border border-white/10 bg-white/[0.03] p-5 text-sm text-[#A0A0A8]">
+              Applications are currently closed. Please check back later.
+            </p>
+          ) : (
+          <div className={`grid grid-cols-1 ${availableCards.length > 1 ? 'md:grid-cols-2' : ''} gap-6`}>
+            {availableCards.map((card, index) => (
               <article
                 key={card.id}
                 className="group relative flex min-h-[218px] flex-col justify-between overflow-hidden bg-[#101010] border border-white/[0.09] p-5 sm:p-6"
@@ -160,7 +207,7 @@ export function ApplyToSpeakModal({ isOpen, onClose }) {
                 <div className="absolute left-0 top-0 h-[2px] w-full bg-gradient-to-r from-[#E62B1E] via-[#E62B1E]/50 to-transparent" aria-hidden="true" />
                 <div>
                   <div className="flex items-center justify-between mb-6">
-                    <span className="text-[10px] font-mono tracking-[0.16em] text-[#66666F]">0{index + 1} / 02</span>
+                    <span className="text-[10px] font-mono tracking-[0.16em] text-[#66666F]">0{index + 1} / 0{availableCards.length}</span>
                     <div className="w-10 h-10 rounded-lg border border-[#E62B1E]/20 bg-[#E62B1E]/[0.07] text-[#FF554F] flex items-center justify-center">
                       {index === 0 ? (
                         <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
@@ -199,6 +246,7 @@ export function ApplyToSpeakModal({ isOpen, onClose }) {
               </article>
             ))}
           </div>
+          )}
         </div>
       </div>
     </div>

@@ -1,6 +1,5 @@
 import { connectDB } from '../config/db.js';
 import AnonymousVoice from '../models/AnonymousVoice.js';
-import store from '../models/store.js';
 import SPEAK_CONFIG from '../config/speakConfig.js';
 import { formatRegistrationDeadline, getRegistrationDeadlines } from '../services/registrationDeadlines.js';
 import { sanitizeInput, hashClientIp, EMAIL_REGEX, PHONE_REGEX } from '../utils/security.js';
@@ -16,10 +15,17 @@ export async function submitAnonymousVoice(req, res, next) {
       });
     }
 
-    // 2. Check Registration Deadline
+    // 2. Check registration availability and deadline
     const deadlines = await getRegistrationDeadlines();
     const deadline = new Date(deadlines.anonymousVoicesDeadline);
     const now = new Date();
+    if (!deadlines.anonymousVoicesOpen) {
+      return res.status(403).json({
+        success: false,
+        error: 'REGISTRATIONS_CLOSED',
+        message: 'Anonymous Voices applications are currently closed.',
+      });
+    }
     if (now > deadline) {
       return res.status(403).json({
         success: false,
@@ -188,7 +194,7 @@ export async function submitAnonymousVoice(req, res, next) {
     }
 
     // 7. Ensure DB connection & check for duplicate submission by email
-    const dbConn = await connectDB().catch(() => null);
+    await connectDB();
 
     const submissionData = {
       email,
@@ -216,53 +222,27 @@ export async function submitAnonymousVoice(req, res, next) {
       },
     };
 
-    if (dbConn) {
-      // Check duplicate submission
-      const existing = await AnonymousVoice.findOne({ email }).lean();
-      if (existing) {
-        return res.status(409).json({
-          success: false,
-          error: 'ALREADY_SUBMITTED',
-          message: 'A submission has already been received from this email address. Each student may only apply once.',
-        });
-      }
-
-      const created = await AnonymousVoice.create(submissionData);
-      return res.status(201).json({
-        success: true,
-        message: 'Thank you! Your submission for Anonymous Voices has been received.',
-        data: {
-          id: created._id,
-          fullName: created.fullName,
-          email: created.email,
-          talkTitle: created.talkTitle,
-          createdAt: created.createdAt,
-        },
-      });
-    } else {
-      // In-Memory Fallback
-      const existing = store.findAnonymousVoiceByEmail(email);
-      if (existing) {
-        return res.status(409).json({
-          success: false,
-          error: 'ALREADY_SUBMITTED',
-          message: 'A submission has already been received from this email address. Each student may only apply once.',
-        });
-      }
-
-      const created = store.addAnonymousVoice(submissionData);
-      return res.status(201).json({
-        success: true,
-        message: 'Thank you! Your submission for Anonymous Voices has been received.',
-        data: {
-          id: created._id,
-          fullName: created.fullName,
-          email: created.email,
-          talkTitle: created.talkTitle,
-          createdAt: created.createdAt,
-        },
+    const existing = await AnonymousVoice.findOne({ email }).lean();
+    if (existing) {
+      return res.status(409).json({
+        success: false,
+        error: 'ALREADY_SUBMITTED',
+        message: 'A submission has already been received from this email address. Each student may only apply once.',
       });
     }
+
+    const created = await AnonymousVoice.create(submissionData);
+    return res.status(201).json({
+      success: true,
+      message: 'Thank you! Your submission for Anonymous Voices has been received.',
+      data: {
+        id: created._id,
+        fullName: created.fullName,
+        email: created.email,
+        talkTitle: created.talkTitle,
+        createdAt: created.createdAt,
+      },
+    });
   } catch (err) {
     if (err.code === 11000) {
       return res.status(409).json({

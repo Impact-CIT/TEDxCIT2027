@@ -41,14 +41,15 @@ The "Apply to Speak" flow allows candidates and nominators to submit application
 
 ### D. Admin Curation Portal (`/admin`)
 - Accessible at `/admin` or `/admin/submissions`.
-- Protected by `ADMIN_PASSWORD` (default: `tedxcit2027admin` or configured in `.env`).
+- Protected by a short-lived, signed HttpOnly session cookie. The admin password is submitted only during sign-in and is never saved in browser storage.
 - **Capabilities:**
   - View both collections (**Anonymous Voices** & **Speaker Nominations**).
   - Search by applicant name, email, or talk title.
   - Filter by status: `submitted`, `shortlisted`, `rejected`.
   - Review full pitch details, talk structures, and candidate recordings.
   - 1-click status update buttons.
-  - Set and save closing dates and times for both forms. The Speaker Nomination deadline can be left blank to keep that form open.
+  - Toggle each form on or off; disabled forms are hidden from the public application chooser and cannot accept submissions.
+  - Set and save closing dates and times for both forms. The Speaker Nomination deadline can be left blank to keep that form open indefinitely.
   - 1-click **CSV Export** for committee deliberation.
 
 ---
@@ -79,10 +80,12 @@ The application stores all data in two MongoDB collections:
      ```env
      MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/tedxcit2027?retryWrites=true&w=majority
      ADMIN_PASSWORD=your_secure_admin_password
+     ADMIN_SESSION_SECRET=your_separate_random_session_secret
      ```
    - In **Vercel Dashboard** (Settings &rarr; Environment Variables):
      - Add `MONGODB_URI`
      - Add `ADMIN_PASSWORD`
+     - Add `ADMIN_SESSION_SECRET`
 
 *(Note: If `MONGODB_URI` is not set during local testing, the backend gracefully activates an in-memory store so the app never crashes.)*
 

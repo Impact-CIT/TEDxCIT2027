@@ -28,7 +28,7 @@ export default function NotFound() {
             Page Not Found
           </h1>
           <p className="text-xs sm:text-sm text-[#8E8E93] mt-3 leading-relaxed">
-            The page you are looking for doesn&apos;t exist or has moved. Explore the TEDxCIT 2027 homepage or register for a delegate pass.
+            The page you are looking for doesn&apos;t exist or has moved. Return to the TEDxCIT 2027 homepage.
           </p>
         </div>
 
@@ -39,18 +39,6 @@ export default function NotFound() {
           >
             Return to Home
           </button>
-          <a
-            href="/register"
-            onClick={(e) => {
-              e.preventDefault();
-              window.history.pushState({}, '', '/register');
-              window.dispatchEvent(new Event('popstate'));
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            className="w-full sm:w-auto px-6 py-3 border border-[#2B2B2B] hover:border-[#FF2B25] text-white font-bold text-xs uppercase tracking-wider transition-colors cursor-pointer"
-          >
-            Register Now
-          </a>
         </div>
       </div>
     </div>

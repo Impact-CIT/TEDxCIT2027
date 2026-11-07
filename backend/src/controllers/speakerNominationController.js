@@ -1,6 +1,5 @@
 import { connectDB } from '../config/db.js';
 import SpeakerNomination from '../models/SpeakerNomination.js';
-import store from '../models/store.js';
 import { formatRegistrationDeadline, getRegistrationDeadlines } from '../services/registrationDeadlines.js';
 import { sanitizeInput, hashClientIp, EMAIL_REGEX, PHONE_REGEX } from '../utils/security.js';
 
@@ -17,6 +16,13 @@ export async function submitSpeakerNomination(req, res, next) {
 
     const deadlines = await getRegistrationDeadlines();
     const deadline = deadlines.speakerNominationDeadline;
+    if (!deadlines.speakerNominationOpen) {
+      return res.status(403).json({
+        success: false,
+        error: 'REGISTRATIONS_CLOSED',
+        message: 'Speaker nominations are currently closed.',
+      });
+    }
     if (deadline && new Date() > new Date(deadline)) {
       return res.status(403).json({
         success: false,
@@ -230,7 +236,7 @@ export async function submitSpeakerNomination(req, res, next) {
     }
 
     // 6. Save to Database
-    const dbConn = await connectDB().catch(() => null);
+    await connectDB();
 
     const recordData = {
       nominatorDetails: {
@@ -252,31 +258,17 @@ export async function submitSpeakerNomination(req, res, next) {
       },
     };
 
-    if (dbConn) {
-      const created = await SpeakerNomination.create(recordData);
-      return res.status(201).json({
-        success: true,
-        message: 'Thank you! Your speaker nomination has been received.',
-        data: {
-          id: created._id,
-          nominatorName: fullName,
-          isSelfNomination,
-          createdAt: created.createdAt,
-        },
-      });
-    } else {
-      const created = store.addSpeakerNomination(recordData);
-      return res.status(201).json({
-        success: true,
-        message: 'Thank you! Your speaker nomination has been received.',
-        data: {
-          id: created._id,
-          nominatorName: fullName,
-          isSelfNomination,
-          createdAt: created.createdAt,
-        },
-      });
-    }
+    const created = await SpeakerNomination.create(recordData);
+    return res.status(201).json({
+      success: true,
+      message: 'Thank you! Your speaker nomination has been received.',
+      data: {
+        id: created._id,
+        nominatorName: fullName,
+        isSelfNomination,
+        createdAt: created.createdAt,
+      },
+    });
   } catch (err) {
     next(err);
   }

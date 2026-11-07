@@ -41,6 +41,7 @@ export default function SpeakerNomination() {
   const [draftSavedTime, setDraftSavedTime] = useState(null);
   const [registrationDeadline, setRegistrationDeadline] = useState(null);
   const [deadlineFormatted, setDeadlineFormatted] = useState(null);
+  const [registrationEnabled, setRegistrationEnabled] = useState(false);
   const [deadlineLoaded, setDeadlineLoaded] = useState(false);
   const [deadlineLoadError, setDeadlineLoadError] = useState(null);
 
@@ -58,6 +59,7 @@ export default function SpeakerNomination() {
         if (active) {
           setRegistrationDeadline(result.data.speakerNominationDeadline);
           setDeadlineFormatted(result.data.speakerNominationDeadlineFormatted);
+          setRegistrationEnabled(result.data.speakerNominationEnabled === true);
         }
       })
       .catch((err) => {
@@ -267,6 +269,30 @@ export default function SpeakerNomination() {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
+
+  if (!deadlineLoaded || deadlineLoadError || !registrationEnabled) {
+    return (
+      <div className="w-full min-h-[70vh] bg-[#000000] text-[#F5F5F2] flex items-center justify-center px-4 py-16 font-sans">
+        <div className="max-w-xl w-full border border-[#262626] bg-[#0A0A0A] p-8 sm:p-12 text-center">
+          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#FF554F] mb-3">TEDxCIT 2027 · Speaker Nomination</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-white mb-3">
+            {!deadlineLoaded ? 'Checking application availability' : registrationEnabled ? 'Nominations unavailable' : 'Nominations are closed'}
+          </h1>
+          <p className="text-sm leading-relaxed text-[#A0A0A8] mb-7">
+            {deadlineLoadError || (!deadlineLoaded
+              ? 'Please wait while we check the current registration status.'
+              : 'Speaker nominations are not currently accepting submissions.')}
+          </p>
+          <button
+            onClick={handleBackToHome}
+            className="inline-flex items-center gap-2 bg-[#E62B1E] hover:bg-[#c5231a] text-white font-semibold text-xs uppercase tracking-wide px-6 py-3 transition-colors cursor-pointer"
+          >
+            Return to Home <span aria-hidden="true">→</span>
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   if (submitSuccess) {
     return (

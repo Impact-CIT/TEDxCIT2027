@@ -22,4 +22,24 @@ export const submissionRateLimiter = rateLimit({
   },
 });
 
+export const adminLoginRateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  validate: {
+    ip: false,
+  },
+  keyGenerator: (req) => (
+    req.headers['x-forwarded-for']?.split(',')[0]?.trim() ||
+    req.socket?.remoteAddress ||
+    '127.0.0.1'
+  ),
+  message: {
+    success: false,
+    error: 'TOO_MANY_REQUESTS',
+    message: 'Too many sign-in attempts. Please try again later.',
+  },
+});
+
 export default submissionRateLimiter;

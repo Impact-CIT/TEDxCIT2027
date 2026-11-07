@@ -17,7 +17,6 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 import RefundPolicy from './pages/RefundPolicy';
 import DeliveryPolicy from './pages/DeliveryPolicy';
 import ContactUs from './pages/ContactUs';
-import DelegateRegistration from './pages/DelegateRegistration';
 import NotFound from './pages/NotFound';
 
 // Native Apply to Speak Flow Pages & Admin Portal
@@ -80,14 +79,7 @@ export default function App() {
       case '/curation':
         return <AdminSubmissions />;
 
-      // 3. Delegate Registration
-      case '/register':
-      case '/delegates':
-      case '/passes':
-      case '/registration':
-        return <DelegateRegistration />;
-
-      // 4. Legal & Compliance Pages
+      // 3. Legal & Compliance Pages
       case '/terms-and-conditions':
       case '/terms':
         return <TermsConditions />;
@@ -175,7 +167,7 @@ export default function App() {
         {/* Dynamic Route Content */}
         {renderContent()}
 
-        {/* Global Footer with Razorpay Legal Policies & Contact Info */}
+        {/* Global footer */}
         <Footer />
       </div>
     </div>

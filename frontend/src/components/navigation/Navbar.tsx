@@ -183,10 +183,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   );
 
   return (
-    <motion.header
-      initial={{ opacity: 0, y: -8 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] as const }}
+    <header
       className={`relative top-0 left-0 right-0 z-50 w-full transition-colors duration-300 ease-in-out font-sans bg-[#000000] border-b ${
         isScrolled ? 'border-[#333333]' : 'border-[#292929]'
       } ${className}`}
@@ -454,7 +451,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.header>
+    </header>
   );
 };
 

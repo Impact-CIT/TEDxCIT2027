@@ -19,6 +19,14 @@ const registrationSettingsSchema = new mongoose.Schema(
         ? new Date(SPEAK_CONFIG.speakerNominationDeadline)
         : null,
     },
+    anonymousVoicesOpen: {
+      type: Boolean,
+      default: true,
+    },
+    speakerNominationOpen: {
+      type: Boolean,
+      default: true,
+    },
   },
   { versionKey: false }
 );
