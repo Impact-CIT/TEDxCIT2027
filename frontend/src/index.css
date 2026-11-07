@@ -46,8 +46,8 @@
   --text: #f5f5f2;
   --muted: #bdbdbd;
   --line: #292929;
-  --red: #ff2b25;
-  --button: #ff2b25;
+  --red: #EB0028;
+  --button: #EB0028;
 }
 
 *, *::before, *::after {
@@ -93,3 +93,69 @@ body {
   color: var(--text);
 }
 
+/* Lenis Smooth Scroll Configuration (Zero Lag) */
+html {
+  scroll-behavior: auto;
+}
+
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* Desktop Fine Pointer Custom X Comet Cursor Hiding */
+@media (hover: hover) and (pointer: fine) {
+  body.custom-cursor-enabled,
+  body.custom-cursor-enabled a,
+  body.custom-cursor-enabled button,
+  body.custom-cursor-enabled input,
+  body.custom-cursor-enabled select,
+  body.custom-cursor-enabled textarea,
+  body.custom-cursor-enabled [role="button"] {
+    cursor: none !important;
+  }
+}
+
+/* Custom Modal & Card Scrollbar */
+.custom-modal-scrollbar {
+  overflow-y: auto !important;
+  overscroll-behavior: contain !important;
+  -webkit-overflow-scrolling: touch !important;
+  scrollbar-width: thin !important;
+  scrollbar-color: #EB0028 rgba(255, 255, 255, 0.08) !important;
+}
+
+.custom-modal-scrollbar::-webkit-scrollbar {
+  width: 8px !important;
+}
+
+.custom-modal-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border-radius: 9999px !important;
+  margin: 6px 0 !important;
+}
+
+.custom-modal-scrollbar::-webkit-scrollbar-thumb {
+  background: #EB0028 !important;
+  border-radius: 9999px !important;
+  border: 2px solid #0B0B0C !important;
+}
+
+.custom-modal-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #FF2B25 !important;
+}

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Play, Pause, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 export interface FrameItem {
   /** Image source path or URL */
@@ -138,7 +138,7 @@ export const CinematicFramesSection: React.FC<CinematicFramesSectionProps> = ({
     >
       {/* Background Ambient Stage Red Hue */}
       <div
-        className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[850px] h-[550px] bg-[#EB0028]/7 rounded-full blur-[170px] pointer-events-none"
+        className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[850px] h-[550px] bg-[#EB0028]/14 rounded-full blur-[170px] pointer-events-none"
         aria-hidden="true"
       />
 
@@ -156,7 +156,7 @@ export const CinematicFramesSection: React.FC<CinematicFramesSectionProps> = ({
             </div>
 
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight text-white uppercase font-['Inter',sans-serif] leading-tight">
-              {title}
+              MOMENTS THAT SPARK <span className="text-[#EB0028]">TRANSFORMATION</span>
             </h2>
 
             {description && (
@@ -185,17 +185,6 @@ export const CinematicFramesSection: React.FC<CinematicFramesSectionProps> = ({
                 />
               ))}
             </div>
-
-            {/* Pause / Play Toggle */}
-            <button
-              type="button"
-              onClick={() => setIsPaused((prev) => !prev)}
-              className="w-9 h-9 rounded-none bg-black/80 backdrop-blur-md border border-white/15 text-white flex items-center justify-center hover:bg-[#EB0028] hover:border-[#EB0028] transition-colors cursor-pointer"
-              title={isPaused ? 'Resume auto-cycle' : 'Pause auto-cycle'}
-              aria-label={isPaused ? 'Resume auto-cycle' : 'Pause auto-cycle'}
-            >
-              {isPaused ? <Play className="w-3.5 h-3.5 fill-current ml-0.5" /> : <Pause className="w-3.5 h-3.5" />}
-            </button>
 
             {/* Prev / Next Arrows */}
             <div className="flex items-center gap-1.5">
@@ -311,7 +300,7 @@ export const CinematicFramesSection: React.FC<CinematicFramesSectionProps> = ({
       {/* Bottom Timing Notice */}
       <div className="w-full px-6 sm:px-10 lg:px-14 xl:px-20 mt-6 flex flex-wrap items-center justify-between text-xs font-mono text-[#8E8E93]">
         <div className="flex items-center gap-2">
-          <Sparkles className="w-3.5 h-3.5 text-[#EB0028]" />
+          <span className="w-2 h-2 rounded-full bg-[#EB0028] animate-pulse" />
           <span>CYCLES EVERY 3 SECONDS • SET {activeSetIndex + 1} OF {imageSets.length}</span>
         </div>
         <span>SLANTED STAGE FRAMES (/ / / /) • HOVER TO PAUSE</span>

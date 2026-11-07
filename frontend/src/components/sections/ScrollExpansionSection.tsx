@@ -314,13 +314,13 @@ export const ScrollExpansionSection: React.FC<ScrollExpansionSectionProps> = ({
                     <stop offset="100%" stopColor="#000000" />
                   </radialGradient>
                   <radialGradient id="coreBloom" cx="50%" cy="50%" r="50%">
-                    <stop offset="0%" stopColor="#FF2B25" stopOpacity="0.85" />
+                    <stop offset="0%" stopColor="#EB0028" stopOpacity="0.85" />
                     <stop offset="35%" stopColor="#EB0028" stopOpacity="0.45" />
                     <stop offset="70%" stopColor="#66000F" stopOpacity="0.15" />
                     <stop offset="100%" stopColor="#000000" stopOpacity="0" />
                   </radialGradient>
                   <linearGradient id="ribbonRed1" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#FF4D5A" />
+                    <stop offset="0%" stopColor="#EB0028" />
                     <stop offset="40%" stopColor="#EB0028" />
                     <stop offset="85%" stopColor="#5E000C" />
                     <stop offset="100%" stopColor="#170003" />
@@ -388,7 +388,7 @@ export const ScrollExpansionSection: React.FC<ScrollExpansionSectionProps> = ({
             ref={headlineRef}
             className="relative z-20 flex flex-col items-center justify-center text-center px-6 sm:px-10 max-w-5xl will-change-[opacity,transform] pointer-events-none"
           >
-            <span className="font-mono text-xs sm:text-sm tracking-[0.28em] text-[#FF4D5A] uppercase mb-4 sm:mb-6 font-semibold drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
+            <span className="font-mono text-xs sm:text-sm tracking-[0.28em] text-[#EB0028] uppercase mb-4 sm:mb-6 font-semibold drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
               THE UNEXPLORED REALITY
             </span>
 

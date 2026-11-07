@@ -7,14 +7,14 @@ export default function RefundPolicy() {
   }, []);
 
   return (
-    <div className="w-full min-h-screen bg-[#000000] text-[#F5F5F2] pt-28 pb-20 px-4 sm:px-8 lg:px-14 xl:px-20 font-sans selection:bg-[#FF2B25] selection:text-white">
+    <div className="w-full min-h-screen bg-[#000000] text-[#F5F5F2] pt-28 pb-20 px-4 sm:px-8 lg:px-14 xl:px-20 font-sans selection:bg-[#EB0028] selection:text-white">
       <div className="max-w-4xl mx-auto">
         
         {/* Navigation Breadcrumb */}
         <div className="mb-8">
           <a
             href="/"
-            className="inline-flex items-center gap-2 text-xs font-mono tracking-widest uppercase text-[#8E8E93] hover:text-[#FF2B25] transition-colors"
+            className="inline-flex items-center gap-2 text-xs font-mono tracking-widest uppercase text-[#8E8E93] hover:text-[#EB0028] transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>BACK TO HOME</span>
@@ -23,12 +23,12 @@ export default function RefundPolicy() {
 
         {/* Header */}
         <div className="border-b border-[#262626] pb-8 mb-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#FF2B25]/10 border border-[#FF2B25]/30 text-[#FF2B25] text-xs font-mono uppercase tracking-widest mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#EB0028]/10 border border-[#EB0028]/30 text-[#EB0028] text-xs font-mono uppercase tracking-widest mb-4">
             <RefreshCw className="w-3.5 h-3.5" />
             <span>Billing & Transaction Policies</span>
           </div>
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white uppercase">
-            Cancellation & Refund Policy
+            Cancellation & <span className="text-[#EB0028]">Refund Policy</span>
           </h1>
           <p className="mt-3 text-sm font-mono text-[#8E8E93]">
             Last Updated: November 2026 • Official Guidelines for TEDxCIT 2027 Passes
@@ -41,7 +41,7 @@ export default function RefundPolicy() {
           {/* Highlights Box for Quick Underwriter Audit */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="bg-[#0D0D0D] border border-[#262626] p-5 rounded-sm">
-              <div className="flex items-center gap-2 text-[#FF2B25] font-mono text-xs uppercase tracking-wider mb-2">
+              <div className="flex items-center gap-2 text-[#EB0028] font-mono text-xs uppercase tracking-wider mb-2">
                 <Clock className="w-4 h-4" />
                 <span>Turnaround Time</span>
               </div>
@@ -50,7 +50,7 @@ export default function RefundPolicy() {
             </div>
 
             <div className="bg-[#0D0D0D] border border-[#262626] p-5 rounded-sm">
-              <div className="flex items-center gap-2 text-[#FF2B25] font-mono text-xs uppercase tracking-wider mb-2">
+              <div className="flex items-center gap-2 text-[#EB0028] font-mono text-xs uppercase tracking-wider mb-2">
                 <AlertCircle className="w-4 h-4" />
                 <span>Duplicate Payments</span>
               </div>
@@ -59,7 +59,7 @@ export default function RefundPolicy() {
             </div>
 
             <div className="bg-[#0D0D0D] border border-[#262626] p-5 rounded-sm">
-              <div className="flex items-center gap-2 text-[#FF2B25] font-mono text-xs uppercase tracking-wider mb-2">
+              <div className="flex items-center gap-2 text-[#EB0028] font-mono text-xs uppercase tracking-wider mb-2">
                 <ShieldCheck className="w-4 h-4" />
                 <span>Gateway Provider</span>
               </div>
@@ -71,7 +71,7 @@ export default function RefundPolicy() {
           {/* Section 1: Standard Pass Purchases */}
           <section className="bg-[#0A0A0A] border border-[#1F1F1F] p-6 sm:p-8 rounded-sm">
             <h2 className="text-lg sm:text-xl font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
-              <span className="text-[#FF2B25] font-mono">01.</span> General Cancellation Policy
+              <span className="text-[#EB0028] font-mono">01.</span> General Cancellation Policy
             </h2>
             <p className="mb-3">
               TEDxCIT 2027 operates on strict capacity limits in accordance with TED license constraints and campus auditorium fire safety regulations. Consequently:
@@ -83,15 +83,15 @@ export default function RefundPolicy() {
           </section>
 
           {/* Section 2: Event Postponement / Cancellation by Organizers */}
-          <section className="bg-[#0E0E0E] border border-[#FF2B25]/30 p-6 sm:p-8 rounded-sm">
+          <section className="bg-[#0E0E0E] border border-[#EB0028]/30 p-6 sm:p-8 rounded-sm">
             <h2 className="text-lg sm:text-xl font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
-              <span className="text-[#FF2B25] font-mono">02.</span> Organizer Cancellation or Rescheduling
+              <span className="text-[#EB0028] font-mono">02.</span> Organizer Cancellation or Rescheduling
             </h2>
             <div className="space-y-3">
               <p>
                 In the rare event that TEDxCIT 2027 is postponed, rescheduled, or cancelled entirely due to force majeure, government health/safety directives, adverse weather, or institutional emergencies:
               </p>
-              <div className="bg-[#141414] p-4 border-l-2 border-[#FF2B25] text-xs sm:text-sm text-[#E5E5EA] space-y-2">
+              <div className="bg-[#141414] p-4 border-l-2 border-[#EB0028] text-xs sm:text-sm text-[#E5E5EA] space-y-2">
                 <p className="font-semibold text-white">Full Refund Guarantee:</p>
                 <p>
                   1. If the event is permanently cancelled, a <strong>100% full refund</strong> will be initiated automatically to all registered delegates.
@@ -109,7 +109,7 @@ export default function RefundPolicy() {
           {/* Section 3: Technical Errors & Double Debits */}
           <section className="bg-[#0A0A0A] border border-[#1F1F1F] p-6 sm:p-8 rounded-sm">
             <h2 className="text-lg sm:text-xl font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
-              <span className="text-[#FF2B25] font-mono">03.</span> Duplicate Charges & Technical Glitches
+              <span className="text-[#EB0028] font-mono">03.</span> Duplicate Charges & Technical Glitches
             </h2>
             <p className="mb-3">
               If your bank account or card is debited multiple times due to a network interruption, gateway timeout, or transaction glitch:
@@ -124,7 +124,7 @@ export default function RefundPolicy() {
           {/* Section 4: Refund Claim Procedure */}
           <section className="bg-[#0A0A0A] border border-[#1F1F1F] p-6 sm:p-8 rounded-sm">
             <h2 className="text-lg sm:text-xl font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
-              <span className="text-[#FF2B25] font-mono">04.</span> How to Request a Refund or Report an Issue
+              <span className="text-[#EB0028] font-mono">04.</span> How to Request a Refund or Report an Issue
             </h2>
             <p className="mb-4">
               To submit a billing inquiry or claim an authorized refund, please provide the following details to our support desk:
@@ -137,7 +137,7 @@ export default function RefundPolicy() {
               <p>• Screenshot of the debit confirmation from your bank/UPI app</p>
             </div>
             <p className="mt-4 text-xs text-[#8E8E93]">
-              Send your request to: <span className="text-white font-semibold">tedx@citchennai.net</span> with the subject line <em>&quot;REFUND QUERY - [Your Name] - [Order ID]&quot;</em>.
+              Send your request to: <span className="text-white font-semibold">tedx@citchennai.net</span> with the subject line <strong className="text-white font-medium">&quot;REFUND QUERY - [Your Name] - [Order ID]&quot;</strong>.
             </p>
           </section>
 

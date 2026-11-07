@@ -7,14 +7,14 @@ export default function PrivacyPolicy() {
   }, []);
 
   return (
-    <div className="w-full min-h-screen bg-[#000000] text-[#F5F5F2] pt-28 pb-20 px-4 sm:px-8 lg:px-14 xl:px-20 font-sans selection:bg-[#FF2B25] selection:text-white">
+    <div className="w-full min-h-screen bg-[#000000] text-[#F5F5F2] pt-28 pb-20 px-4 sm:px-8 lg:px-14 xl:px-20 font-sans selection:bg-[#EB0028] selection:text-white">
       <div className="max-w-4xl mx-auto">
         
         {/* Navigation Breadcrumb */}
         <div className="mb-8">
           <a
             href="/"
-            className="inline-flex items-center gap-2 text-xs font-mono tracking-widest uppercase text-[#8E8E93] hover:text-[#FF2B25] transition-colors"
+            className="inline-flex items-center gap-2 text-xs font-mono tracking-widest uppercase text-[#8E8E93] hover:text-[#EB0028] transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>BACK TO HOME</span>
@@ -23,12 +23,12 @@ export default function PrivacyPolicy() {
 
         {/* Header */}
         <div className="border-b border-[#262626] pb-8 mb-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#FF2B25]/10 border border-[#FF2B25]/30 text-[#FF2B25] text-xs font-mono uppercase tracking-widest mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#EB0028]/10 border border-[#EB0028]/30 text-[#EB0028] text-xs font-mono uppercase tracking-widest mb-4">
             <ShieldCheck className="w-3.5 h-3.5" />
             <span>Data Protection & Privacy</span>
           </div>
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white uppercase">
-            Privacy Policy
+            Privacy <span className="text-[#EB0028]">Policy</span>
           </h1>
           <p className="mt-3 text-sm font-mono text-[#8E8E93]">
             Last Updated: November 2026 • TEDx Chennai Institute of Technology
@@ -41,7 +41,7 @@ export default function PrivacyPolicy() {
           {/* Section 1 */}
           <section className="bg-[#0A0A0A] border border-[#1F1F1F] p-6 sm:p-8 rounded-sm">
             <h2 className="text-lg sm:text-xl font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
-              <span className="text-[#FF2B25] font-mono">01.</span> Introduction & Scope
+              <span className="text-[#EB0028] font-mono">01.</span> Introduction & Scope
             </h2>
             <p>
               TEDxCIT 2027 (&quot;we&quot;, &quot;us&quot;, or &quot;our&quot;) is committed to protecting the privacy, confidentiality, and security of all delegates, attendees, speakers, and website visitors. This Privacy Policy outlines our procedures concerning the collection, storage, use, and protection of personal data in compliance with the Digital Personal Data Protection Act (DPDPA), 2023, and Information Technology (Reasonable Security Practices and Procedures and Sensitive Personal Data or Information) Rules, 2011.
@@ -51,7 +51,7 @@ export default function PrivacyPolicy() {
           {/* Section 2 */}
           <section className="bg-[#0A0A0A] border border-[#1F1F1F] p-6 sm:p-8 rounded-sm">
             <h2 className="text-lg sm:text-xl font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
-              <span className="text-[#FF2B25] font-mono">02.</span> Information We Collect
+              <span className="text-[#EB0028] font-mono">02.</span> Information We Collect
             </h2>
             <p className="mb-3">During registration or speaker applications, we collect only necessary personal data, including:</p>
             <ul className="list-disc list-inside space-y-2 text-[#D1D1D6]">
@@ -63,9 +63,9 @@ export default function PrivacyPolicy() {
           </section>
 
           {/* Section 3 - CRITICAL RAZORPAY COMPLIANCE */}
-          <section className="bg-[#0E0E0E] border-2 border-[#FF2B25]/40 p-6 sm:p-8 rounded-sm shadow-xl">
+          <section className="bg-[#0E0E0E] border-2 border-[#EB0028]/40 p-6 sm:p-8 rounded-sm shadow-xl">
             <h2 className="text-lg sm:text-xl font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
-              <Lock className="w-5 h-5 text-[#FF2B25]" />
+              <Lock className="w-5 h-5 text-[#EB0028]" />
               <span>03. Payment Security & Financial Data</span>
             </h2>
             <div className="space-y-3">
@@ -83,7 +83,7 @@ export default function PrivacyPolicy() {
           {/* Section 4 */}
           <section className="bg-[#0A0A0A] border border-[#1F1F1F] p-6 sm:p-8 rounded-sm">
             <h2 className="text-lg sm:text-xl font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
-              <span className="text-[#FF2B25] font-mono">04.</span> Purpose of Data Collection
+              <span className="text-[#EB0028] font-mono">04.</span> Purpose of Data Collection
             </h2>
             <ul className="list-disc list-inside space-y-2 text-[#D1D1D6]">
               <li>To issue and verify digital delegate passes and generate entry QR codes.</li>
@@ -96,7 +96,7 @@ export default function PrivacyPolicy() {
           {/* Section 5 */}
           <section className="bg-[#0A0A0A] border border-[#1F1F1F] p-6 sm:p-8 rounded-sm">
             <h2 className="text-lg sm:text-xl font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
-              <span className="text-[#FF2B25] font-mono">05.</span> Disclosure & Third-Party Sharing
+              <span className="text-[#EB0028] font-mono">05.</span> Disclosure & Third-Party Sharing
             </h2>
             <p>
               We <strong>do not sell, rent, lease, or monetize</strong> your personal information to third-party advertisers or external marketing agencies. Data is shared strictly with authorized service providers under confidentiality agreements:
@@ -110,12 +110,12 @@ export default function PrivacyPolicy() {
           {/* Section 6 */}
           <section className="bg-[#0A0A0A] border border-[#1F1F1F] p-6 sm:p-8 rounded-sm">
             <h2 className="text-lg sm:text-xl font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
-              <span className="text-[#FF2B25] font-mono">06.</span> Grievance Officer & Contact
+              <span className="text-[#EB0028] font-mono">06.</span> Grievance Officer & Contact
             </h2>
             <p className="mb-3">
               In accordance with Information Technology Act 2000 and the Digital Personal Data Protection Act, 2023, the details of the Grievance Officer for data protection inquiries are:
             </p>
-            <div className="border-l-2 border-[#FF2B25] pl-4 text-xs sm:text-sm text-[#A1A1A6] space-y-1">
+            <div className="border-l-2 border-[#EB0028] pl-4 text-xs sm:text-sm text-[#A1A1A6] space-y-1">
               <p><strong>Designation:</strong> Data Grievance Officer, TEDxCIT 2027</p>
               <p><strong>Institution:</strong> Chennai Institute of Technology</p>
               <p><strong>Address:</strong> Sarathy Nagar, Kundrathur, Chennai, Tamil Nadu - 600069, India</p>

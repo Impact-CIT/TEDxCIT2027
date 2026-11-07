@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Mail, Phone, MapPin, Clock, Building2, Send, CheckCircle2, ArrowLeft } from 'lucide-react';
+import { Mail, Phone, MapPin, Clock, Building2, Send, CheckCircle2, ArrowLeft, ExternalLink } from 'lucide-react';
 
 export default function ContactUs() {
   const [formData, setFormData] = useState({
@@ -21,14 +21,14 @@ export default function ContactUs() {
   };
 
   return (
-    <div className="w-full min-h-screen bg-[#000000] text-[#F5F5F2] pt-28 pb-20 px-4 sm:px-8 lg:px-14 xl:px-20 font-sans selection:bg-[#FF2B25] selection:text-white">
+    <div className="w-full min-h-screen bg-[#000000] text-[#F5F5F2] pt-28 pb-20 px-4 sm:px-8 lg:px-14 xl:px-20 font-sans selection:bg-[#EB0028] selection:text-white">
       <div className="max-w-5xl mx-auto">
         
         {/* Navigation Breadcrumb */}
         <div className="mb-8">
           <a
             href="/"
-            className="inline-flex items-center gap-2 text-xs font-mono tracking-widest uppercase text-[#8E8E93] hover:text-[#FF2B25] transition-colors"
+            className="inline-flex items-center gap-2 text-xs font-mono tracking-widest uppercase text-[#8E8E93] hover:text-[#EB0028] transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>BACK TO HOME</span>
@@ -37,12 +37,12 @@ export default function ContactUs() {
 
         {/* Header */}
         <div className="border-b border-[#262626] pb-8 mb-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#FF2B25]/10 border border-[#FF2B25]/30 text-[#FF2B25] text-xs font-mono uppercase tracking-widest mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#EB0028]/10 border border-[#EB0028]/30 text-[#EB0028] text-xs font-mono uppercase tracking-widest mb-4">
             <Building2 className="w-3.5 h-3.5" />
             <span>Organizer Information</span>
           </div>
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white uppercase">
-            Contact Us
+            Contact <span className="text-[#EB0028]">Us</span>
           </h1>
           <p className="mt-3 text-sm font-mono text-[#8E8E93]">
             TEDx Chennai Institute of Technology Organizing Committee
@@ -57,7 +57,7 @@ export default function ContactUs() {
             {/* Campus Address Card */}
             <div className="bg-[#0A0A0A] border border-[#1F1F1F] p-6 sm:p-7 rounded-sm">
               <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-sm bg-[#FF2B25]/10 border border-[#FF2B25]/30 flex items-center justify-center text-[#FF2B25] shrink-0 mt-1">
+                <div className="w-10 h-10 rounded-sm bg-[#EB0028]/10 border border-[#EB0028]/30 flex items-center justify-center text-[#EB0028] shrink-0 mt-1">
                   <MapPin className="w-5 h-5" />
                 </div>
                 <div>
@@ -74,9 +74,10 @@ export default function ContactUs() {
                       href="https://maps.google.com/?q=Chennai+Institute+of+Technology"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-xs font-mono text-[#FF2B25] hover:underline uppercase"
+                      className="inline-flex items-center gap-1.5 text-xs font-mono text-[#EB0028] hover:underline uppercase"
                     >
-                      <span>View on Google Maps ↗</span>
+                      <span>View on Google Maps</span>
+                      <ExternalLink className="w-3.5 h-3.5" />
                     </a>
                   </div>
                 </div>
@@ -86,7 +87,7 @@ export default function ContactUs() {
             {/* Email Card */}
             <div className="bg-[#0A0A0A] border border-[#1F1F1F] p-6 sm:p-7 rounded-sm">
               <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-sm bg-[#FF2B25]/10 border border-[#FF2B25]/30 flex items-center justify-center text-[#FF2B25] shrink-0 mt-1">
+                <div className="w-10 h-10 rounded-sm bg-[#EB0028]/10 border border-[#EB0028]/30 flex items-center justify-center text-[#EB0028] shrink-0 mt-1">
                   <Mail className="w-5 h-5" />
                 </div>
                 <div>
@@ -96,13 +97,13 @@ export default function ContactUs() {
                   <div className="mt-2 space-y-1">
                     <p className="text-sm">
                       <span className="text-[#8E8E93]">General & Ticketing Inquiries:</span>{' '}
-                      <a href="mailto:tedx@citchennai.net" className="text-white hover:text-[#FF2B25] font-semibold underline">
+                      <a href="mailto:tedx@citchennai.net" className="text-white hover:text-[#EB0028] font-semibold underline">
                         tedx@citchennai.net
                       </a>
                     </p>
                     <p className="text-sm">
                       <span className="text-[#8E8E93]">Organizer Lead:</span>{' '}
-                      <a href="mailto:sanjithcodez@gmail.com" className="text-white hover:text-[#FF2B25] font-semibold underline">
+                      <a href="mailto:sanjithcodez@gmail.com" className="text-white hover:text-[#EB0028] font-semibold underline">
                         sanjithcodez@gmail.com
                       </a>
                     </p>
@@ -114,7 +115,7 @@ export default function ContactUs() {
             {/* Helpline & Timings */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="bg-[#0A0A0A] border border-[#1F1F1F] p-6 rounded-sm">
-                <div className="flex items-center gap-2 text-[#FF2B25] font-mono text-xs uppercase tracking-wider mb-2">
+                <div className="flex items-center gap-2 text-[#EB0028] font-mono text-xs uppercase tracking-wider mb-2">
                   <Phone className="w-4 h-4" />
                   <span>Helpline Phone</span>
                 </div>
@@ -123,7 +124,7 @@ export default function ContactUs() {
               </div>
 
               <div className="bg-[#0A0A0A] border border-[#1F1F1F] p-6 rounded-sm">
-                <div className="flex items-center gap-2 text-[#FF2B25] font-mono text-xs uppercase tracking-wider mb-2">
+                <div className="flex items-center gap-2 text-[#EB0028] font-mono text-xs uppercase tracking-wider mb-2">
                   <Clock className="w-4 h-4" />
                   <span>Operating Hours</span>
                 </div>
@@ -134,7 +135,7 @@ export default function ContactUs() {
 
             {/* License Note */}
             <div className="p-4 bg-[#121212] border border-[#262626] rounded-sm text-xs text-[#8E8E93] leading-relaxed">
-              <strong className="text-white">Independent Event Disclosure:</strong> TEDxCIT 2027 is operated under a license from TED Conferences LLC. For inquiries regarding global TED programs, visit <a href="https://www.ted.com" target="_blank" rel="noreferrer" className="text-[#FF2B25] underline">ted.com</a>.
+              <strong className="text-white">Independent Event Disclosure:</strong> TEDxCIT 2027 is operated under a license from TED Conferences LLC. For inquiries regarding global TED programs, visit <a href="https://www.ted.com" target="_blank" rel="noreferrer" className="text-[#EB0028] underline">ted.com</a>.
             </div>
 
           </div>
@@ -158,7 +159,7 @@ export default function ContactUs() {
                   </p>
                   <button
                     onClick={() => setIsSubmitted(false)}
-                    className="mt-3 text-xs font-mono text-[#FF2B25] uppercase tracking-wider hover:underline"
+                    className="mt-3 text-xs font-mono text-[#EB0028] uppercase tracking-wider hover:underline"
                   >
                     Send another query
                   </button>
@@ -175,7 +176,7 @@ export default function ContactUs() {
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       placeholder="e.g. Sanjith Kumar"
-                      className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#FF2B25] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
+                      className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#EB0028] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
                     />
                   </div>
 
@@ -189,7 +190,7 @@ export default function ContactUs() {
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       placeholder="you@example.com"
-                      className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#FF2B25] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
+                      className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#EB0028] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
                     />
                   </div>
 
@@ -202,7 +203,7 @@ export default function ContactUs() {
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                       placeholder="+91 98765 43210"
-                      className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#FF2B25] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
+                      className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#EB0028] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
                     />
                   </div>
 
@@ -213,7 +214,7 @@ export default function ContactUs() {
                     <select
                       value={formData.subject}
                       onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                      className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#FF2B25] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
+                      className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#EB0028] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
                     >
                       <option value="Delegate Registration Query">Delegate Registration / Pass Query</option>
                       <option value="Payment / Razorpay Issue">Payment / Razorpay Issue</option>
@@ -233,13 +234,13 @@ export default function ContactUs() {
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                       placeholder="Type your message or inquiry here..."
-                      className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#FF2B25] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors resize-none"
+                      className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#EB0028] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors resize-none"
                     />
                   </div>
 
                   <button
                     type="submit"
-                    className="w-full py-3 bg-[#FF2B25] hover:bg-[#d61e19] text-white font-bold uppercase tracking-wider text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer"
+                    className="w-full py-3 bg-[#EB0028] hover:bg-[#C80022] text-white font-bold uppercase tracking-wider text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer"
                   >
                     <Send className="w-3.5 h-3.5" />
                     <span>Submit Inquiry</span>
