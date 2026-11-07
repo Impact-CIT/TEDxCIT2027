@@ -25,17 +25,38 @@
       }
     },
     {
-      "source": "/admin",
-      "destination": "/"
+      "source": "/assets/(.*)",
+      "destination": {
+        "service": "frontend",
+        "path": "/assets/$1"
+      }
     },
     {
-      "source": "/admin/:path*",
-      "destination": "/"
+      "source": "/images/(.*)",
+      "destination": {
+        "service": "frontend",
+        "path": "/images/$1"
+      }
+    },
+    {
+      "source": "/videos/(.*)",
+      "destination": {
+        "service": "frontend",
+        "path": "/videos/$1"
+      }
+    },
+    {
+      "source": "/(tedx-logo.svg|cinematic.html|favicon.ico)",
+      "destination": {
+        "service": "frontend",
+        "path": "/$1"
+      }
     },
     {
       "source": "/(.*)",
       "destination": {
-        "service": "frontend"
+        "service": "frontend",
+        "path": "/index.html"
       }
     }
   ]
