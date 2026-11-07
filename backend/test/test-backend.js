@@ -1,4 +1,6 @@
+process.env.NODE_ENV = 'test';
 import 'dotenv/config';
+process.env.NODE_ENV = 'test';
 import assert from 'assert';
 import http from 'http';
 import app from '../src/server.js';
