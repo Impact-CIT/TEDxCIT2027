@@ -313,6 +313,125 @@ async function runTests() {
     assert(res.body.data.id);
   });
 
+  // 16. Anonymous Voices Submission
+  await test('POST /api/anonymous-voices accepts valid submission', async () => {
+    const res = await makeRequest('POST', '/api/anonymous-voices', {
+      email: 'student.av@citchennai.net',
+      fullName: 'Aarav Kumar',
+      contactNumber: '9876543210',
+      communicationEmail: 'aarav@citchennai.net',
+      socialLinks: 'https://linkedin.com/in/aaravkumar',
+      institution: 'Chennai Institute of Technology',
+      graduationYear: '2027',
+      department: 'AIDS',
+      section: 'A',
+      talkTitle: 'The Architecture of Autonomous Empathy',
+      coreMessage: 'Exploring how emotional intelligence can be integrated into autonomous systems.',
+      uniquePerspective: 'My work on human-computer interaction in assistive healthcare.',
+      visionBridge: 'Translating cutting-edge algorithmic models into empathetic everyday tools.',
+      themeRelevance: 'Unlocking untapped cognitive dimensions of modern artificial intelligence.',
+      criticismResponse: 'Skeptics argue empathy cannot be coded; I demonstrate behavioral alignment.',
+      talkStructure: 'Opening narrative (1m), algorithmic dilemma (2m), synthesis and vision (2m).',
+      recordedSpeechUrl: 'https://drive.google.com/file/d/12345/view',
+    });
+    assert.strictEqual(res.status, 201);
+    assert.strictEqual(res.body.success, true);
+    assert(res.body.data.id);
+  });
+
+  // 17. Anonymous Voices Duplicate Email Rejection
+  await test('POST /api/anonymous-voices rejects duplicate submission from same email', async () => {
+    const res = await makeRequest('POST', '/api/anonymous-voices', {
+      email: 'student.av@citchennai.net',
+      fullName: 'Aarav Kumar',
+      contactNumber: '9876543210',
+      communicationEmail: 'aarav@citchennai.net',
+      socialLinks: 'https://linkedin.com/in/aaravkumar',
+      institution: 'Chennai Institute of Technology',
+      graduationYear: '2027',
+      department: 'AIDS',
+      section: 'A',
+      talkTitle: 'Another Title',
+      coreMessage: 'Another message',
+      uniquePerspective: 'Perspective',
+      visionBridge: 'Bridge',
+      themeRelevance: 'Relevance',
+      criticismResponse: 'Response',
+      talkStructure: 'Structure',
+      recordedSpeechUrl: 'https://drive.google.com/file/d/12345/view',
+    });
+    assert.strictEqual(res.status, 409);
+    assert.strictEqual(res.body.success, false);
+    assert.strictEqual(res.body.error, 'ALREADY_SUBMITTED');
+  });
+
+  // 18. Speaker Nomination - Self Nomination
+  await test('POST /api/speaker-nominations accepts valid self-nomination', async () => {
+    const res = await makeRequest('POST', '/api/speaker-nominations', {
+      nominatorDetails: {
+        email: 'priya.n@example.com',
+        fullName: 'Priya N',
+        contactNumber: '9123456780',
+        communicationEmail: 'priya.n@example.com',
+        workStatus: 'Working Professional',
+        currentProfession: 'Quantum Computing Researcher',
+        organization: 'Q-Labs India',
+      },
+      isSelfNomination: true,
+      selfNomination: {
+        bio: 'Over 8 years researching quantum coherence in topological states.',
+        socialLinks: 'https://linkedin.com/in/priyan',
+        mediaLinks: 'https://youtube.com/watch?v=sample',
+        uniqueIdea: 'Quantum annealing in biological pattern discovery.',
+        keyTakeaways: 'Quantum mechanics is closer to biology than previously theorized.',
+      },
+    });
+    assert.strictEqual(res.status, 201);
+    assert.strictEqual(res.body.success, true);
+    assert(res.body.data.id);
+  });
+
+  // 19. Speaker Nomination - Nominating Someone Else
+  await test('POST /api/speaker-nominations accepts nomination of another person', async () => {
+    const res = await makeRequest('POST', '/api/speaker-nominations', {
+      nominatorDetails: {
+        email: 'nominator@citchennai.net',
+        fullName: 'Vikram Sundaram',
+        contactNumber: '9988776655',
+        communicationEmail: 'nominator@citchennai.net',
+        workStatus: 'Student',
+        currentProfession: 'Undergraduate Scholar',
+        organization: 'Chennai Institute of Technology',
+      },
+      isSelfNomination: false,
+      nominee: {
+        nomineeName: 'Dr. Sunita Narain',
+        qualification: 'Environmental Scientist & Author',
+        organization: 'Centre for Science and Environment',
+        bio: 'Pioneered ecological sustainability policy reforms across South Asia.',
+        socialLinks: 'https://linkedin.com/in/sunitanarain',
+        mediaLinks: 'https://youtube.com/watch?v=talk',
+        uniquePerspective: 'Community-driven decentralized water management in hyper-dense urban clusters.',
+      },
+    });
+    assert.strictEqual(res.status, 201);
+    assert.strictEqual(res.body.success, true);
+    assert(res.body.data.id);
+  });
+
+  // 20. Admin Protected Endpoint
+  await test('GET /api/admin/submissions requires authentication', async () => {
+    const unauth = await makeRequest('GET', '/api/admin/submissions');
+    assert.strictEqual(unauth.status, 401);
+
+    const auth = await makeRequest('GET', '/api/admin/submissions', null, {
+      'x-admin-password': 'tedxcit2027admin',
+    });
+    assert.strictEqual(auth.status, 200);
+    assert.strictEqual(auth.body.success, true);
+    assert(auth.body.counts.total >= 3);
+  });
+
   // Cleanup
   await new Promise((resolve) => server.close(resolve));
 

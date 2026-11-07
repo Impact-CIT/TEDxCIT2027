@@ -11,6 +11,8 @@ class DataStore {
     this.registrationsByOrderId = new Map(); // orderId -> id
     this.speakerApplications = [];
     this.studentSpeakerApplications = [];
+    this.anonymousVoices = [];
+    this.speakerNominations = [];
   }
 
   /**
@@ -170,6 +172,50 @@ class DataStore {
   }
 
   /**
+   * Add anonymous voice submission (fallback)
+   */
+  addAnonymousVoice(data) {
+    const id = `AV-${Date.now().toString(36).toUpperCase()}-${crypto.randomBytes(2).toString('hex').toUpperCase()}`;
+    const entry = {
+      _id: id,
+      id,
+      ...data,
+      status: 'submitted',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+    this.anonymousVoices.push(entry);
+    return entry;
+  }
+
+  /**
+   * Check if anonymous voice exists for email
+   */
+  findAnonymousVoiceByEmail(email) {
+    if (!email) return null;
+    return this.anonymousVoices.find(
+      (v) => v.email && v.email.toLowerCase() === email.toLowerCase()
+    ) || null;
+  }
+
+  /**
+   * Add speaker nomination submission (fallback)
+   */
+  addSpeakerNomination(data) {
+    const id = `SN-${Date.now().toString(36).toUpperCase()}-${crypto.randomBytes(2).toString('hex').toUpperCase()}`;
+    const entry = {
+      _id: id,
+      id,
+      ...data,
+      status: 'submitted',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+    this.speakerNominations.push(entry);
+    return entry;
+  }
+
+  /**
    * Clear all records (useful in tests)
    */
   clear() {
@@ -177,6 +223,8 @@ class DataStore {
     this.registrationsByOrderId.clear();
     this.speakerApplications = [];
     this.studentSpeakerApplications = [];
+    this.anonymousVoices = [];
+    this.speakerNominations = [];
   }
 }
 

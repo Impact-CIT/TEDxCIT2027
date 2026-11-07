@@ -2,6 +2,7 @@ import express from 'express';
 import delegateRoutes from './delegateRoutes.js';
 import speakerRoutes from './speakerRoutes.js';
 import studentSpeakerRoutes from './studentSpeakerRoutes.js';
+import speakFlowRoutes from './speakFlowRoutes.js';
 import {
   registerDelegate,
   verifyPayment,
@@ -11,7 +12,10 @@ import {
 
 const router = express.Router();
 
-// 1. Delegate & Registration Routes
+// 1. Apply to Speak Flow & Native Forms (Anonymous Voices & Speaker Nominations)
+router.use('/', speakFlowRoutes);
+
+// 2. Delegate & Registration Routes
 router.use('/delegates', delegateRoutes);
 
 // 2. Direct Payment Convenience Aliases (for easy frontend integration)
