@@ -27,3 +27,7 @@ Thumbs.db
 .vscode/
 .idea/
 
+# Scratch & Verification Artifacts
+scratch/
+.vercel
+.env.local

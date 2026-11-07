@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 44" width="380" height="44" fill="none" role="img" aria-label="TEDx Chennai Institute of Technology">
+  <!-- TEDx Wordmark -->
+  <g id="tedx-brand">
+    <!-- T -->
+    <path fill="#EB0028" d="M0 4.5h23.2v6.6h-7.8v22.4H7.8V11.1H0V4.5z"/>
+    <!-- E -->
+    <path fill="#EB0028" d="M26.2 4.5h20.8v6.4H33.8v6.2h11.8v6.2H33.8v6.6H47v6.4H26.2V4.5z"/>
+    <!-- D -->
+    <path fill="#EB0028" d="M50 4.5h11.2c8.4 0 14.6 5.6 14.6 15.6s-6.2 15.6-14.6 15.6H50V4.5zm7.6 24.8h3.8c4.6 0 7.4-3.4 7.4-9.2s-2.8-9.2-7.4-9.2h-3.8v18.4z"/>
+    <!-- x -->
+    <path fill="#EB0028" d="M78.6 4.5h4.2l3.4 5.6 3.4-5.6h4.2l-5.6 8.4 6 9.4h-4.4l-3.6-6-3.6 6h-4.4l6-9.4-5.2-8.4z"/>
+  </g>
+
+  <!-- Event Name: Chennai Institute of Technology -->
+  <g id="event-name">
+    <text x="105" y="24" fill="#F5F5F2" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="17" font-weight="600" letter-spacing="-0.01em">Chennai Institute of Technology</text>
+    <text x="105.5" y="36.5" fill="#8E8E93" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="8.5" font-weight="400" letter-spacing="0.02em">x = independently organized TED event</text>
+  </g>
+</svg>
+
