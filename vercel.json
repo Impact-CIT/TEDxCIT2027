@@ -52,9 +52,37 @@
         "path": "/$1"
       }
     },
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
-    }
+    { "source": "/home", "destination": "/index.html" },
+    { "source": "/speakers", "destination": "/index.html" },
+    { "source": "/team", "destination": "/index.html" },
+    { "source": "/organizers", "destination": "/index.html" },
+    { "source": "/apply-to-speak", "destination": "/index.html" },
+    { "source": "/apply/anonymous-voices", "destination": "/index.html" },
+    { "source": "/apply-to-speak/anonymous-voices", "destination": "/index.html" },
+    { "source": "/anonymous-voices", "destination": "/index.html" },
+    { "source": "/apply/speaker-nomination", "destination": "/index.html" },
+    { "source": "/apply-to-speak/speaker-nomination", "destination": "/index.html" },
+    { "source": "/speaker-nomination", "destination": "/index.html" },
+    { "source": "/nominate-speaker", "destination": "/index.html" },
+    { "source": "/admin", "destination": "/index.html" },
+    { "source": "/admin/submissions", "destination": "/index.html" },
+    { "source": "/curation", "destination": "/index.html" },
+    { "source": "/register", "destination": "/index.html" },
+    { "source": "/delegates", "destination": "/index.html" },
+    { "source": "/passes", "destination": "/index.html" },
+    { "source": "/registration", "destination": "/index.html" },
+    { "source": "/terms-and-conditions", "destination": "/index.html" },
+    { "source": "/terms", "destination": "/index.html" },
+    { "source": "/privacy-policy", "destination": "/index.html" },
+    { "source": "/privacy", "destination": "/index.html" },
+    { "source": "/cancellation-and-refund", "destination": "/index.html" },
+    { "source": "/refund-policy", "destination": "/index.html" },
+    { "source": "/refunds", "destination": "/index.html" },
+    { "source": "/shipping-and-delivery", "destination": "/index.html" },
+    { "source": "/ticket-delivery", "destination": "/index.html" },
+    { "source": "/delivery", "destination": "/index.html" },
+    { "source": "/contact-us", "destination": "/index.html" },
+    { "source": "/contact", "destination": "/index.html" },
+    { "source": "/partner-with-us", "destination": "/index.html" }
   ]
 }
