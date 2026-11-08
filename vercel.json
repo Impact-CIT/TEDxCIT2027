@@ -8,81 +8,15 @@
     "frontend": {
       "root": "frontend",
       "framework": "vite",
-      "outputDirectory": "dist"
+      "outputDirectory": "dist",
+      "rewrites": [
+        { "source": "/(.*)", "destination": "/index.html" }
+      ]
     }
   },
   "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": {
-        "service": "backend"
-      }
-    },
-    {
-      "source": "/uploads/(.*)",
-      "destination": {
-        "service": "backend"
-      }
-    },
-    {
-      "source": "/assets/(.*)",
-      "destination": {
-        "service": "frontend",
-        "path": "/assets/$1"
-      }
-    },
-    {
-      "source": "/images/(.*)",
-      "destination": {
-        "service": "frontend",
-        "path": "/images/$1"
-      }
-    },
-    {
-      "source": "/videos/(.*)",
-      "destination": {
-        "service": "frontend",
-        "path": "/videos/$1"
-      }
-    },
-    {
-      "source": "/(tedx-logo.svg|cinematic.html|favicon.ico)",
-      "destination": {
-        "service": "frontend",
-        "path": "/$1"
-      }
-    },
-    { "source": "/home", "destination": "/index.html" },
-    { "source": "/speakers", "destination": "/index.html" },
-    { "source": "/team", "destination": "/index.html" },
-    { "source": "/organizers", "destination": "/index.html" },
-    { "source": "/apply-to-speak", "destination": "/index.html" },
-    { "source": "/apply/anonymous-voices", "destination": "/index.html" },
-    { "source": "/apply-to-speak/anonymous-voices", "destination": "/index.html" },
-    { "source": "/anonymous-voices", "destination": "/index.html" },
-    { "source": "/apply/speaker-nomination", "destination": "/index.html" },
-    { "source": "/apply-to-speak/speaker-nomination", "destination": "/index.html" },
-    { "source": "/speaker-nomination", "destination": "/index.html" },
-    { "source": "/nominate-speaker", "destination": "/index.html" },
-    { "source": "/admin", "destination": "/index.html" },
-    { "source": "/admin/submissions", "destination": "/index.html" },
-    { "source": "/curation", "destination": "/index.html" },
-    { "source": "/register", "destination": "/index.html" },
-    { "source": "/delegates", "destination": "/index.html" },
-    { "source": "/passes", "destination": "/index.html" },
-    { "source": "/registration", "destination": "/index.html" },
-    { "source": "/terms-and-conditions", "destination": "/index.html" },
-    { "source": "/terms", "destination": "/index.html" },
-    { "source": "/privacy-policy", "destination": "/index.html" },
-    { "source": "/privacy", "destination": "/index.html" },
-    { "source": "/cancellation-and-refund", "destination": "/index.html" },
-    { "source": "/refund-policy", "destination": "/index.html" },
-    { "source": "/refunds", "destination": "/index.html" },
-    { "source": "/shipping-and-delivery", "destination": "/index.html" },
-    { "source": "/ticket-delivery", "destination": "/index.html" },
-    { "source": "/delivery", "destination": "/index.html" },
-    { "source": "/contact-us", "destination": "/index.html" },
-    { "source": "/contact", "destination": "/index.html" },
-    { "source": "/partner-with-us", "destination": "/index.html" }
+    { "source": "/api/(.*)", "destination": { "service": "backend" } },
+    { "source": "/uploads/(.*)", "destination": { "service": "backend" } },
+    { "source": "/(.*)", "destination": { "service": "frontend" } }
   ]
 }
