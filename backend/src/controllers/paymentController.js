@@ -68,8 +68,8 @@ export async function createOrder(req, res) {
       orderId: orderId,
       amount: order.amount,
       currency: order.currency,
-      key_id: razorpayService.keyId,
-      keyId: razorpayService.keyId,
+      key_id: order.key_id || order.keyId || razorpayService.keyId,
+      keyId: order.keyId || order.key_id || razorpayService.keyId,
       receipt: order.receipt,
     };
 
