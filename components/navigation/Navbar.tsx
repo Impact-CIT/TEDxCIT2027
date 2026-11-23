@@ -260,7 +260,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="flex items-center border-l border-[#292929] pl-3 lg:pl-4 xl:pl-5 space-x-2 lg:space-x-2.5 xl:space-x-3 shrink-0">
             {ctaButtons.map((btn) => {
               const isActive = pathname === btn.href || pathname.startsWith(`${btn.href}/`);
-              const isPrimary = btn.isPrimary || btn.label === 'REGISTER NOW';
+              const isPrimary = Boolean(btn.isPrimary);
 
               return (
                 <motion.a

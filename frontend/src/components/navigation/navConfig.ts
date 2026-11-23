@@ -14,14 +14,14 @@ export interface NavItem {
  * Order strictly maintained as per event specification:
  * 1. HOME (/)
  * 2. SPEAKERS (/speakers)
- * 3. APPLY TO SPEAK (/apply-to-speak) - Outlined CTA Button
- * 4. PARTNER WITH US (/partner-with-us) - Outlined CTA Button
- * 5. REGISTER NOW (/register) - Filled Primary CTA Button
+ * 3. PARTNER WITH US (/partner-with-us) - Outlined CTA Button
+ * 4. REGISTER NOW (/register) - Outlined CTA Button
+ * 5. APPLY TO SPEAK (/apply/anonymous-voices) - Filled Primary CTA Button in right-side corner
  */
 export const NAV_ITEMS: readonly NavItem[] = [
   { label: 'HOME', href: '/' },
   { label: 'SPEAKERS', href: '/speakers' },
-  { label: 'APPLY TO SPEAK', href: '/apply/anonymous-voices', isButton: true },
   { label: 'PARTNER WITH US', href: '/partner-with-us', isButton: true },
-  { label: 'REGISTER NOW', href: '/register', isButton: true, isPrimary: true },
+  { label: 'REGISTER NOW', href: '/register', isButton: true },
+  { label: 'APPLY TO SPEAK', href: '/apply/anonymous-voices', isButton: true, isPrimary: true },
 ] as const;

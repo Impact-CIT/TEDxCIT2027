@@ -203,23 +203,8 @@ export const Hero: React.FC<HeroProps> = ({ className = '' }) => {
               An invitation to challenge the familiar, uncover the overlooked and give the untapped its moment to emerge.
             </p>
 
-            {/* Action Buttons: REGISTER NOW, APPLY TO SPEAK, and PARTNER WITH US */}
+            {/* Action Buttons: APPLY TO SPEAK, REGISTER NOW, and PARTNER WITH US */}
             <div className="mt-8 sm:mt-10 lg:mt-12 flex flex-row items-center gap-3 sm:gap-3.5 flex-wrap">
-              <motion.a
-                href="/register"
-                onClick={(e) => {
-                  e.preventDefault();
-                  openDelegateModal();
-                }}
-                whileHover={{ scale: 1.025 }}
-                whileTap={{ scale: 0.975 }}
-                transition={{ duration: 0.2 }}
-                className="group relative inline-flex items-center justify-between space-x-3.5 bg-[#EB0028] hover:bg-[#C80022] border border-[#EB0028] px-4.5 sm:px-5.5 lg:px-6 py-3 sm:py-3.5 text-xs sm:text-[13px] font-bold tracking-[0.08em] uppercase text-white transition-all duration-300 rounded-none overflow-hidden shadow-lg shadow-[#EB0028]/25 hover:shadow-[#EB0028]/40 focus:outline-none focus-visible:ring-1 focus-visible:ring-white whitespace-nowrap cursor-pointer"
-              >
-                <span className="relative z-10">REGISTER NOW</span>
-                <ArrowUpRight className="relative z-10 w-4 h-4 transition-transform duration-300 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-              </motion.a>
-
               <motion.a
                 href="/apply/anonymous-voices"
                 onClick={(e) => {
@@ -231,13 +216,28 @@ export const Hero: React.FC<HeroProps> = ({ className = '' }) => {
                 whileHover={{ scale: 1.025 }}
                 whileTap={{ scale: 0.975 }}
                 transition={{ duration: 0.2 }}
+                className="group relative inline-flex items-center justify-between space-x-3.5 bg-[#EB0028] hover:bg-[#C80022] border border-[#EB0028] px-4.5 sm:px-5.5 lg:px-6 py-3 sm:py-3.5 text-xs sm:text-[13px] font-bold tracking-[0.08em] uppercase text-white transition-all duration-300 rounded-none overflow-hidden shadow-lg shadow-[#EB0028]/25 hover:shadow-[#EB0028]/40 focus:outline-none focus-visible:ring-1 focus-visible:ring-white whitespace-nowrap cursor-pointer"
+              >
+                <span className="relative z-10">APPLY TO SPEAK</span>
+                <ArrowUpRight className="relative z-10 w-4 h-4 transition-transform duration-300 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </motion.a>
+
+              <motion.a
+                href="/register"
+                onClick={(e) => {
+                  e.preventDefault();
+                  openDelegateModal();
+                }}
+                whileHover={{ scale: 1.025 }}
+                whileTap={{ scale: 0.975 }}
+                transition={{ duration: 0.2 }}
                 className="group relative inline-flex items-center justify-between space-x-3.5 border border-[#292929] hover:border-[#EB0028] bg-transparent px-4 sm:px-5 lg:px-5.5 py-3 sm:py-3.5 text-xs sm:text-[13px] font-bold tracking-[0.08em] uppercase text-[#F5F5F2] hover:text-white transition-all duration-300 rounded-none overflow-hidden focus:outline-none focus-visible:ring-1 focus-visible:ring-[#EB0028] whitespace-nowrap cursor-pointer"
               >
                 <span
                   className="absolute inset-0 bg-gradient-to-r from-[#EB0028]/25 via-[#EB0028]/10 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"
                   aria-hidden="true"
                 />
-                <span className="relative z-10">APPLY TO SPEAK</span>
+                <span className="relative z-10">REGISTER NOW</span>
                 <ArrowUpRight className="relative z-10 w-4 h-4 transition-transform duration-300 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-[#EB0028]" />
               </motion.a>
 
