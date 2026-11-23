@@ -578,7 +578,7 @@ export default function DelegateRegistration() {
                       <input
                         type="text"
                         required
-                        placeholder="e.g. Sanjith Kumar"
+                        placeholder="e.g. Rohan Mehta"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#FF2B25] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
