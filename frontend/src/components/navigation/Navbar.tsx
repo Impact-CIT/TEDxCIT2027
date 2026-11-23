@@ -425,10 +425,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             {/* Mobile Footer Meta */}
             <div className="border-t border-[#292929] pt-6 flex flex-col sm:flex-row justify-between text-xs text-[#8E8E93]">
-              <span className="font-mono tracking-widest uppercase">
-                CHENNAI / IDEAS WORTH SPREADING
-              </span>
-              <span className="mt-2 sm:mt-0 font-normal">
+              <span className="font-normal">
                 TEDx Chennai Institute of Technology
               </span>
             </div>

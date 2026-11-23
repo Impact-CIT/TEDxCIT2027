@@ -160,8 +160,7 @@ export const ImpactStatsSection: React.FC<ImpactStatsSectionProps> = ({
         >
           {/* Left: Eyebrow + "A Decade of Impact" */}
           <div className="max-w-2xl">
-            <div className="mb-3.5 flex items-center gap-2.5">
-              <span className="w-2 h-2 rounded-full bg-[#EB0028] animate-pulse" aria-hidden="true" />
+            <div className="mb-3.5 flex items-center">
               <span className="font-mono text-xs uppercase tracking-[0.24em] text-[#8E8E93]">
                 HISTORICAL TELEMETRY // 2017 — 2027
               </span>

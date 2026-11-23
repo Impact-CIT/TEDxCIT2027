@@ -109,8 +109,6 @@ export const ScrollExpansionSection: React.FC<ScrollExpansionSectionProps> = ({
           borderRadius: '0px',
           borderColor: 'transparent',
         });
-        gsap.set(labelRef.current, { opacity: 0 });
-        gsap.set(badgeControlsRef.current, { opacity: 0 });
         gsap.set(scrimOverlayRef.current, { opacity: 0.85 });
         gsap.set(headlineRef.current, { opacity: 1, y: 0, scale: 1 });
         return;
@@ -130,30 +128,6 @@ export const ScrollExpansionSection: React.FC<ScrollExpansionSectionProps> = ({
           invalidateOnRefresh: true,
         },
       });
-
-      // 1a. Eyebrow label fades out quickly as expansion begins
-      tl.to(
-        labelRef.current,
-        {
-          opacity: 0,
-          y: -22,
-          duration: 0.18,
-          ease: 'power1.out',
-        },
-        0
-      );
-
-      // 1b. Badge controls fade out as full expansion approaches
-      tl.to(
-        badgeControlsRef.current,
-        {
-          opacity: 0,
-          y: 15,
-          duration: 0.25,
-          ease: 'power1.out',
-        },
-        0.35
-      );
 
       // 2. Expand framed visual from 82% to 100vw, 55vh to 100svh, radius 6px to 0px
       tl.fromTo(
@@ -246,19 +220,6 @@ export const ScrollExpansionSection: React.FC<ScrollExpansionSectionProps> = ({
         className="sticky top-0 w-full h-screen h-[100svh] flex items-center justify-center overflow-hidden"
       >
         {/* ========================================================
-            EDITORIAL EYEBROW LABEL
-            Positioned above the framed visual prior to expansion
-            ======================================================== */}
-        <div
-          ref={labelRef}
-          className="absolute bottom-[calc(50%+28vh+12px)] md:bottom-[calc(50%+28.5vh+18px)] text-center transition-opacity duration-300 pointer-events-none z-20"
-        >
-          <span className="font-mono text-[11px] sm:text-xs md:text-[13px] tracking-[0.24em] uppercase text-[#8E8E93]">
-            BEYOND WHAT IS SEEN
-          </span>
-        </div>
-
-        {/* ========================================================
             CENTERED RECTANGULAR VISUAL
             Expands from 82% width / 55vh height to full 100vw / 100vh
             ======================================================== */}
@@ -340,45 +301,6 @@ export const ScrollExpansionSection: React.FC<ScrollExpansionSectionProps> = ({
             ref={scrimOverlayRef}
             className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/80 to-black/65 pointer-events-none will-change-[opacity] z-10"
           />
-
-          {/* ========================================================
-              IMAGE SELECTOR TABS / PILLS
-              Allows viewing each photo directly with active indicator
-              ======================================================== */}
-          {resolvedImages.length > 1 && !allImagesFailed && (
-            <div
-              ref={badgeControlsRef}
-              className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 z-25 flex items-center gap-2 pointer-events-auto will-change-[opacity,transform]"
-            >
-              {resolvedImages.map((src, idx) => {
-                const isActive = idx === currentIndex;
-                const label = resolvedLabels[idx] || `Photo 0${idx + 1}`;
-                return (
-                  <button
-                    key={src}
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setCurrentIndex(idx);
-                    }}
-                    className={`group flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-mono tracking-wider uppercase transition-all duration-300 border backdrop-blur-md cursor-pointer ${
-                      isActive
-                        ? 'bg-[#EB0028]/95 text-white border-[#EB0028] shadow-[0_0_18px_rgba(235,0,40,0.6)]'
-                        : 'bg-black/60 text-[#F5F5F2]/75 border-white/20 hover:border-white/50 hover:text-white'
-                    }`}
-                    aria-label={`Show ${label}`}
-                  >
-                    <span
-                      className={`inline-block w-1.5 h-1.5 rounded-full transition-colors duration-300 ${
-                        isActive ? 'bg-white' : 'bg-[#8E8E93] group-hover:bg-white'
-                      }`}
-                    />
-                    <span>{label}</span>
-                  </button>
-                );
-              })}
-            </div>
-          )}
 
           {/* ========================================================
               EDITORIAL TRANSITION HEADLINE

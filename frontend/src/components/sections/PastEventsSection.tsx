@@ -611,7 +611,6 @@ export const PastEventsSection: React.FC<PastEventsSectionProps> = ({
                     <div className="max-w-3xl">
                       {/* Theme Code Moniker */}
                       <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-[0.22em] text-[#EB0028] font-bold mb-2">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#EB0028] animate-pulse" />
                         <span>THEME FOCUS</span>
                         <span className="text-white/30">//</span>
                         <span className="text-white/90">{event.theme || 'UNTAPPED'}</span>

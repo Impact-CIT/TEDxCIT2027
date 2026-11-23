@@ -149,10 +149,6 @@ export default function App() {
                 '/images/beyond-seen-1.jpg',
                 '/images/beyond-seen-2.jpg',
               ]}
-              imageLabels={[
-                'Organizing Committee',
-                'Team & Crew',
-              ]}
             />
 
             {/* 50/50 Split Stage Video & TEDx CIT Mission Section */}

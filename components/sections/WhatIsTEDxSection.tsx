@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ArrowUpRight, Globe, Lightbulb, Users } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 
 export interface WhatIsTEDxSectionProps {
   /** Optional subhead text */
@@ -59,27 +59,11 @@ export const WhatIsTEDxSection: React.FC<WhatIsTEDxSectionProps> = ({
         >
           <div className="w-full rounded-2xl bg-[#09090C]/90 backdrop-blur-xl border border-white/10 p-8 sm:p-10 lg:p-12 xl:p-14 relative overflow-hidden shadow-[0_24px_80px_rgba(0,0,0,0.9)] group transition-all duration-500 hover:border-[#EB0028]/50 hover:shadow-[0_30px_90px_rgba(235,0,40,0.18)]">
             
-            {/* Theatrical Ambient Red Glow inside Card */}
+            {/* Ambient Red Glow inside Card */}
             <div
               className="absolute -top-28 -right-28 w-80 h-80 bg-[#EB0028]/12 rounded-full blur-3xl pointer-events-none transition-transform duration-700 group-hover:scale-125"
               aria-hidden="true"
             />
-
-            {/* Top Status Header */}
-            <div className="flex items-center justify-between mb-8 pb-6 border-b border-white/10">
-              <div className="flex items-center gap-2.5">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#EB0028] opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[#EB0028]" />
-                </span>
-                <span className="font-mono text-xs uppercase tracking-[0.22em] text-[#8E8E93]">
-                  GLOBAL MOVEMENT // TEDx INITIATIVE
-                </span>
-              </div>
-              <span className="font-mono text-[11px] uppercase tracking-widest text-[#6E6E73]">
-                EST. 2009
-              </span>
-            </div>
 
             {/* Massive Official TEDx Lettermark */}
             <div className="mb-10 select-none">
@@ -99,8 +83,7 @@ export const WhatIsTEDxSection: React.FC<WhatIsTEDxSectionProps> = ({
               
               {/* Pillar 1: Ideas */}
               <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5 transition-all duration-300 hover:border-[#EB0028]/40 hover:bg-[#EB0028]/5 group/pillar">
-                <div className="flex items-center gap-2 text-[#EB0028] mb-2">
-                  <Lightbulb className="w-4 h-4 transition-transform duration-300 group-hover/pillar:scale-110" />
+                <div className="mb-2">
                   <span className="font-mono text-xs tracking-wider uppercase text-white font-bold">
                     IDEAS
                   </span>
@@ -112,8 +95,7 @@ export const WhatIsTEDxSection: React.FC<WhatIsTEDxSectionProps> = ({
 
               {/* Pillar 2: Community */}
               <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5 transition-all duration-300 hover:border-[#EB0028]/40 hover:bg-[#EB0028]/5 group/pillar">
-                <div className="flex items-center gap-2 text-[#EB0028] mb-2">
-                  <Users className="w-4 h-4 transition-transform duration-300 group-hover/pillar:scale-110" />
+                <div className="mb-2">
                   <span className="font-mono text-xs tracking-wider uppercase text-white font-bold">
                     COMMUNITY
                   </span>
@@ -125,8 +107,7 @@ export const WhatIsTEDxSection: React.FC<WhatIsTEDxSectionProps> = ({
 
               {/* Pillar 3: Global */}
               <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5 transition-all duration-300 hover:border-[#EB0028]/40 hover:bg-[#EB0028]/5 group/pillar">
-                <div className="flex items-center gap-2 text-[#EB0028] mb-2">
-                  <Globe className="w-4 h-4 transition-transform duration-300 group-hover/pillar:scale-110" />
+                <div className="mb-2">
                   <span className="font-mono text-xs tracking-wider uppercase text-white font-bold">
                     GLOBAL
                   </span>
@@ -156,9 +137,8 @@ export const WhatIsTEDxSection: React.FC<WhatIsTEDxSectionProps> = ({
           transition={{ duration: 0.85, ease: transitionEase, delay: 0.12 }}
           className="w-full flex flex-col justify-center"
         >
-          {/* Eyebrow with Pulsing Dot */}
-          <div className="mb-4 sm:mb-5 flex items-center gap-2.5">
-            <span className="w-2 h-2 rounded-full bg-[#EB0028] animate-pulse" aria-hidden="true" />
+          {/* Eyebrow */}
+          <div className="mb-4 sm:mb-5 flex items-center">
             <span className="font-mono text-xs sm:text-[13px] uppercase tracking-[0.22em] text-[#8E8E93]">
               {subhead}
             </span>

@@ -148,8 +148,7 @@ export const CinematicFramesSection: React.FC<CinematicFramesSectionProps> = ({
           
           {/* Eyebrow & Headline */}
           <div className="max-w-3xl">
-            <div className="mb-3.5 flex items-center gap-2.5">
-              <span className="w-2 h-2 rounded-full bg-[#EB0028] animate-pulse" aria-hidden="true" />
+            <div className="mb-3.5 flex items-center">
               <span className="font-mono text-xs uppercase tracking-[0.24em] text-[#8E8E93]">
                 {eyebrow}
               </span>

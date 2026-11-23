@@ -2,7 +2,7 @@
 
 import React, { useRef, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Volume2, VolumeX, ArrowUpRight, Film } from 'lucide-react';
+import { Volume2, VolumeX, ArrowUpRight } from 'lucide-react';
 
 export interface AboutVideoSectionProps {
   /** Video source path or URL */
@@ -233,15 +233,6 @@ export const AboutVideoSection: React.FC<AboutVideoSectionProps> = ({
               </div>
             )}
           </div>
-
-          {/* Subtext below video with high-tech status readout */}
-          <div className="mt-3.5 flex items-center justify-between text-xs font-mono text-[#8E8E93] px-1">
-            <span className="flex items-center gap-2">
-              <Film className="w-3.5 h-3.5 text-[#EB0028]" />
-              <span>OFFICIAL HIGHLIGHT RECORD</span>
-            </span>
-            <span className="tracking-widest">16:9 CINEMATIC 4K REEL</span>
-          </div>
         </motion.div>
 
         {/* =========================================================================
@@ -255,8 +246,7 @@ export const AboutVideoSection: React.FC<AboutVideoSectionProps> = ({
           className="w-full flex flex-col justify-center"
         >
           {/* Eyebrow Label */}
-          <div className="mb-4 sm:mb-5 flex items-center gap-2.5">
-            <span className="w-2 h-2 rounded-full bg-[#EB0028] animate-pulse" aria-hidden="true" />
+          <div className="mb-4 sm:mb-5 flex items-center">
             <span className="font-mono text-xs sm:text-[13px] uppercase tracking-[0.22em] text-[#8E8E93]">
               {subhead}
             </span>
