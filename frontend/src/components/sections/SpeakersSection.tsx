@@ -143,7 +143,7 @@ export const SpeakersSection: React.FC<SpeakersSectionProps> = ({
   description = 'Every idea has a story, every perspective holds a possibility, and every voice has the power to spark change. Meet the minds who dare to explore beyond the obvious and bring the untapped into the spotlight.',
   speakers = DEFAULT_SPEAKERS,
   className = '',
-  showFilters = true,
+  showFilters: _showFilters = true,
 }) => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, margin: '-10% 0px -10% 0px' });
@@ -253,7 +253,11 @@ export const SpeakersSection: React.FC<SpeakersSectionProps> = ({
 
             {/* Main Headline */}
             <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-white font-['Inter',sans-serif] leading-[1.1]">
-              Visionary minds. <span className="text-[#EB0028]">Uncharted ideas.</span>
+              {title === 'Visionary minds. Uncharted ideas.' ? (
+                <>Visionary minds. <span className="text-[#EB0028]">Uncharted ideas.</span></>
+              ) : (
+                title
+              )}
             </h2>
 
             {description && (

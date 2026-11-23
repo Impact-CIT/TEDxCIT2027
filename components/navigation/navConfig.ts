@@ -5,6 +5,7 @@ export interface NavItem {
   readonly label: string;
   readonly href: string;
   readonly isButton?: boolean;
+  readonly isPrimary?: boolean;
 }
 
 /**

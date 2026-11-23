@@ -9,7 +9,14 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+    "paths": {
+      "react": ["./frontend/node_modules/@types/react"],
+      "react/jsx-runtime": ["./frontend/node_modules/@types/react/jsx-runtime"],
+      "react-dom": ["./frontend/node_modules/@types/react-dom"],
+      "*": ["./frontend/node_modules/*", "./*"]
+    },
+    "typeRoots": ["./frontend/node_modules/@types"]
   },
   "include": ["components"]
 }
