@@ -141,17 +141,6 @@ export const Hero: React.FC<HeroProps> = ({ className = '' }) => {
             Features 3D subtle parallax glide + intact, uncut typography
             ======================================================== */}
         <div className="w-full lg:w-[68%] xl:w-[68%] flex flex-col justify-start pl-6 sm:pl-10 lg:pl-14 xl:pl-16 pr-2 sm:pr-3 lg:pr-4 pt-8 sm:pt-10 lg:pt-12 xl:pt-14 pb-12 lg:pb-16 border-b lg:border-b-0">
-          {/* Eyebrow Label with pulsing live status beacon */}
-          <div className="mb-3 sm:mb-4 lg:mb-5 flex items-center space-x-3">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#EB0028] opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#EB0028]" />
-            </span>
-            <span className="font-mono text-[11px] sm:text-xs md:text-[13px] tracking-[0.18em] uppercase text-[#8E8E93]">
-              CHENNAI / IDEAS WORTH SPREADING
-            </span>
-          </div>
-
           {/* 
             Massive UNTAPPED headline with 3D Parallax Tilt:
             - UN in off-white (#F5F5F2)
@@ -238,10 +227,10 @@ export const Hero: React.FC<HeroProps> = ({ className = '' }) => {
               </motion.a>
 
               <motion.a
-                href="/apply-to-speak"
+                href="/apply/anonymous-voices"
                 onClick={(e) => {
                   e.preventDefault();
-                  window.history.pushState({}, '', '/apply-to-speak');
+                  window.history.pushState({}, '', '/apply/anonymous-voices');
                   window.dispatchEvent(new Event('popstate'));
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
@@ -256,29 +245,6 @@ export const Hero: React.FC<HeroProps> = ({ className = '' }) => {
             </div>
           </div>
         </div>
-      </div>
-
-      {/* ========================================================
-          CINEMATIC CONTINUOUS MARQUEE TICKER AT BOTTOM
-          Infinite sliding ticker anchoring the lower viewport edge
-          ======================================================== */}
-      <div className="w-full border-t border-[#1C1C1E] bg-[#000000]/80 backdrop-blur-sm py-2.5 overflow-hidden z-20">
-        <motion.div
-          animate={{ x: ['0%', '-50%'] }}
-          transition={{
-            duration: 28,
-            repeat: Infinity,
-            ease: 'linear',
-          }}
-          className="flex whitespace-nowrap font-mono text-[11px] sm:text-xs tracking-[0.22em] uppercase text-[#6E6E73]"
-        >
-          <span className="inline-block px-4">
-            TEDx Chennai Institute of Technology <span className="text-[#EB0028] font-bold">/</span> THEME: UNTAPPED <span className="text-[#EB0028] font-bold">/</span> DISCOVER UNEXPLORED PERSPECTIVES <span className="text-[#EB0028] font-bold">/</span> IDEAS WORTH SPREADING <span className="text-[#EB0028] font-bold">/</span> CIT CAMPUS CHENNAI <span className="text-[#EB0028] font-bold">/</span>
-          </span>
-          <span className="inline-block px-4">
-            TEDx Chennai Institute of Technology <span className="text-[#EB0028] font-bold">/</span> THEME: UNTAPPED <span className="text-[#EB0028] font-bold">/</span> DISCOVER UNEXPLORED PERSPECTIVES <span className="text-[#EB0028] font-bold">/</span> IDEAS WORTH SPREADING <span className="text-[#EB0028] font-bold">/</span> CIT CAMPUS CHENNAI <span className="text-[#EB0028] font-bold">/</span>
-          </span>
-        </motion.div>
       </div>
     </section>
   );

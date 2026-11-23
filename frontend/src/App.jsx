@@ -12,7 +12,6 @@ import { CinematicFramesSection } from './components/sections/CinematicFramesSec
 import { WhyUntappedSection } from './components/sections/WhyUntappedSection';
 import { CinematicStage } from './components/stage/CinematicStage';
 import { SmoothScroll } from './components/scroll/SmoothScroll';
-import { ApplyToSpeakModal } from './components/ApplyToSpeakModal';
 
 // Dedicated Legal & Compliance Pages
 import TermsConditions from './pages/TermsConditions';
@@ -22,7 +21,6 @@ import DeliveryPolicy from './pages/DeliveryPolicy';
 import ContactUs from './pages/ContactUs';
 import Speakers from './pages/Speakers';
 import NotFound from './pages/NotFound';
-import Organizers from './pages/Organizers';
 
 // Native Apply to Speak Flow Pages & Admin Portal
 import AnonymousVoices from './pages/AnonymousVoices';
@@ -41,9 +39,6 @@ function getNormalizedPath() {
 
 export default function App() {
   const [currentPath, setCurrentPath] = useState(getNormalizedPath);
-  const [isSpeakModalOpen, setIsSpeakModalOpen] = useState(false);
-  const openSpeakModal = () => setIsSpeakModalOpen(true);
-  const closeSpeakModal = () => setIsSpeakModalOpen(false);
 
   // Listen to popstate and history navigation
   useEffect(() => {
@@ -56,13 +51,6 @@ export default function App() {
     window.addEventListener('popstate', handleLocationChange);
     return () => window.removeEventListener('popstate', handleLocationChange);
   }, []);
-
-  // When visiting /apply-to-speak directly, open the modal in an effect
-  useEffect(() => {
-    if (currentPath === '/apply-to-speak') {
-      setIsSpeakModalOpen(true);
-    }
-  }, [currentPath]);
 
   // When opening the home page, the cinematic stage animation plays first.
   // Bypass with ?skip=true or if not on home page
@@ -85,10 +73,12 @@ export default function App() {
   // Render the appropriate main content based on URL route
   const renderContent = () => {
     switch (currentPath) {
-      // 1. Apply to Speak Flow Native Pages
+      // 1. Apply to Speak Flow Native Pages (Directly opens Anonymous Voices form)
       case '/apply/anonymous-voices':
       case '/apply-to-speak/anonymous-voices':
       case '/anonymous-voices':
+      case '/apply-to-speak':
+      case '/apply':
         return <AnonymousVoices />;
 
       case '/apply/speaker-nomination':
@@ -139,15 +129,7 @@ export default function App() {
       case '/speaker':
         return <Speakers />;
 
-      // 5. Organizers Page & Team Route
-      case '/organizers':
-      case '/organisers':
-      case '/team':
-      case '/meet-our-team':
-        return <Organizers />;
-
       // 5. Home Landing Page
-      case '/apply-to-speak':
       case '/':
       case '/home':
       case '/about':
@@ -167,17 +149,12 @@ export default function App() {
                 '/images/beyond-seen-1.jpg',
                 '/images/beyond-seen-2.jpg',
               ]}
-              imageLabels={[
-                'Organizing Committee',
-                'Team & Crew',
-              ]}
             />
 
             {/* 50/50 Split Stage Video & TEDx CIT Mission Section */}
             <AboutVideoSection
               videoSrc="/videos/tedx-cit-speaker.mp4"
               posterSrc="/images/tedx-speaker-stage-poster.jpg"
-              onApplyToSpeak={openSpeakModal}
             />
 
             {/* 3-Frame Rotating Stage Showcase Section (MOMENTS THAT SPARK TRANSFORMATION) */}
@@ -204,9 +181,6 @@ export default function App() {
 
   return (
     <div className="min-h-screen w-full bg-[#000000] text-[#F5F5F2] selection:bg-[#EB0028] selection:text-white flex flex-col relative font-sans">
-      {/* Apply to Speak Accessible Modal */}
-      <ApplyToSpeakModal isOpen={isSpeakModalOpen} onClose={closeSpeakModal} />
-
       {/* Butter-smooth zero-lag scrolling (Lenis + GSAP ScrollTrigger sync) */}
       <SmoothScroll enabled={!isHomePage || !isIntroActive} />
 
@@ -225,7 +199,7 @@ export default function App() {
       {/* Main Website Page Content */}
       <div className="w-full flex flex-col min-h-screen">
         {/* Full-width Grid Architectural Navbar */}
-        <Navbar currentPath={currentPath} onApplyToSpeak={openSpeakModal} />
+        <Navbar currentPath={currentPath} />
 
         {/* Dynamic Route Content */}
         {renderContent()}

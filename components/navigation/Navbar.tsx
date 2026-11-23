@@ -261,21 +261,12 @@ export const Navbar: React.FC<NavbarProps> = ({
             {ctaButtons.map((btn) => {
               const isActive = pathname === btn.href || pathname.startsWith(`${btn.href}/`);
               const isPrimary = btn.isPrimary || btn.label === 'REGISTER NOW';
-              const isApplyToSpeak = btn.href === '/apply-to-speak';
 
               return (
                 <motion.a
                   key={btn.href}
-                  href={isApplyToSpeak ? undefined : btn.href}
-                  onClick={(e) => {
-                    if (isApplyToSpeak) {
-                      e.preventDefault();
-                      onApplyToSpeak?.();
-                    } else {
-                      handleNavigate(e, btn.href);
-                    }
-                  }}
-                  role={isApplyToSpeak ? 'button' : undefined}
+                  href={btn.href}
+                  onClick={(e) => handleNavigate(e, btn.href)}
                   whileHover={{ scale: 1.025 }}
                   whileTap={{ scale: 0.975 }}
                   transition={{ duration: 0.2 }}
@@ -400,23 +391,15 @@ export const Navbar: React.FC<NavbarProps> = ({
                   item.href === '/'
                     ? pathname === '/'
                     : pathname === item.href || pathname.startsWith(`${item.href}/`);
-                const isApplyToSpeak = item.href === '/apply-to-speak';
 
                 return (
                   <motion.div key={item.href} variants={linkItemVariants}>
                     <a
                       ref={index === 0 ? firstNavLinkRef : undefined}
-                      href={isApplyToSpeak ? undefined : item.href}
-                      role={isApplyToSpeak ? 'button' : undefined}
+                      href={item.href}
                       onClick={(e) => {
-                        if (isApplyToSpeak) {
-                          e.preventDefault();
-                          handleCloseMenu();
-                          onApplyToSpeak?.();
-                        } else {
-                          handleCloseMenu();
-                          handleNavigate(e, item.href);
-                        }
+                        handleCloseMenu();
+                        handleNavigate(e, item.href);
                       }}
                       aria-current={isActive ? 'page' : undefined}
                       className={`block font-sans text-2xl sm:text-3xl font-bold uppercase tracking-tight transition-colors duration-200 focus:outline-none focus-visible:ring-1 focus-visible:ring-[#EB0028] cursor-pointer ${
@@ -442,10 +425,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             {/* Mobile Footer Meta */}
             <div className="border-t border-[#292929] pt-6 flex flex-col sm:flex-row justify-between text-xs text-[#8E8E93]">
-              <span className="font-mono tracking-widest uppercase">
-                CHENNAI / IDEAS WORTH SPREADING
-              </span>
-              <span className="mt-2 sm:mt-0 font-normal">
+              <span className="font-normal">
                 TEDx Chennai Institute of Technology
               </span>
             </div>

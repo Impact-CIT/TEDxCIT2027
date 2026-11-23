@@ -116,7 +116,7 @@ export default function PrivacyPolicy() {
               In accordance with Information Technology Act 2000 and the Digital Personal Data Protection Act, 2023, the details of the Grievance Officer for data protection inquiries are:
             </p>
             <div className="border-l-2 border-[#EB0028] pl-4 text-xs sm:text-sm text-[#A1A1A6] space-y-1">
-              <p><strong>Designation:</strong> Data Grievance Officer, TEDxCIT 2027</p>
+              <p><strong>Designation:</strong> Data Grievance Officer, TEDxCIT 2026</p>
               <p><strong>Institution:</strong> Chennai Institute of Technology</p>
               <p><strong>Address:</strong> Sarathy Nagar, Kundrathur, Chennai, Tamil Nadu - 600069, India</p>
               <p><strong>Email:</strong> tedx@citchennai.net</p>

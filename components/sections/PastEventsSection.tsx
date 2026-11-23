@@ -611,7 +611,6 @@ export const PastEventsSection: React.FC<PastEventsSectionProps> = ({
                     <div className="max-w-3xl">
                       {/* Theme Code Moniker */}
                       <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-[0.22em] text-[#EB0028] font-bold mb-2">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#EB0028] animate-pulse" />
                         <span>THEME FOCUS</span>
                         <span className="text-white/30">//</span>
                         <span className="text-white/90">{event.theme || 'UNTAPPED'}</span>
@@ -929,7 +928,7 @@ export const PastEventsSection: React.FC<PastEventsSectionProps> = ({
                 onClick={() => setModalEvent(null)}
                 className="px-6 py-2.5 bg-[#EB0028] hover:bg-[#C80022] text-white font-bold text-xs uppercase tracking-widest rounded-xl transition-all shadow-[0_4px_20px_rgba(235,0,40,0.4)] flex items-center gap-2"
               >
-                <span>View 2027 Speaker Lineup</span>
+                <span>View 2026 Speaker Lineup</span>
                 <ArrowUpRight className="w-4 h-4" />
               </a>
             </div>

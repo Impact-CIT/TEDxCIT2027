@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useInView } from 'framer-motion';
 import { ArrowRight, Mic, Clock, MapPin, X, Share2, Check, Quote } from 'lucide-react';
 
@@ -22,7 +22,7 @@ export interface SpeakerItem {
 export interface SpeakersSectionProps {
   /** Section heading. Default: "Visionary minds. Uncharted ideas." */
   title?: string;
-  /** Eyebrow text. Default: "OFFICIAL LINEUP • TEDxCIT 2027" */
+  /** Eyebrow text. Default: "OFFICIAL LINEUP • TEDxCIT 2026" */
   eyebrow?: string;
   /** Subtitle narrative */
   description?: string;
@@ -139,7 +139,7 @@ export const DEFAULT_SPEAKERS: SpeakerItem[] = [
  */
 export const SpeakersSection: React.FC<SpeakersSectionProps> = ({
   title = 'Visionary minds. Uncharted ideas.',
-  eyebrow = 'OFFICIAL LINEUP • TEDxCIT 2027',
+  eyebrow = 'OFFICIAL LINEUP • TEDxCIT 2026',
   description = 'Every idea has a story, every perspective holds a possibility, and every voice has the power to spark change. Meet the minds who dare to explore beyond the obvious and bring the untapped into the spotlight.',
   speakers = DEFAULT_SPEAKERS,
   className = '',
@@ -176,8 +176,8 @@ export const SpeakersSection: React.FC<SpeakersSectionProps> = ({
     if (navigator.share) {
       navigator
         .share({
-          title: `${speaker.name} at TEDxCIT 2027`,
-          text: `Discover ${speaker.name}'s talk on "${speaker.topic}" at TEDxCIT 2027!`,
+          title: `${speaker.name} at TEDxCIT 2026`,
+          text: `Discover ${speaker.name}'s talk on "${speaker.topic}" at TEDxCIT 2026!`,
           url: window.location.href,
         })
         .catch(() => {});

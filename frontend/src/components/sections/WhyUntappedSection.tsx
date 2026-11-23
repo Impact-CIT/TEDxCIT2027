@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ArrowUpRight, Flame, Compass, Zap } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 
 export interface WhyUntappedSectionProps {
   /** Optional subhead text */
@@ -31,7 +31,7 @@ const transitionEase = [0.16, 1, 0.3, 1] as const;
  */
 export const WhyUntappedSection: React.FC<WhyUntappedSectionProps> = ({
   subhead = 'THEME CONCEPT & CURATORIAL MANIFESTO',
-  ctaText = 'EXPLORE 2027 LINEUP',
+  ctaText = 'EXPLORE 2026 LINEUP',
   ctaLink = '/speakers',
   className = '',
 }) => {
@@ -78,22 +78,6 @@ export const WhyUntappedSection: React.FC<WhyUntappedSectionProps> = ({
               aria-hidden="true"
             />
 
-            {/* Top Brand Tag */}
-            <div className="flex items-center justify-between mb-8 pb-6 border-b border-white/10">
-              <div className="flex items-center gap-2.5">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#EB0028] opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[#EB0028]" />
-                </span>
-                <span className="font-mono text-xs uppercase tracking-[0.22em] text-[#8E8E93]">
-                  THEME CURATION // TEDxCIT
-                </span>
-              </div>
-              <span className="font-mono text-[11px] uppercase tracking-widest text-[#6E6E73]">
-                EDITION 06
-              </span>
-            </div>
-
             {/* Huge UNTAPPED Lettermark */}
             <div className="mb-10 select-none">
               <div className="text-5xl sm:text-6xl md:text-7xl lg:text-7xl xl:text-8xl 2xl:text-9xl font-black tracking-tight leading-none text-[#EB0028] font-['Inter',sans-serif] uppercase drop-shadow-[0_8px_30px_rgba(235,0,40,0.25)]">
@@ -112,8 +96,7 @@ export const WhyUntappedSection: React.FC<WhyUntappedSectionProps> = ({
               
               {/* Pillar 1: Latent Depths */}
               <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5 transition-all duration-300 hover:border-[#EB0028]/40 hover:bg-[#EB0028]/5 group/pillar">
-                <div className="flex items-center gap-2 text-[#EB0028] mb-2">
-                  <Flame className="w-4 h-4 transition-transform duration-300 group-hover/pillar:scale-110" />
+                <div className="mb-2">
                   <span className="font-mono text-xs tracking-wider uppercase text-white font-bold">
                     LATENT DEPTHS
                   </span>
@@ -125,8 +108,7 @@ export const WhyUntappedSection: React.FC<WhyUntappedSectionProps> = ({
 
               {/* Pillar 2: Unmapped Inquiry */}
               <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5 transition-all duration-300 hover:border-[#EB0028]/40 hover:bg-[#EB0028]/5 group/pillar">
-                <div className="flex items-center gap-2 text-[#EB0028] mb-2">
-                  <Compass className="w-4 h-4 transition-transform duration-300 group-hover/pillar:scale-110" />
+                <div className="mb-2">
                   <span className="font-mono text-xs tracking-wider uppercase text-white font-bold">
                     UNMAPPED INQUIRY
                   </span>
@@ -138,8 +120,7 @@ export const WhyUntappedSection: React.FC<WhyUntappedSectionProps> = ({
 
               {/* Pillar 3: Catalytic Courage */}
               <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5 transition-all duration-300 hover:border-[#EB0028]/40 hover:bg-[#EB0028]/5 group/pillar">
-                <div className="flex items-center gap-2 text-[#EB0028] mb-2">
-                  <Zap className="w-4 h-4 transition-transform duration-300 group-hover/pillar:scale-110" />
+                <div className="mb-2">
                   <span className="font-mono text-xs tracking-wider uppercase text-white font-bold">
                     CATALYTIC COURAGE
                   </span>
@@ -170,8 +151,7 @@ export const WhyUntappedSection: React.FC<WhyUntappedSectionProps> = ({
           className="w-full flex flex-col justify-center"
         >
           {/* Eyebrow Label */}
-          <div className="mb-4 sm:mb-5 flex items-center gap-2.5">
-            <span className="w-2 h-2 rounded-full bg-[#EB0028] animate-pulse" aria-hidden="true" />
+          <div className="mb-4 sm:mb-5 flex items-center">
             <span className="font-mono text-xs sm:text-[13px] uppercase tracking-[0.22em] text-[#8E8E93]">
               {subhead}
             </span>
