@@ -11,7 +11,6 @@ import { SponsorSection } from './components/sections/SponsorSection';
 import { CinematicFramesSection } from './components/sections/CinematicFramesSection';
 import { WhyUntappedSection } from './components/sections/WhyUntappedSection';
 import { CinematicStage } from './components/stage/CinematicStage';
-import { XCometCursor } from './components/cursor/XCometCursor';
 import { SmoothScroll } from './components/scroll/SmoothScroll';
 import { ApplyToSpeakModal } from './components/ApplyToSpeakModal';
 
@@ -207,9 +206,6 @@ export default function App() {
     <div className="min-h-screen w-full bg-[#000000] text-[#F5F5F2] selection:bg-[#EB0028] selection:text-white flex flex-col relative font-sans">
       {/* Apply to Speak Accessible Modal */}
       <ApplyToSpeakModal isOpen={isSpeakModalOpen} onClose={closeSpeakModal} />
-
-      {/* Dynamic X Comet Cursor with continuous ember particle trail */}
-      <XCometCursor />
 
       {/* Butter-smooth zero-lag scrolling (Lenis + GSAP ScrollTrigger sync) */}
       <SmoothScroll enabled={!isHomePage || !isIntroActive} />
