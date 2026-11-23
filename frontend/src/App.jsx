@@ -27,6 +27,7 @@ import AnonymousVoices from './pages/AnonymousVoices';
 import SpeakerNomination from './pages/SpeakerNomination';
 import AdminSubmissions from './pages/AdminSubmissions';
 import DelegateRegistration from './pages/DelegateRegistration';
+import DelegateNoticeModal from './components/modals/DelegateNoticeModal';
 
 // Set to true to show the sponsors scrollbar / marquee section on the home page
 const SHOW_SPONSORS_SECTION = false;
@@ -42,8 +43,9 @@ function getNormalizedPath() {
 
 export default function App() {
   const [currentPath, setCurrentPath] = useState(getNormalizedPath);
+  const [isDelegateModalOpen, setIsDelegateModalOpen] = useState(false);
 
-  // Listen to popstate and history navigation
+  // Listen to popstate, history navigation, and delegate pass notice modal
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
@@ -51,8 +53,16 @@ export default function App() {
       setCurrentPath(getNormalizedPath());
     };
 
+    const handleOpenDelegateModal = () => {
+      setIsDelegateModalOpen(true);
+    };
+
     window.addEventListener('popstate', handleLocationChange);
-    return () => window.removeEventListener('popstate', handleLocationChange);
+    window.addEventListener('open-delegate-modal', handleOpenDelegateModal);
+    return () => {
+      window.removeEventListener('popstate', handleLocationChange);
+      window.removeEventListener('open-delegate-modal', handleOpenDelegateModal);
+    };
   }, []);
 
   // When opening the home page, the cinematic stage animation plays first.
@@ -210,6 +220,12 @@ export default function App() {
         {/* Global footer */}
         <Footer />
       </div>
+
+      {/* Delegate Passes Notice Modal (Informs users passes are not open yet & directs to Anonymous Voices) */}
+      <DelegateNoticeModal
+        isOpen={isDelegateModalOpen}
+        onClose={() => setIsDelegateModalOpen(false)}
+      />
     </div>
   );
 }

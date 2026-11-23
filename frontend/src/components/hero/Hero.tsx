@@ -2,6 +2,7 @@
 
 import React, { useMemo } from 'react';
 import { ArrowUpRight } from 'lucide-react';
+import { openDelegateModal } from '../modals/DelegateNoticeModal';
 import {
   motion,
   useMotionValue,
@@ -208,9 +209,7 @@ export const Hero: React.FC<HeroProps> = ({ className = '' }) => {
                 href="/register"
                 onClick={(e) => {
                   e.preventDefault();
-                  window.history.pushState({}, '', '/register');
-                  window.dispatchEvent(new Event('popstate'));
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                  openDelegateModal();
                 }}
                 whileHover={{ scale: 1.025 }}
                 whileTap={{ scale: 0.975 }}

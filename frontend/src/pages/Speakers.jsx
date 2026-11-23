@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, ChevronRight } from 'lucide-react';
+import { openDelegateModal } from '../components/modals/DelegateNoticeModal';
 
 /**
  * 2026 Voices Unbound Speakers
@@ -10,127 +11,148 @@ export const SPEAKERS_LIST = [
     id: 'aysha-sanober',
     name: 'Aysha Sanober',
     designation: 'Action Coalitions Leader, Generation Equality/UN Women',
-    image: '/Speakers/Aysha Sanober.JPG',
+    image: '/Speakers/optimized/Aysha Sanober.webp',
+    fallbackImage: '/Speakers/Aysha Sanober.JPG',
   },
   {
     id: 'harini-viswanathan',
     name: 'Harini Viswanathan',
     designation: 'Software Engineer, Bank of America',
-    image: '/Speakers/Harini Viswanathan.JPG',
+    image: '/Speakers/optimized/Harini Viswanathan.webp',
+    fallbackImage: '/Speakers/Harini Viswanathan.JPG',
   },
   {
     id: 'shalini-robert',
     name: 'Shalini Robert',
     designation: 'Founder, The Roberts Charitable Trust',
-    image: '/Speakers/Shalini Robert.JPG',
+    image: '/Speakers/optimized/Shalini Robert.webp',
+    fallbackImage: '/Speakers/Shalini Robert.JPG',
   },
   {
     id: 'preethikha-s',
     name: 'Preethikha S',
     designation: 'Student, Chennai Institute of Technology',
-    image: '/Speakers/Preethika S.JPG',
+    image: '/Speakers/optimized/Preethika S.webp',
+    fallbackImage: '/Speakers/Preethika S.JPG',
   },
   {
     id: 'arti-dosanjh',
     name: 'Arti Dosanjh',
     designation: 'Director, Delivery at Sapiens',
-    image: '/Speakers/Arti Dosanjh.JPG',
+    image: '/Speakers/optimized/Arti Dosanjh.webp',
+    fallbackImage: '/Speakers/Arti Dosanjh.JPG',
   },
   {
     id: 'swetha-kishore',
     name: 'Swetha Kishore',
     designation: 'Founder & CEO, Lafayette by Mug Cakes',
-    image: '/Speakers/Swetha Kishore.JPG',
+    image: '/Speakers/optimized/Swetha Kishore.webp',
+    fallbackImage: '/Speakers/Swetha Kishore.JPG',
   },
   {
     id: 'indhumathi-l',
     name: 'Indhumathi L',
     designation: 'Test Specialist',
-    image: '/Speakers/Indhumathi L.JPG',
+    image: '/Speakers/optimized/Indhumathi L.webp',
+    fallbackImage: '/Speakers/Indhumathi L.JPG',
   },
   {
     id: 'magathi-narayanan',
     name: 'Magathi Narayanan',
     designation: 'Student, Chennai Institute of Technology',
-    image: '/Speakers/Magathi Narayanan.JPG',
+    image: '/Speakers/optimized/Magathi Narayanan.webp',
+    fallbackImage: '/Speakers/Magathi Narayanan.JPG',
   },
   {
     id: 'sangamithra-k',
     name: 'Sangamithra K',
     designation: 'Student, Chennai Institute of Technology',
-    image: '/Speakers/Sangamithra.JPG',
+    image: '/Speakers/optimized/Sangamithra.webp',
+    fallbackImage: '/Speakers/Sangamithra.JPG',
   },
   {
     id: 'mrudula-oruganti',
     name: 'Mrudula Oruganti',
     designation: 'Founder, The Parenting Hub & Senior Alliance Cloud Solutions Engineer, Gigamon',
-    image: '/Speakers/Mrudula Oraganti.JPG',
+    image: '/Speakers/optimized/Mrudula Oraganti.webp',
+    fallbackImage: '/Speakers/Mrudula Oraganti.JPG',
   },
   {
     id: 'vaisali-sridhar-babu',
     name: 'Vaisali Sridhar Babu',
     designation: 'Vice President, BFSI',
-    image: '/Speakers/Vaisali Sridhar Babu.JPG',
+    image: '/Speakers/optimized/Vaisali Sridhar Babu.webp',
+    fallbackImage: '/Speakers/Vaisali Sridhar Babu.JPG',
   },
   {
     id: 'sachitha-s',
     name: 'Sachitha S',
     designation: 'Student, Chennai Institute of Technology',
-    image: '/Speakers/Sachitha S.JPG',
+    image: '/Speakers/optimized/Sachitha S.webp',
+    fallbackImage: '/Speakers/Sachitha S.JPG',
   },
   {
     id: 'indu-gopalakrishnan',
     name: 'Indu Gopalakrishnan',
     designation: 'Founder, Project Kintsugi',
-    image: '/Speakers/Indu Gopalakrishnan.JPG',
+    image: '/Speakers/optimized/Indu Gopalakrishnan.webp',
+    fallbackImage: '/Speakers/Indu Gopalakrishnan.JPG',
   },
   {
     id: 'ranjini-manian',
     name: 'Ranjini Manian',
     designation: 'Founder Chair, Global Adjustments Foundation - ChampionWoman',
-    image: '/Speakers/Ranjini Manian.JPG',
+    image: '/Speakers/optimized/Ranjini Manian.webp',
+    fallbackImage: '/Speakers/Ranjini Manian.JPG',
   },
   {
     id: 'immaculate-reshma',
     name: 'Immaculate Reshma',
     designation: 'Product Manager, Zoho',
-    image: '/Speakers/Immaculate Reshma.JPG',
+    image: '/Speakers/optimized/Immaculate Reshma.webp',
+    fallbackImage: '/Speakers/Immaculate Reshma.JPG',
   },
   {
     id: 'merlin-jennifer',
     name: 'Merlin Jennifer',
     designation: 'Student, Chennai Institute of Technology',
-    image: '/Speakers/Merlin Jennifer.JPG',
+    image: '/Speakers/optimized/Merlin Jennifer.webp',
+    fallbackImage: '/Speakers/Merlin Jennifer.JPG',
   },
   {
     id: 'arasi-arul',
     name: 'Arasi Arul',
     designation: 'Director, TN W.O.M.E.N. & Member, National Human Rights Commission',
-    image: '/Speakers/Arasi Arul.JPG',
+    image: '/Speakers/optimized/Arasi Arul.webp',
+    fallbackImage: '/Speakers/Arasi Arul.JPG',
   },
   {
     id: 'yamini-lakshmipathy',
     name: 'Yamini Lakshmipathy',
     designation: 'Director of Engineering, Fourkites',
-    image: '/Speakers/Yamini Lakshmipathy.JPG',
+    image: '/Speakers/optimized/Yamini Lakshmipathy.webp',
+    fallbackImage: '/Speakers/Yamini Lakshmipathy.JPG',
   },
   {
     id: 'preethi-sri-s',
     name: 'Preethi Sri S',
     designation: 'Global Head, Digital Expansion Solution Engineering',
-    image: '/Speakers/Preethi Sri.JPG',
+    image: '/Speakers/optimized/Preethi Sri.webp',
+    fallbackImage: '/Speakers/Preethi Sri.JPG',
   },
   {
     id: 'ambika-natarajan',
     name: 'Ambika Natarajan',
     designation: 'Senior Vice President, HCLTech',
-    image: '/Speakers/Ambika Natarajan.JPG',
+    image: '/Speakers/optimized/Ambika Natarajan.webp',
+    fallbackImage: '/Speakers/Ambika Natarajan.JPG',
   },
   {
     id: 'zohra-fakrudeen-ali',
     name: 'Zohra Fakrudeen Ali',
     designation: 'Student, Chennai Institute of Technology',
-    image: '/Speakers/Zohra Fakrudeen Ali.JPG',
+    image: '/Speakers/optimized/Zohra Fakrudeen Ali.webp',
+    fallbackImage: '/Speakers/Zohra Fakrudeen Ali.JPG',
   },
 ];
 
@@ -138,8 +160,13 @@ export default function Speakers() {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-    const timer = setTimeout(() => setIsVisible(true), 100);
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+      if (typeof window !== 'undefined' && window.__lenis) {
+        window.__lenis.resize();
+      }
+    }, 100);
     return () => clearTimeout(timer);
   }, []);
 
@@ -172,25 +199,29 @@ export default function Speakers() {
         }
 
         .speaker-card {
-          transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+          content-visibility: auto;
+          contain-intrinsic-size: 380px 470px;
+          transform: translateZ(0);
+          backface-visibility: hidden;
+          transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.4s ease;
         }
 
         .speaker-card:hover {
           box-shadow:
             0 24px 60px rgba(235, 0, 40, 0.22),
             0 0 0 1px rgba(235, 0, 40, 0.35);
-          transform: translateY(-6px);
+          transform: translateY(-6px) translateZ(0);
           border-color: rgba(235, 0, 40, 0.5);
         }
       `}</style>
 
       {/* Atmospheric Background Red Glow Accent */}
       <div
-        className="absolute top-1/4 right-1/4 w-[750px] h-[550px] bg-[#EB0028]/12 rounded-full blur-[180px] pointer-events-none"
+        className="absolute top-1/4 right-1/4 w-[750px] h-[550px] bg-[#EB0028]/12 rounded-full blur-[180px] pointer-events-none transform-gpu"
         aria-hidden="true"
       />
       <div
-        className="absolute bottom-1/4 left-1/5 w-[600px] h-[450px] bg-[#EB0028]/10 rounded-full blur-[160px] pointer-events-none"
+        className="absolute bottom-1/4 left-1/5 w-[600px] h-[450px] bg-[#EB0028]/10 rounded-full blur-[160px] pointer-events-none transform-gpu"
         aria-hidden="true"
       />
 
@@ -211,13 +242,13 @@ export default function Speakers() {
             HEADER: "Visionary minds. Uncharted ideas."
             ========================================================================= */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 sm:mb-16 border-b border-[#1C1C1E] pb-10">
-          <div className="max-w-3xl">
+          <div className="w-full max-w-5xl">
             {/* Main Headline */}
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-white font-['Inter',sans-serif] leading-[1.1]">
               Visionary minds. <span className="text-[#EB0028]">Uncharted ideas.</span>
             </h1>
 
-            <p className="mt-4 text-[#8E8E93] text-sm sm:text-base leading-relaxed max-w-2xl">
+            <p className="mt-4 text-[#8E8E93] text-sm sm:text-base lg:text-[17px] leading-relaxed max-w-4xl lg:max-w-5xl">
               Every idea has a story, every perspective holds a possibility, and every voice has the power to spark change. Meet the minds who dare to explore beyond the obvious and bring the untapped into the spotlight.
             </p>
           </div>
@@ -232,9 +263,8 @@ export default function Speakers() {
             return (
               <div
                 key={speaker.id}
-                className={`speaker-card group relative w-full h-[470px] rounded-2xl overflow-hidden border border-white/10 bg-[#0A0A0A] select-none ${
-                  isVisible ? 'speaker-card-reveal' : 'opacity-0'
-                }`}
+                className={`speaker-card group relative w-full h-[470px] rounded-2xl overflow-hidden border border-white/10 bg-[#0A0A0A] select-none ${isVisible ? 'speaker-card-reveal' : 'opacity-0'
+                  }`}
                 style={{
                   animationDelay: `${Math.min(index * 60, 600)}ms`,
                 }}
@@ -243,7 +273,13 @@ export default function Speakers() {
                 <div className="absolute inset-0 overflow-hidden bg-[#0A0A0A]">
                   <img
                     src={speaker.image}
+                    onError={(e) => {
+                      if (speaker.fallbackImage && e.currentTarget.src !== speaker.fallbackImage) {
+                        e.currentTarget.src = speaker.fallbackImage;
+                      }
+                    }}
                     alt={speaker.name}
+                    decoding="async"
                     className="w-full h-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105"
                     loading="lazy"
                   />
@@ -304,13 +340,16 @@ export default function Speakers() {
                 <ChevronRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
               </a>
 
-              <a
-                href="/register"
-                onClick={(e) => handleNavigate(e, '/register')}
-                className="px-6 py-3.5 border border-white/20 hover:border-white/50 text-white font-bold text-xs uppercase tracking-widest rounded-xl transition-all duration-300 bg-white/5 hover:bg-white/10 flex items-center justify-center gap-2 text-center"
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  openDelegateModal();
+                }}
+                className="px-6 py-3.5 border border-white/20 hover:border-white/50 text-white font-bold text-xs uppercase tracking-widest rounded-xl transition-all duration-300 bg-white/5 hover:bg-white/10 flex items-center justify-center gap-2 text-center cursor-pointer"
               >
                 <span>Book Delegate Pass</span>
-              </a>
+              </button>
             </div>
           </div>
         </div>

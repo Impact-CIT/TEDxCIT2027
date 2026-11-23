@@ -213,7 +213,7 @@ export const SpeakersSection: React.FC<SpeakersSectionProps> = ({
       <div className="w-full px-5 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 max-w-[1700px] mx-auto relative z-10">
         {/* Section Heading */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 sm:mb-16 border-b border-[#1C1C1E] pb-10">
-          <div className="max-w-3xl">
+          <div className="w-full max-w-5xl">
             {eyebrow && (
               <div className="mb-3.5 flex items-center gap-2.5">
                 <span className="w-2 h-2 rounded-full bg-[#EB0028] animate-pulse" aria-hidden="true" />
@@ -235,7 +235,7 @@ export const SpeakersSection: React.FC<SpeakersSectionProps> = ({
             </h2>
 
             {description && (
-              <p className="mt-4 text-[#8E8E93] text-sm sm:text-base leading-relaxed">
+              <p className="mt-4 text-[#8E8E93] text-sm sm:text-base lg:text-[17px] leading-relaxed max-w-4xl lg:max-w-5xl">
                 {description}
               </p>
             )}
@@ -248,9 +248,8 @@ export const SpeakersSection: React.FC<SpeakersSectionProps> = ({
             return (
               <div
                 key={speaker.id}
-                className={`speaker-card group relative w-full h-[470px] rounded-2xl overflow-hidden border border-white/10 bg-[#0A0A0A] select-none ${
-                  isInView ? 'speaker-card-reveal' : 'opacity-0'
-                }`}
+                className={`speaker-card group relative w-full h-[470px] rounded-2xl overflow-hidden border border-white/10 bg-[#0A0A0A] select-none ${isInView ? 'speaker-card-reveal' : 'opacity-0'
+                  }`}
                 style={{
                   animationDelay: `${Math.min(index * 60, 600)}ms`,
                 }}

@@ -29,7 +29,6 @@ export default function AnonymousVoices() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [serverError, setServerError] = useState(null);
-  const [draftSavedTime, setDraftSavedTime] = useState(null);
   const [registrationDeadline, setRegistrationDeadline] = useState(SPEAK_CONFIG.anonymousVoicesDeadline);
   const [deadlineFormatted, setDeadlineFormatted] = useState(SPEAK_CONFIG.anonymousVoicesDeadlineFormatted);
   const [registrationEnabled, setRegistrationEnabled] = useState(true);
@@ -83,7 +82,6 @@ export default function AnonymousVoices() {
         const toSave = { ...formData };
         delete toSave.website_url_hp;
         localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(toSave));
-        setDraftSavedTime(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
       } catch {
         // Storage full or unavailable
       }
@@ -279,11 +277,6 @@ export default function AnonymousVoices() {
             <span>←</span>
             <span>Home</span>
           </button>
-          {draftSavedTime && (
-            <span className="text-[#6E6E73]">
-              Draft saved locally ({draftSavedTime})
-            </span>
-          )}
         </div>
 
         {/* Header Hero Section */}
@@ -291,9 +284,6 @@ export default function AnonymousVoices() {
           <div className="flex flex-wrap items-center gap-2 mb-3">
             <span className="font-mono text-xs uppercase tracking-[0.2em] text-[#E62B1E] bg-[#E62B1E]/10 border border-[#E62B1E]/30 px-3 py-1">
               EXCLUSIVE TO STUDENTS OF CIT GROUP OF INSTITUTIONS
-            </span>
-            <span className="font-mono text-xs uppercase tracking-[0.15em] text-[#A0A0A5] bg-black/60 px-3 py-1 border border-[#222]">
-              THEME: THE UNTAPPED &bull; 11 FEB
             </span>
           </div>
 
@@ -310,13 +300,9 @@ export default function AnonymousVoices() {
               <span className="text-[#8E8E93]">Registration Deadline: </span>
               <span className="text-[#E62B1E] font-bold">{deadlineFormatted} IST</span>
             </div>
-            {!deadlineLoaded ? (
-              <span className="text-[#A0A0A5]">CHECKING DEADLINE</span>
-            ) : isPastDeadline ? (
+            {isPastDeadline ? (
               <span className="text-[#E62B1E] bg-[#E62B1E]/15 px-3 py-1 font-bold">REGISTRATIONS CLOSED</span>
-            ) : (
-              <span className="text-emerald-400 bg-emerald-950/50 px-3 py-1 border border-emerald-800">APPLICATIONS ACTIVE</span>
-            )}
+            ) : null}
           </div>
         </div>
 

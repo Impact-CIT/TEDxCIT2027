@@ -7,8 +7,12 @@ import {
   Briefcase,
   AlertCircle,
   ArrowLeft,
+  ChevronRight,
   Sparkles,
 } from 'lucide-react';
+
+// Set to true when delegate pass ticket bookings officially open
+const DELEGATE_REGISTRATIONS_OPEN = false;
 
 export default function DelegateRegistration() {
   const [selectedPass, setSelectedPass] = useState('student');
@@ -40,6 +44,106 @@ export default function DelegateRegistration() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  // When delegate pass bookings are not yet open, show status announcement
+  // and direct interested students to Anonymous Voices
+  if (!DELEGATE_REGISTRATIONS_OPEN) {
+    return (
+      <div className="w-full min-h-screen bg-[#000000] text-[#F5F5F2] pt-24 sm:pt-28 pb-20 px-4 sm:px-6 lg:px-12 selection:bg-[#EB0028] selection:text-white relative overflow-hidden font-sans">
+        {/* Ambient Red Glow */}
+        <div
+          className="absolute top-1/4 right-1/4 w-[700px] h-[500px] bg-[#EB0028]/10 rounded-full blur-[180px] pointer-events-none transform-gpu"
+          aria-hidden="true"
+        />
+
+        <div className="max-w-3xl mx-auto relative z-10">
+          {/* Breadcrumb Navigation */}
+          <div className="mb-8">
+            <a
+              href="/"
+              onClick={(e) => {
+                e.preventDefault();
+                window.history.pushState({}, '', '/');
+                window.dispatchEvent(new Event('popstate'));
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className="inline-flex items-center gap-2 text-xs font-mono tracking-widest uppercase text-[#8E8E93] hover:text-[#EB0028] transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span>BACK TO HOME</span>
+            </a>
+          </div>
+
+          {/* Main Status Notice Card */}
+          <div className="bg-[#0C0C0E] border border-white/10 rounded-2xl p-8 sm:p-12 shadow-2xl relative overflow-hidden">
+            {/* Status Pill */}
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-[#EB0028]/15 border border-[#EB0028]/30 text-[10px] font-mono text-[#EB0028] uppercase tracking-widest font-bold mb-6">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#EB0028] animate-pulse" />
+              <span>DELEGATE PASSES • OPENING SOON</span>
+            </div>
+
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-[1.15] mb-4">
+              Delegate Registrations <span className="text-[#EB0028]">Not Yet Open</span>
+            </h1>
+
+            <p className="text-[#A1A1AA] text-sm sm:text-base leading-relaxed mb-8">
+              Delegate pass bookings for TEDx Chennai Institute of Technology 2027 have not been released yet. Official dates and ticketing details will be announced soon.
+            </p>
+
+            {/* Speaker Application Callout Box */}
+            <div className="bg-[#141418] border border-white/10 rounded-xl p-6 sm:p-7 mb-8 relative overflow-hidden">
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-xl bg-[#EB0028]/15 border border-[#EB0028]/30 flex items-center justify-center text-[#EB0028] shrink-0 mt-0.5">
+                  <Sparkles className="w-5 h-5" />
+                </div>
+                <div>
+                  <h2 className="text-white font-bold text-lg leading-snug">
+                    Want to participate as a student speaker?
+                  </h2>
+                  <p className="text-[#8E8E93] text-sm mt-1.5 leading-relaxed">
+                    Student speaker applications are officially active! If you are a student with an idea worth spreading, apply through <strong className="text-white">Anonymous Voices</strong> to deliver a talk on the official TEDx stage.
+                  </p>
+
+                  <div className="mt-5">
+                    <a
+                      href="/apply/anonymous-voices"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        window.history.pushState({}, '', '/apply/anonymous-voices');
+                        window.dispatchEvent(new Event('popstate'));
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }}
+                      className="inline-flex items-center gap-2 px-6 py-3 bg-[#EB0028] hover:bg-[#C80022] text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-all shadow-[0_4px_20px_rgba(235,0,40,0.35)] hover:shadow-[0_6px_28px_rgba(235,0,40,0.5)] group"
+                    >
+                      <span>Apply for Anonymous Voices</span>
+                      <ChevronRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Back Button */}
+            <div className="pt-4 border-t border-white/10 flex items-center justify-between text-xs font-mono text-[#8E8E93]">
+              <span>TEDx Chennai Institute of Technology 2027</span>
+              <a
+                href="/speakers"
+                onClick={(e) => {
+                  e.preventDefault();
+                  window.history.pushState({}, '', '/speakers');
+                  window.dispatchEvent(new Event('popstate'));
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                className="hover:text-white transition-colors uppercase tracking-wider"
+              >
+                Explore 2026 Speakers →
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const passes = {
     student: {

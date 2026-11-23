@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import { X } from 'lucide-react';
 import { NAV_ITEMS, type NavItem } from './navConfig';
+import { openDelegateModal } from '../modals/DelegateNoticeModal';
 
 export type { NavItem };
 export { NAV_ITEMS };
@@ -203,12 +204,12 @@ export const Navbar: React.FC<NavbarProps> = ({
           <a
             href="/"
             onClick={(e) => handleNavigate(e, '/')}
-            aria-label="TEDx Chennai Institute of Technology Home"
+            aria-label="TEDx Chennai Institute Of Technology Home"
             className="group inline-flex items-center transition-opacity duration-200 hover:opacity-90 focus:outline-none focus-visible:ring-1 focus-visible:ring-[#EB0028]"
           >
             <img
               src={logoSrc}
-              alt="TEDx Chennai Institute of Technology"
+              alt="TEDx Chennai Institute Of Technology"
               width={320}
               height={42}
               className="h-8 sm:h-9 lg:h-[34px] xl:h-[38px] w-auto object-contain select-none"
@@ -266,7 +267,14 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <motion.a
                   key={btn.href}
                   href={btn.href}
-                  onClick={(e) => handleNavigate(e, btn.href)}
+                  onClick={(e) => {
+                    if (btn.label === 'REGISTER NOW' || btn.href === '/register') {
+                      e.preventDefault();
+                      openDelegateModal();
+                    } else {
+                      handleNavigate(e, btn.href);
+                    }
+                  }}
                   whileHover={{ scale: 1.025 }}
                   whileTap={{ scale: 0.975 }}
                   transition={{ duration: 0.2 }}
@@ -356,12 +364,12 @@ export const Navbar: React.FC<NavbarProps> = ({
                   handleCloseMenu();
                   handleNavigate(e, '/');
                 }}
-                aria-label="TEDx Chennai Institute of Technology Home"
+                aria-label="TEDx Chennai Institute Of Technology Home"
                 className="inline-flex items-center focus:outline-none focus-visible:ring-1 focus-visible:ring-[#EB0028]"
               >
                 <img
                   src={logoSrc}
-                  alt="TEDx Chennai Institute of Technology"
+                  alt="TEDx Chennai Institute Of Technology"
                   width={240}
                   height={32}
                   className="h-8 w-auto object-contain"
@@ -399,7 +407,12 @@ export const Navbar: React.FC<NavbarProps> = ({
                       href={item.href}
                       onClick={(e) => {
                         handleCloseMenu();
-                        handleNavigate(e, item.href);
+                        if (item.label === 'REGISTER NOW' || item.href === '/register') {
+                          e.preventDefault();
+                          openDelegateModal();
+                        } else {
+                          handleNavigate(e, item.href);
+                        }
                       }}
                       aria-current={isActive ? 'page' : undefined}
                       className={`block font-sans text-2xl sm:text-3xl font-bold uppercase tracking-tight transition-colors duration-200 focus:outline-none focus-visible:ring-1 focus-visible:ring-[#EB0028] cursor-pointer ${

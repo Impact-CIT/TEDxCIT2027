@@ -24,23 +24,16 @@ export const SmoothScroll: React.FC<SmoothScrollProps> = ({ enabled = true }) =>
   useEffect(() => {
     if (!enabled) return;
 
-    // Detect touch device
-    const isTouch =
-      'ontouchstart' in window ||
-      navigator.maxTouchPoints > 0 ||
-      (window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
-
-    // Initialize Lenis with optimized settings for zero-lag responsiveness
+    // Initialize Lenis with tuned spring damping for butter-smooth gliding
     const lenis = new Lenis({
-      duration: 1.05, // Responsive easing duration (swift and buttery, not dragging)
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Exponential deceleration
+      lerp: 0.085, // Silky, organic deceleration glide without sluggish drag
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: true,
       wheelMultiplier: 1.0,
-      touchMultiplier: 1.5,
+      syncTouch: false, // Preserves native fluid momentum on touch and precision trackpads
       infinite: false,
-      autoRaf: false, // We sync directly with GSAP's ticker to eliminate scroll lag and jitter!
+      autoRaf: false, // Synced directly with GSAP's ticker
     });
 
     lenisRef.current = lenis;
@@ -56,7 +49,7 @@ export const SmoothScroll: React.FC<SmoothScrollProps> = ({ enabled = true }) =>
     };
 
     gsap.ticker.add(tickerUpdate);
-    gsap.ticker.lagSmoothing(0); // Critical: prevents jumpy lag-smoothing stutter
+    gsap.ticker.lagSmoothing(500, 33); // Smooth out frame drops gracefully without hitching
 
     // 3. Keep layout measurements accurate on resize & DOM changes
     const handleResize = () => {
