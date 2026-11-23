@@ -3,7 +3,6 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { useInView } from 'framer-motion';
 import {
-  CalendarDays,
   MapPin,
   ArrowUpRight,
   Users,
@@ -39,7 +38,7 @@ export interface PastEventItem {
 export interface PastEventsSectionProps {
   /** Section heading. Default: "Past events. Lasting ideas." */
   title?: string;
-  /** Eyebrow text. Default: "CHRONICLES // 2021 — 2026 ARCHIVE" */
+  /** Eyebrow text. Default: "CHRONICLES // 2022 — 2027 TIMELINE" */
   eyebrow?: string;
   /** Subtitle narrative */
   description?: string;
@@ -52,13 +51,13 @@ export interface PastEventsSectionProps {
 export const DEFAULT_PAST_EVENTS: PastEventItem[] = [
   {
     id: 'cit-2026',
-    edition: '04',
+    edition: '05',
     year: '2026',
     theme: 'VOICES UNBOUND',
     title: 'TEDxCIT 2026: Voices Unbound',
     tagline: 'Amplifying unconventional voices, unfiltered perspectives, and transformative ideas.',
     date: '2026-02-18',
-    location: 'Main Auditorium, CIT Chennai',
+    location: 'Parthasarathy Auditorium, CIT Chennai',
     image: '/images/frames/frame-set1-1.jpg',
     link: '#',
     stats: {
@@ -75,13 +74,13 @@ export const DEFAULT_PAST_EVENTS: PastEventItem[] = [
   },
   {
     id: 'cit-2025',
-    edition: '03',
+    edition: '04',
     year: '2025',
     theme: 'QUESTIONS FOR THE FUTURE',
     title: 'TEDxCIT 2025: Questions for the Future',
     tagline: 'Interrogating tomorrow\'s possibilities across science, ethics, and human ingenuity.',
     date: '2025-03-22',
-    location: 'Innovation Hall, CIT Campus',
+    location: 'Parthasarathy Auditorium, CIT Chennai',
     image: '/images/frames/frame-set1-2.jpg',
     link: '#',
     stats: {
@@ -98,13 +97,13 @@ export const DEFAULT_PAST_EVENTS: PastEventItem[] = [
   },
   {
     id: 'cit-2024',
-    edition: '02',
+    edition: '03',
     year: '2024',
     theme: 'BEYOND THE HORIZON',
     title: 'TEDxCIT 2024: Beyond the Horizon',
     tagline: 'Pushing past known thresholds of imagination, technology, and collective purpose.',
     date: '2024-04-10',
-    location: 'CIT Convention Centre',
+    location: 'Parthasarathy Auditorium, CIT Chennai',
     image: '/images/frames/frame-set1-3.jpg',
     link: '#',
     stats: {
@@ -120,20 +119,43 @@ export const DEFAULT_PAST_EVENTS: PastEventItem[] = [
     curatorQuote: 'Beyond every horizon lies another territory waiting to be braved.',
   },
   {
-    id: 'cit-2023',
-    edition: '01',
-    year: '2023',
-    theme: 'COUNTDOWN',
-    title: 'TEDxCIT 2023: Countdown',
-    tagline: 'Accelerating urgent solutions to climate challenges and building a regenerative future.',
-    date: '2023-09-14',
-    location: 'Main Auditorium, CIT Chennai',
-    image: '/images/frames/frame-set2-1.jpg',
+    id: 'cit-2022-may',
+    edition: '02',
+    year: 'May 2022',
+    theme: 'CELEBRATING WOMENHOOD',
+    title: 'TEDxCIT May 2022: Celebrating Womenhood',
+    tagline: 'Honoring resilience, leadership, and trailblazing women shaping society.',
+    date: '2022-05-14',
+    location: 'Parthasarathy Auditorium, CIT Chennai',
+    image: '/images/frames/frame-set2-2.jpg',
     link: '#',
     stats: {
       talks: '10 Talks',
-      delegates: '800 Attendees',
-      views: '220K+ Views',
+      delegates: '750 Attendees',
+      views: '210K+ Views',
+    },
+    highlights: [
+      'Women in Leadership & Tech Innovation',
+      'Art, Culture & Social Transformation',
+      'Empowering Voices Across Generations',
+    ],
+    curatorQuote: 'When women rise with purpose, communities transform.',
+  },
+  {
+    id: 'cit-2022-jan',
+    edition: '01',
+    year: 'Jan 2022',
+    theme: 'COUNTDOWN',
+    title: 'TEDxCIT Jan 2022: Countdown',
+    tagline: 'Accelerating urgent solutions to climate challenges and building a regenerative future.',
+    date: '2022-01-20',
+    location: 'Parthasarathy Auditorium, CIT Chennai',
+    image: '/images/frames/frame-set2-1.jpg',
+    link: '#',
+    stats: {
+      talks: '9 Talks',
+      delegates: '700 Attendees',
+      views: '190K+ Views',
     },
     highlights: [
       'Decarbonization & Clean Energy Tech',
@@ -141,52 +163,6 @@ export const DEFAULT_PAST_EVENTS: PastEventItem[] = [
       'Youth Climate Stewardship',
     ],
     curatorQuote: 'The clock is ticking, but every action creates a ripple of hope.',
-  },
-  {
-    id: 'cit-2022',
-    edition: '02',
-    year: '2022',
-    theme: 'INFINITE RESONANCES',
-    title: 'TEDxCIT 2022: Infinite Resonances',
-    tagline: 'Harmonizing ancient acoustic traditions and modern harmonic mathematics for neurological therapy.',
-    date: '2022-10-05',
-    location: 'CIT Open Amphitheatre',
-    image: '/images/frames/frame-set2-2.jpg',
-    link: '#',
-    stats: {
-      talks: '9 Talks',
-      delegates: '700 Attendees',
-      views: '185K+ Views',
-    },
-    highlights: [
-      'Vedic Acoustics in Modern Frequency Medicine',
-      'Geometry of Sustainable Fractals',
-      'Autonomous Drone Swarms for Forestation',
-    ],
-    curatorQuote: 'Every idea echoes far beyond the room where it was first spoken.',
-  },
-  {
-    id: 'cit-2021',
-    edition: '01',
-    year: '2021',
-    theme: 'IGNITING CURIOSITY',
-    title: 'TEDxCIT 2021: Igniting Curiosity',
-    tagline: 'The inaugural virtual gathering lighting fires of curiosity across borders during unprecedented global shifts.',
-    date: '2021-11-20',
-    location: 'Virtual Global Stage, Chennai',
-    image: '/images/frames/frame-set2-3.jpg',
-    link: '#',
-    stats: {
-      talks: '8 Talks',
-      delegates: '2,500+ Virtual Delegates',
-      views: '160K+ Views',
-    },
-    highlights: [
-      'Post-Pandemic Educational Metamorphosis',
-      'Space-Tech Miniaturization by Student Pioneers',
-      'Virtual Reality as an Empathy Amplifier',
-    ],
-    curatorQuote: 'The journey of a thousand ideas began right here.',
   },
 ];
 
@@ -205,16 +181,16 @@ const AUTO_CYCLE_DURATION_MS = 3000; // 3 seconds per edition
  */
 export const PastEventsSection: React.FC<PastEventsSectionProps> = ({
   title = 'Past events. Lasting ideas.',
-  eyebrow = 'CHRONICLES // 2021 — 2026 ARCHIVE',
-  description = 'Six transformative gatherings. A continuous kinetic continuum of visionaries who took the red circle at Chennai Institute of Technology to challenge conventions and ignite enduring change.',
+  eyebrow = 'CHRONICLES // 2022 — 2026 TIMELINE',
+  description = 'Five transformative gatherings. A continuous kinetic continuum of visionaries who took the red circle at Chennai Institute of Technology to challenge conventions and ignite enduring change.',
   events = DEFAULT_PAST_EVENTS,
   className = '',
 }) => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: false, margin: '-10% 0px -10% 0px' });
 
-  // Currently active edition ID
-  const [activeId, setActiveId] = useState<string>(events[0]?.id || 'cit-2026');
+  // Currently active edition ID (defaults to latest past edition)
+  const [activeId, setActiveId] = useState<string>(events.find((e) => e.id === 'cit-2026')?.id || events[0]?.id || 'cit-2026');
   // Auto-cycle state (ENABLED BY DEFAULT so it automatically comes and goes)
   const [isAutoCycleEnabled, setIsAutoCycleEnabled] = useState<boolean>(true);
   const [isHovered, setIsHovered] = useState<boolean>(false);
@@ -393,19 +369,8 @@ export const PastEventsSection: React.FC<PastEventsSectionProps> = ({
             )}
           </div>
 
-          {/* Chrono Controls: Auto Status Indicator + Steppers */}
+          {/* Chrono Controls: Steppers */}
           <div className="flex items-center gap-3 shrink-0">
-            {/* Live Auto Telemetry Status Pill */}
-            <div className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl text-xs font-mono uppercase tracking-wider border border-white/10 bg-[#0D0D10] text-[#8E8E93]">
-              <span className="relative flex h-2 w-2">
-                {!isHovered && (
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#EB0028] opacity-75" />
-                )}
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#EB0028]" />
-              </span>
-              <span className="text-white/80">{isHovered ? 'Paused on Hover' : 'Live Archive'}</span>
-            </div>
-
             {/* Left / Right Navigation Steppers */}
             <div className="flex items-center gap-1 bg-[#0D0D10] border border-white/10 p-1 rounded-xl">
               <button
@@ -433,7 +398,7 @@ export const PastEventsSection: React.FC<PastEventsSectionProps> = ({
             CHRONOLOGY PROGRESS TRACK (Interactive Timeline Ruler)
             ========================================================================= */}
         <div className="mb-8 hidden sm:block">
-          <div className="grid grid-cols-6 gap-2 border-b border-[#222226] pb-3">
+          <div className="grid grid-cols-5 gap-2 border-b border-[#222226] pb-3">
             {events.map((ev, idx) => {
               const isActive = ev.id === activeId;
               return (
@@ -444,20 +409,22 @@ export const PastEventsSection: React.FC<PastEventsSectionProps> = ({
                     setCycleIndex((prev) => prev + 1);
                   }}
                   className={`text-left group transition-all duration-300 cursor-pointer pb-1 relative ${
-                    isActive ? 'opacity-100' : 'opacity-40 hover:opacity-80'
+                    isActive ? 'opacity-100' : 'opacity-40 hover:opacity-100'
                   }`}
                 >
                   <div className="flex items-center gap-2 mb-1">
                     <span
                       className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
-                        isActive ? 'bg-[#EB0028] scale-150 shadow-[0_0_8px_#EB0028]' : 'bg-[#666]'
+                        isActive
+                          ? 'bg-[#EB0028] scale-150 shadow-[0_0_8px_#EB0028]'
+                          : 'bg-[#666] group-hover:bg-[#EB0028] group-hover:scale-125'
                       }`}
                     />
-                    <span className="font-mono text-xs font-bold text-white tracking-wider">
+                    <span className="font-mono text-xs font-bold text-white tracking-wider group-hover:text-white transition-colors">
                       {ev.year || '2026'}
                     </span>
                   </div>
-                  <span className="block text-[11px] font-mono text-[#8E8E93] truncate uppercase">
+                  <span className="block text-[11px] font-mono text-[#8E8E93] truncate uppercase group-hover:text-[#EB0028]/80 transition-colors">
                     {ev.theme || ev.title}
                   </span>
 
@@ -502,7 +469,7 @@ export const PastEventsSection: React.FC<PastEventsSectionProps> = ({
                   setActiveId(event.id);
                   setCycleIndex((prev) => prev + 1);
                 }}
-                className={`relative h-full overflow-hidden transition-all duration-800 cursor-pointer border-r last:border-r-0 border-white/10 ${
+                className={`relative h-full overflow-hidden transition-all duration-800 cursor-pointer border-r last:border-r-0 border-white/10 group ${
                   isActive
                     ? 'flex-[5] bg-[#0A0A0D]'
                     : 'flex-[0.8] hover:flex-[1.15] bg-[#050507]'
@@ -519,7 +486,7 @@ export const PastEventsSection: React.FC<PastEventsSectionProps> = ({
                     className={`w-full h-full object-cover transition-all duration-1000 ease-out ${
                       isActive
                         ? 'animate-ken-burns filter brightness-70 contrast-115 saturate-110'
-                        : 'scale-100 filter brightness-25 contrast-125 saturate-0'
+                        : 'scale-100 filter brightness-25 contrast-125 saturate-0 group-hover:brightness-40 group-hover:saturate-60 group-hover:scale-105'
                     }`}
                   />
                   {/* Cinematic Shadow Gradients */}
@@ -533,25 +500,43 @@ export const PastEventsSection: React.FC<PastEventsSectionProps> = ({
                       isActive ? 'opacity-80' : 'opacity-100'
                     }`}
                   />
+
+                  {/* Minimal Subtle Red Gradient Aura on Hover */}
+                  <div
+                    className={`absolute inset-0 bg-gradient-to-t from-[#EB0028]/25 via-[#EB0028]/8 to-transparent transition-opacity duration-500 pointer-events-none z-10 ${
+                      isActive ? 'opacity-15' : 'opacity-0 group-hover:opacity-100'
+                    }`}
+                  />
+                  {/* Sleek Top & Bottom Red Laser Accents on Hover */}
+                  <div
+                    className={`absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-[#EB0028] to-transparent transition-opacity duration-500 pointer-events-none z-20 ${
+                      isActive ? 'opacity-0' : 'opacity-0 group-hover:opacity-100'
+                    }`}
+                  />
+                  <div
+                    className={`absolute bottom-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-[#EB0028] to-transparent transition-opacity duration-500 pointer-events-none z-20 ${
+                      isActive ? 'opacity-0' : 'opacity-0 group-hover:opacity-100'
+                    }`}
+                  />
                 </div>
 
                 {/* 2. COLLAPSED SLICE VIEW: Vertical Typographic Spine */}
                 {!isActive && (
-                  <div className="relative z-10 w-full h-full p-4 flex flex-col justify-between items-center py-8 group transition-opacity duration-500">
+                  <div className="relative z-20 w-full h-full p-4 flex flex-col justify-between items-center py-8 transition-opacity duration-500">
                     {/* Top Edition Numeral */}
-                    <span className="w-8 h-8 rounded-lg bg-black/70 border border-white/15 text-[#EB0028] font-mono text-xs font-bold flex items-center justify-center shadow-md group-hover:border-[#EB0028]/50 transition-colors">
-                      0{index + 1}
+                    <span className="w-8 h-8 rounded-lg bg-black/70 border border-white/15 text-[#EB0028] font-mono text-xs font-bold flex items-center justify-center shadow-md group-hover:border-[#EB0028] group-hover:bg-[#EB0028]/15 group-hover:shadow-[0_0_15px_rgba(235,0,40,0.5)] transition-all duration-300">
+                      {event.edition || `0${index + 1}`}
                     </span>
 
                     {/* Rotated Vertical Monolith Title */}
-                    <div className="spine-text font-mono text-xs uppercase tracking-[0.25em] text-[#D1D1D6] font-semibold whitespace-nowrap opacity-75 group-hover:opacity-100 transition-opacity">
+                    <div className="spine-text font-mono text-xs uppercase tracking-[0.25em] text-[#D1D1D6] font-semibold whitespace-nowrap opacity-75 group-hover:opacity-100 group-hover:text-white transition-all duration-300">
                       <span>{event.theme || 'UNTAPPED'}</span>
-                      <span className="text-[#EB0028] mx-2">•</span>
-                      <span className="text-white/60">{event.year}</span>
+                      <span className="text-[#EB0028] mx-2 inline-block transition-transform group-hover:scale-125">•</span>
+                      <span className="text-white/60 group-hover:text-white/90">{event.year}</span>
                     </div>
 
                     {/* Bottom Indicator Pip */}
-                    <div className="w-1.5 h-1.5 rounded-full bg-white/30 group-hover:bg-[#EB0028] transition-colors" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-white/30 group-hover:bg-[#EB0028] group-hover:scale-150 group-hover:shadow-[0_0_8px_#EB0028] transition-all duration-300" />
                   </div>
                 )}
 
@@ -581,7 +566,7 @@ export const PastEventsSection: React.FC<PastEventsSectionProps> = ({
                       className="pointer-events-none absolute bottom-4 right-6 text-[140px] lg:text-[200px] font-black tracking-tighter text-white/[0.04] font-['Inter',sans-serif] leading-none select-none"
                       aria-hidden="true"
                     >
-                      {event.year}
+                      {event.year && event.year.includes(' ') ? event.year.split(' ')[1] : event.year}
                     </div>
 
                     {/* Top Bar: Archival Tags & Meta */}
@@ -595,27 +580,14 @@ export const PastEventsSection: React.FC<PastEventsSectionProps> = ({
                         </span>
                       </div>
 
-                      <div className="flex items-center gap-4 text-xs font-mono text-[#A1A1AA]">
-                        <span className="flex items-center gap-1.5">
-                          <CalendarDays className="w-3.5 h-3.5 text-[#EB0028]" />
-                          <span>{event.date}</span>
-                        </span>
-                        <span className="hidden lg:flex items-center gap-1.5">
-                          <MapPin className="w-3.5 h-3.5 text-[#EB0028]" />
-                          <span>{event.location}</span>
-                        </span>
+                      <div className="flex items-center gap-2 text-xs font-mono text-[#D1D1D6]">
+                        <MapPin className="w-3.5 h-3.5 text-[#EB0028] shrink-0" />
+                        <span>{event.location || 'Parthasarathy Auditorium, CIT Chennai'}</span>
                       </div>
                     </div>
 
                     {/* Center / Bottom Content Area */}
                     <div className="max-w-3xl">
-                      {/* Theme Code Moniker */}
-                      <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-[0.22em] text-[#EB0028] font-bold mb-2">
-                        <span>THEME FOCUS</span>
-                        <span className="text-white/30">//</span>
-                        <span className="text-white/90">{event.theme || 'UNTAPPED'}</span>
-                      </div>
-
                       {/* Main Title */}
                       <h3 className="text-2xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-[1.1] font-['Inter',sans-serif]">
                         {event.title}
@@ -625,48 +597,6 @@ export const PastEventsSection: React.FC<PastEventsSectionProps> = ({
                       <p className="mt-3 text-sm sm:text-base text-[#D1D1D6] leading-relaxed max-w-2xl font-normal">
                         {event.tagline}
                       </p>
-
-                      {/* Triad Impact Metric Strip */}
-                      <div className="mt-6 pt-5 border-t border-white/15 grid grid-cols-3 gap-4 max-w-lg">
-                        <div>
-                          <span className="block text-[10px] font-mono uppercase text-[#8E8E93] tracking-wider">
-                            TALK SESSIONS
-                          </span>
-                          <span className="block text-xl font-bold text-white mt-0.5">
-                            {event.stats?.talks || '12 Talks'}
-                          </span>
-                        </div>
-                        <div>
-                          <span className="block text-[10px] font-mono uppercase text-[#8E8E93] tracking-wider">
-                            ATTENDEES
-                          </span>
-                          <span className="block text-xl font-bold text-white mt-0.5">
-                            {event.stats?.delegates || '1,000+'}
-                          </span>
-                        </div>
-                        <div>
-                          <span className="block text-[10px] font-mono uppercase text-[#8E8E93] tracking-wider">
-                            GLOBAL STREAM
-                          </span>
-                          <span className="block text-xl font-bold text-[#EB0028] mt-0.5">
-                            {event.stats?.views || '350K+'}
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Action Triggers */}
-                      <div className="mt-8 flex items-center gap-4">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setModalEvent(event);
-                          }}
-                          className="px-6 py-3 rounded-xl bg-[#EB0028] hover:bg-[#C80022] text-white font-bold text-xs uppercase tracking-widest transition-all duration-300 shadow-[0_4px_25px_rgba(235, 0, 40,0.4)] hover:shadow-[0_6px_35px_rgba(235, 0, 40,0.6)] flex items-center gap-2 cursor-pointer"
-                        >
-                          <span>Inspect Full Archive Dossier</span>
-                          <ArrowUpRight className="w-4 h-4" />
-                        </button>
-                      </div>
                     </div>
                   </div>
                 )}
@@ -694,12 +624,16 @@ export const PastEventsSection: React.FC<PastEventsSectionProps> = ({
                   setActiveId(isActive ? '' : event.id);
                   setCycleIndex((prev) => prev + 1);
                 }}
-                className={`rounded-2xl overflow-hidden border transition-all duration-500 cursor-pointer ${
+                className={`rounded-2xl overflow-hidden border transition-all duration-500 cursor-pointer relative group ${
                   isActive
                     ? 'border-[#EB0028] bg-[#0C0C0F] shadow-[0_15px_40px_rgba(235, 0, 40,0.25)]'
-                    : 'border-white/10 bg-[#08080A]'
+                    : 'border-white/10 bg-[#08080A] hover:border-[#EB0028]/40 hover:bg-[#0E0A0C]'
                 }`}
               >
+                {/* Subtle Red Gradient on Mobile Hover */}
+                {!isActive && (
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#EB0028]/15 via-[#EB0028]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                )}
                 {/* Mobile Drawer Countdown Line */}
                 {isActive && isAutoCycleEnabled && !isHovered && (
                   <div className="h-[2px] bg-white/10 w-full overflow-hidden">
@@ -723,7 +657,7 @@ export const PastEventsSection: React.FC<PastEventsSectionProps> = ({
                           : 'bg-white/5 border border-white/10 text-[#EB0028]'
                       }`}
                     >
-                      0{index + 1}
+                      {event.edition || `0${index + 1}`}
                     </span>
                     <div>
                       <span className="block text-xs font-mono uppercase text-[#8E8E93]">
@@ -756,26 +690,15 @@ export const PastEventsSection: React.FC<PastEventsSectionProps> = ({
                         className="w-full h-full object-cover"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
-                      <div className="absolute bottom-3 left-3 right-3 text-xs font-mono text-white/80 flex items-center justify-between">
-                        <span>{event.date}</span>
-                        <span>{event.stats?.talks || '12 Talks'}</span>
+                      <div className="absolute bottom-3 left-3 right-3 text-xs font-mono text-white/80 flex items-center gap-1.5">
+                        <MapPin className="w-3.5 h-3.5 text-[#EB0028] shrink-0" />
+                        <span className="truncate">{event.location || 'Parthasarathy Auditorium, CIT Chennai'}</span>
                       </div>
                     </div>
 
                     <p className="text-xs text-[#D1D1D6] leading-relaxed">
                       {event.tagline}
                     </p>
-
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setModalEvent(event);
-                      }}
-                      className="w-full py-3 rounded-xl bg-[#EB0028] text-white font-bold text-xs uppercase tracking-widest flex items-center justify-center gap-2"
-                    >
-                      <span>Open Edition Dossier</span>
-                      <ArrowUpRight className="w-4 h-4" />
-                    </button>
                   </div>
                 )}
               </div>
@@ -831,16 +754,9 @@ export const PastEventsSection: React.FC<PastEventsSectionProps> = ({
                   <h3 className="text-2xl sm:text-4xl font-black text-white tracking-tight">
                     {modalEvent.title}
                   </h3>
-                  <p className="mt-1 text-xs sm:text-sm text-[#A1A1AA] flex items-center gap-3">
-                    <span className="flex items-center gap-1.5">
-                      <CalendarDays className="w-3.5 h-3.5 text-[#EB0028]" />
-                      <span>{modalEvent.date}</span>
-                    </span>
-                    <span>•</span>
-                    <span className="flex items-center gap-1.5">
-                      <MapPin className="w-3.5 h-3.5 text-[#EB0028]" />
-                      <span>{modalEvent.location}</span>
-                    </span>
+                  <p className="mt-1 text-xs sm:text-sm text-[#A1A1AA] flex items-center gap-2">
+                    <MapPin className="w-3.5 h-3.5 text-[#EB0028]" />
+                    <span>{modalEvent.location}</span>
                   </p>
                 </div>
               </div>

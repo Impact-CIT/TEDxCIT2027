@@ -295,15 +295,6 @@ export const CinematicFramesSection: React.FC<CinematicFramesSectionProps> = ({
 
         </div>
       </div>
-
-      {/* Bottom Timing Notice */}
-      <div className="w-full px-6 sm:px-10 lg:px-14 xl:px-20 mt-6 flex flex-wrap items-center justify-between text-xs font-mono text-[#8E8E93]">
-        <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-[#EB0028] animate-pulse" />
-          <span>CYCLES EVERY 3 SECONDS • SET {activeSetIndex + 1} OF {imageSets.length}</span>
-        </div>
-        <span>SLANTED STAGE FRAMES (/ / / /) • HOVER TO PAUSE</span>
-      </div>
     </section>
   );
 };

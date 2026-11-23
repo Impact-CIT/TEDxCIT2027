@@ -5,8 +5,8 @@ import { Hero } from './components/hero/Hero';
 import { WhatIsTEDxSection } from './components/sections/WhatIsTEDxSection';
 import { ScrollExpansionSection } from './components/sections/ScrollExpansionSection';
 import { AboutVideoSection } from './components/sections/AboutVideoSection';
-import { ImpactStatsSection } from './components/sections/ImpactStatsSection';
 import { PastEventsSection } from './components/sections/PastEventsSection';
+import { ImpactStatsSection } from './components/sections/ImpactStatsSection';
 import { SponsorSection } from './components/sections/SponsorSection';
 import { CinematicFramesSection } from './components/sections/CinematicFramesSection';
 import { WhyUntappedSection } from './components/sections/WhyUntappedSection';
@@ -27,6 +27,9 @@ import AnonymousVoices from './pages/AnonymousVoices';
 import SpeakerNomination from './pages/SpeakerNomination';
 import AdminSubmissions from './pages/AdminSubmissions';
 import DelegateRegistration from './pages/DelegateRegistration';
+
+// Set to true to show the sponsors scrollbar / marquee section on the home page
+const SHOW_SPONSORS_SECTION = false;
 
 /**
  * Normalizes browser pathname for routing
@@ -166,11 +169,11 @@ export default function App() {
             {/* Past Events Section (Past events. Lasting ideas.) */}
             <PastEventsSection />
 
-            {/* Dynamic Scroll Count-Up Impact Metrics Section (A Decade of Impact) */}
+            {/* A Decade of Impact Telemetry & Count-Up Metrics Section */}
             <ImpactStatsSection />
 
-            {/* Infinite Marquee Sponsors Section (Our Sponsors) */}
-            <SponsorSection />
+            {/* Infinite Marquee Sponsors Section (Paused / hidden; toggle SHOW_SPONSORS_SECTION to true when ready to show) */}
+            {SHOW_SPONSORS_SECTION && <SponsorSection />}
           </main>
         );
 

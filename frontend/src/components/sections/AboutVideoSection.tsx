@@ -82,7 +82,7 @@ function getEmbedUrl(src?: string): { type: 'youtube' | 'vimeo' | 'html5'; url: 
 export const AboutVideoSection: React.FC<AboutVideoSectionProps> = ({
   videoSrc = '',
   posterSrc = '/images/stage-speaker-crop.jpg',
-  subhead = 'IDEAS WORTH SPREADING. PERSPECTIVES WITHOUT LIMITS.',
+  subhead = '',
   ctaText = 'APPLY TO SPEAK',
   ctaLink = '/apply/anonymous-voices',
   onApplyToSpeak,
@@ -208,12 +208,6 @@ export const AboutVideoSection: React.FC<AboutVideoSectionProps> = ({
               </div>
             )}
 
-            {/* Video Live Badge (Top-Left) */}
-            <div className="absolute top-4 left-4 z-20 pointer-events-none flex items-center gap-2 px-3 py-1.5 bg-black/80 backdrop-blur-md border border-white/15 text-[11px] font-mono tracking-wider text-white rounded-lg shadow-lg">
-              <span className="w-2 h-2 rounded-full bg-[#EB0028] animate-pulse" />
-              <span>STAGE ARCHIVE</span>
-            </div>
-
             {/* Bottom Controls for HTML5 Video (Audio Toggle - Autoplays) */}
             {embedInfo?.type === 'html5' && !hasVideoError && (
               <div
@@ -246,11 +240,13 @@ export const AboutVideoSection: React.FC<AboutVideoSectionProps> = ({
           className="w-full flex flex-col justify-center"
         >
           {/* Eyebrow Label */}
-          <div className="mb-4 sm:mb-5 flex items-center">
-            <span className="font-mono text-xs sm:text-[13px] uppercase tracking-[0.22em] text-[#8E8E93]">
-              {subhead}
-            </span>
-          </div>
+          {subhead ? (
+            <div className="mb-4 sm:mb-5 flex items-center">
+              <span className="font-mono text-xs sm:text-[13px] uppercase tracking-[0.22em] text-[#8E8E93]">
+                {subhead}
+              </span>
+            </div>
+          ) : null}
 
           {/* Two-Tone Headline */}
           <div className="mb-8 font-['Inter',sans-serif]">

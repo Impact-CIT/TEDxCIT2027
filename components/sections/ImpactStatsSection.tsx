@@ -22,6 +22,8 @@ export interface StatItem {
 export interface ImpactStatsSectionProps {
   /** Section title. Default: "A Decade of Impact" */
   title?: string;
+  /** Eyebrow text. Default: "HISTORICAL TELEMETRY // 2022 — 2027" */
+  eyebrow?: string;
   /** Descriptive tagline on the right. */
   description?: string;
   /** List of stats items. Defaults to 200+ SPEAKERS, 8000+ ATTENDEES, 20M VIEWS */
@@ -125,6 +127,7 @@ const AnimatedCounter: React.FC<{
  */
 export const ImpactStatsSection: React.FC<ImpactStatsSectionProps> = ({
   title = 'A Decade of Impact',
+  eyebrow = 'HISTORICAL TELEMETRY // 2022 — 2027',
   description = 'We expose echo chambers, break down silos, and spotlight "ideas worth spreading" from all over the world.',
   stats = DEFAULT_STATS,
   durationMs = 2200,
@@ -162,7 +165,7 @@ export const ImpactStatsSection: React.FC<ImpactStatsSectionProps> = ({
           <div className="max-w-2xl">
             <div className="mb-3.5 flex items-center">
               <span className="font-mono text-xs uppercase tracking-[0.24em] text-[#8E8E93]">
-                HISTORICAL TELEMETRY // 2017 — 2027
+                {eyebrow}
               </span>
             </div>
 
