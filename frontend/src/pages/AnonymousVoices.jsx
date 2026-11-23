@@ -367,7 +367,7 @@ export default function AnonymousVoices() {
                   name="fullName"
                   value={formData.fullName}
                   onChange={handleChange}
-                  placeholder="e.g. Aarav Kumar"
+                  placeholder="e.g. Sanjith"
                   className="w-full bg-[#141414] border border-[#2B2B2B] text-white px-4 py-3 text-sm focus:border-[#E62B1E] focus:outline-none transition-colors"
                 />
                 {errors.fullName && <p className="field-error text-xs text-[#E62B1E] mt-1.5">{errors.fullName}</p>}

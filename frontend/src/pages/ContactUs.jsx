@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Mail, Phone, MapPin, Clock, Building2, Send, CheckCircle2, ArrowLeft, ExternalLink } from 'lucide-react';
+import { MapPin, Send, CheckCircle2, ArrowLeft, ExternalLink } from 'lucide-react';
 
 export default function ContactUs() {
   const [formData, setFormData] = useState({
@@ -37,10 +37,6 @@ export default function ContactUs() {
 
         {/* Header */}
         <div className="border-b border-[#262626] pb-8 mb-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#EB0028]/10 border border-[#EB0028]/30 text-[#EB0028] text-xs font-mono uppercase tracking-widest mb-4">
-            <Building2 className="w-3.5 h-3.5" />
-            <span>Organizer Information</span>
-          </div>
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white uppercase">
             Contact <span className="text-[#EB0028]">Us</span>
           </h1>
@@ -84,54 +80,6 @@ export default function ContactUs() {
               </div>
             </div>
 
-            {/* Email Card */}
-            <div className="bg-[#0A0A0A] border border-[#1F1F1F] p-6 sm:p-7 rounded-sm">
-              <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-sm bg-[#EB0028]/10 border border-[#EB0028]/30 flex items-center justify-center text-[#EB0028] shrink-0 mt-1">
-                  <Mail className="w-5 h-5" />
-                </div>
-                <div>
-                  <h3 className="text-xs font-mono uppercase tracking-widest text-[#8E8E93]">
-                    Official Email Contacts
-                  </h3>
-                  <div className="mt-2 space-y-1">
-                    <p className="text-sm">
-                      <span className="text-[#8E8E93]">General & Ticketing Inquiries:</span>{' '}
-                      <a href="mailto:tedx@citchennai.net" className="text-white hover:text-[#EB0028] font-semibold underline">
-                        tedx@citchennai.net
-                      </a>
-                    </p>
-                    <p className="text-sm">
-                      <span className="text-[#8E8E93]">Organizer Lead:</span>{' '}
-                      <a href="mailto:sanjithcodez@gmail.com" className="text-white hover:text-[#EB0028] font-semibold underline">
-                        sanjithcodez@gmail.com
-                      </a>
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Helpline & Timings */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="bg-[#0A0A0A] border border-[#1F1F1F] p-6 rounded-sm">
-                <div className="flex items-center gap-2 text-[#EB0028] font-mono text-xs uppercase tracking-wider mb-2">
-                  <Phone className="w-4 h-4" />
-                  <span>Helpline Phone</span>
-                </div>
-                <div className="text-sm font-bold text-white">+91 44 7111 9111</div>
-                <p className="text-xs text-[#8E8E93] mt-1">CIT Campus Central Switchboard</p>
-              </div>
-
-              <div className="bg-[#0A0A0A] border border-[#1F1F1F] p-6 rounded-sm">
-                <div className="flex items-center gap-2 text-[#EB0028] font-mono text-xs uppercase tracking-wider mb-2">
-                  <Clock className="w-4 h-4" />
-                  <span>Operating Hours</span>
-                </div>
-                <div className="text-sm font-bold text-white">9:00 AM – 6:00 PM IST</div>
-                <p className="text-xs text-[#8E8E93] mt-1">Monday through Saturday</p>
-              </div>
-            </div>
 
             {/* License Note */}
             <div className="p-4 bg-[#121212] border border-[#262626] rounded-sm text-xs text-[#8E8E93] leading-relaxed">
@@ -175,7 +123,7 @@ export default function ContactUs() {
                       required
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      placeholder="e.g. Sanjith Kumar"
+                      placeholder="e.g. Sanjith"
                       className="w-full bg-[#141414] border border-[#2B2B2B] focus:border-[#EB0028] text-white px-3.5 py-2.5 outline-none rounded-none text-xs transition-colors"
                     />
                   </div>

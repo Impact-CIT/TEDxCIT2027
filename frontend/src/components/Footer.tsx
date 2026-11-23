@@ -12,12 +12,6 @@ export interface FooterProps {
    Pixel-Perfect Social Icons
    ========================================================================= */
 
-const FacebookIcon: React.FC<{ className?: string }> = ({ className = 'w-4 h-4' }) => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true">
-    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
-  </svg>
-);
-
 const InstagramIcon: React.FC<{ className?: string }> = ({ className = 'w-4 h-4' }) => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true">
     <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
@@ -31,12 +25,6 @@ const LinkedinIcon: React.FC<{ className?: string }> = ({ className = 'w-4 h-4' 
     <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
     <rect width="4" height="12" x="2" y="9" />
     <circle cx="4" cy="4" r="2" />
-  </svg>
-);
-
-const XTwitterIcon: React.FC<{ className?: string }> = ({ className = 'w-3.5 h-3.5' }) => (
-  <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
-    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
   </svg>
 );
 
@@ -138,17 +126,7 @@ export const Footer: React.FC<FooterProps> = ({
             {/* Social Media Link Buttons */}
             <div className="flex items-center gap-3 sm:gap-4">
               <a
-                href="https://facebook.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Facebook"
-                className="w-9 h-9 rounded-full border border-white/15 flex items-center justify-center text-white/80 hover:text-[#EB0028] hover:border-[#EB0028] hover:bg-white/5 transition-all duration-200"
-              >
-                <FacebookIcon className="w-4 h-4" />
-              </a>
-
-              <a
-                href="https://instagram.com"
+                href="https://www.instagram.com/tedxcitchennai?utm_source=ig_web_button_share_sheet&dmpr=ZDNlZDc0MzIxNw=="
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Instagram"
@@ -158,7 +136,7 @@ export const Footer: React.FC<FooterProps> = ({
               </a>
 
               <a
-                href="https://linkedin.com"
+                href="https://www.linkedin.com/company/tedxchennaiinstituteoftechnology/"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="LinkedIn"
@@ -168,17 +146,7 @@ export const Footer: React.FC<FooterProps> = ({
               </a>
 
               <a
-                href="https://x.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="X (Twitter)"
-                className="w-9 h-9 rounded-full border border-white/15 flex items-center justify-center text-white/80 hover:text-[#EB0028] hover:border-[#EB0028] hover:bg-white/5 transition-all duration-200"
-              >
-                <XTwitterIcon className="w-3.5 h-3.5" />
-              </a>
-
-              <a
-                href="https://youtube.com"
+                href="https://www.youtube.com/channel/UCsT0YIqwnpJCM-mx7-gSA4Q"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="YouTube"
