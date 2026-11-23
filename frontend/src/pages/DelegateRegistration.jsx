@@ -134,8 +134,8 @@ export default function DelegateRegistration() {
         }
       }
 
-      // 1. Create order on backend
-      const response = await fetch('http://localhost:5000/api/delegates/register', {
+      // 1. Create order on backend (uses relative URL forwarded by Vite proxy, identical to Anonymous Voices)
+      const response = await fetch('/api/delegates/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -148,7 +148,7 @@ export default function DelegateRegistration() {
       }
 
       const orderData = result.data;
-      const keyId = import.meta.env.VITE_RAZORPAY_KEY_ID || orderData.key_id || orderData.keyId;
+      const keyId = orderData.key_id || orderData.keyId || import.meta.env.VITE_RAZORPAY_KEY_ID;
 
       // 2. Open Razorpay Standard Checkout Modal
       const options = {
@@ -168,22 +168,52 @@ export default function DelegateRegistration() {
         },
         handler: async function (paymentResponse) {
           try {
-            // 3. Verify Payment Signature on Backend
-            const verifyRes = await fetch('http://localhost:5000/api/verify-payment', {
+            console.log('[Razorpay Checkout] Payment successful! Verifying and saving to database:', paymentResponse);
+
+            // 3. Verify Payment Signature and Save Delegate directly to MongoDB Atlas
+            const verifyPayload = {
+              razorpay_order_id: paymentResponse.razorpay_order_id,
+              razorpay_payment_id: paymentResponse.razorpay_payment_id,
+              razorpay_signature: paymentResponse.razorpay_signature,
+
+              // Full delegate details (ensures 100% database persistence, identical to Anonymous Voices)
+              registrationId: orderData.registrationId,
+              name,
+              email,
+              phone,
+              linkedin,
+              passType: selectedPass,
+              attendedBefore,
+              heardAbout,
+              declaration,
+              collegeName: selectedPass === 'student' ? collegeName : '',
+              department: selectedPass === 'student' ? department : '',
+              yearOfStudy: selectedPass === 'student' ? yearOfStudy : '',
+              section: selectedPass === 'student' ? section : '',
+              organisationName: selectedPass === 'professional' ? organisationName : '',
+              jobDesignation: selectedPass === 'professional' ? jobDesignation : '',
+              industryDomain: selectedPass === 'professional' ? industryDomain : '',
+              experienceYears: selectedPass === 'professional' ? experienceYears : '',
+              amount: currentPass.price,
+              amountInPaise: currentPass.price * 100,
+              passName: currentPass.name,
+            };
+
+            const verifyRes = await fetch('/api/delegates/verify-payment', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                razorpay_order_id: paymentResponse.razorpay_order_id,
-                razorpay_payment_id: paymentResponse.razorpay_payment_id,
-                razorpay_signature: paymentResponse.razorpay_signature,
-              }),
+              body: JSON.stringify(verifyPayload),
             });
 
             const verifyResult = await verifyRes.json();
+            console.log('[Razorpay Verification] Backend verification response:', verifyResult);
 
             if (verifyRes.ok && verifyResult.success) {
               setSuccessData({
-                registrationId: orderData.registrationId || verifyResult.registrationId,
+                registrationId:
+                  verifyResult.data?.registrationId ||
+                  orderData.registrationId ||
+                  verifyResult.registrationId,
                 passName: currentPass.name,
                 amountPaid: currentPass.price,
                 paymentId: paymentResponse.razorpay_payment_id,
@@ -193,6 +223,7 @@ export default function DelegateRegistration() {
               setErrorMsg(verifyResult.message || verifyResult.error || 'Payment signature verification failed.');
             }
           } catch (err) {
+            console.error('[Razorpay Verification] Error verifying payment:', err);
             setErrorMsg('Verification error: ' + err.message);
           } finally {
             setIsProcessing(false);

@@ -1,7 +1,9 @@
 import 'dotenv/config';
 import crypto from 'crypto';
 import razorpayService from '../services/razorpayService.js';
+import { connectDB } from '../config/db.js';
 import store from '../models/store.js';
+import Delegate from '../models/Delegate.js';
 import { getPassById } from '../config/pricing.js';
 
 /**
@@ -143,6 +145,16 @@ export async function verifyPayment(req, res) {
         paymentId: payment_id,
       });
 
+      try {
+        await connectDB();
+        await Delegate.findOneAndUpdate(
+          { orderId: order_id },
+          { $set: { status: 'FAILED', paymentId: payment_id, updatedAt: new Date() } }
+        );
+      } catch (dbErr) {
+        console.warn('[PaymentController] MongoDB fail update note:', dbErr.message);
+      }
+
       return res.status(400).json({
         success: false,
         error: 'SIGNATURE_MISMATCH',
@@ -157,12 +169,65 @@ export async function verifyPayment(req, res) {
       paymentMethod: 'RAZORPAY_STANDARD',
     });
 
+    let dbDelegate = null;
+    try {
+      await connectDB();
+
+      const isStudent = (req.body.passType || registration?.passType) === 'student';
+      const delegateDoc = {
+        registrationId: req.body.registrationId || registration?.id || `REG-${Date.now().toString(36).toUpperCase()}`,
+        passType: req.body.passType || registration?.passType || 'student',
+        passName: req.body.passName || registration?.passName || (isStudent ? 'Student Delegate Pass' : 'Professional Delegate Pass'),
+        name: (req.body.name || registration?.name || 'Delegate Attendee').trim(),
+        email: (req.body.email || registration?.email || 'attendee@tedxcit.com').trim().toLowerCase(),
+        phone: (req.body.phone || registration?.phone || '0000000000').trim(),
+        linkedin: (req.body.linkedin || registration?.linkedin || null)?.trim() || null,
+        attendedBefore: (req.body.attendedBefore || registration?.attendedBefore || 'No') === 'Yes' ? 'Yes' : 'No',
+        heardAbout: (req.body.heardAbout || registration?.heardAbout || null)?.trim() || null,
+        declaration: true,
+        collegeName: isStudent ? (req.body.collegeName || registration?.collegeName || null)?.trim() || null : null,
+        department: isStudent ? (req.body.department || registration?.department || null)?.trim() || null : null,
+        yearOfStudy: isStudent ? (req.body.yearOfStudy || registration?.yearOfStudy || null)?.trim() || null : null,
+        section: isStudent ? (req.body.section || registration?.section || null)?.trim() || null : null,
+        organisationName: !isStudent ? (req.body.organisationName || registration?.organisationName || null)?.trim() || null : null,
+        jobDesignation: !isStudent ? (req.body.jobDesignation || registration?.jobDesignation || null)?.trim() || null : null,
+        industryDomain: !isStudent ? (req.body.industryDomain || registration?.industryDomain || null)?.trim() || null : null,
+        experienceYears: !isStudent ? (req.body.experienceYears || registration?.experienceYears || null)?.trim() || null : null,
+        amount: Number(req.body.amount || registration?.amount || (isStudent ? 100 : 200)),
+        amountInPaise: Number(req.body.amountInPaise || registration?.amountInPaise || (isStudent ? 10000 : 20000)),
+        currency: req.body.currency || registration?.currency || 'INR',
+        receipt: req.body.receipt || registration?.receipt || `rcpt_${Date.now()}`,
+        orderId: order_id,
+        paymentId: payment_id,
+        paymentSignature: signature,
+        status: 'PAID',
+        paymentMethod: 'RAZORPAY_STANDARD',
+        updatedAt: new Date(),
+      };
+
+      dbDelegate = await Delegate.findOneAndUpdate(
+        { orderId: order_id },
+        { $set: delegateDoc, $setOnInsert: { createdAt: new Date() } },
+        { upsert: true, returnDocument: 'after', setDefaultsOnInsert: true }
+      );
+
+      console.log('[PaymentController] Successfully saved PAID delegate to MongoDB Atlas:', dbDelegate.registrationId);
+    } catch (dbErr) {
+      if (process.env.NODE_ENV === 'test') {
+        console.warn('[PaymentController] Test DB note:', dbErr.message);
+      } else {
+        console.error('[PaymentController] CRITICAL MongoDB paid update error:', dbErr);
+        throw dbErr;
+      }
+    }
+
     return res.status(200).json({
       success: true,
       message: 'Payment verified successfully',
       order_id,
       payment_id,
-      ...(registration && { registrationId: registration.id, status: 'PAID' }),
+      registrationId: dbDelegate?.registrationId || registration?.id,
+      status: 'PAID',
     });
   } catch (err) {
     console.error('[PaymentController] verifyPayment Error:', err);

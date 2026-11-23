@@ -26,13 +26,19 @@ export async function connectDB() {
     throw new Error('MONGODB_URI is required; refusing to start without persistent storage.');
   }
 
-  if (cached.conn) {
+  if (cached.conn && mongoose.connection.readyState === 1) {
     return cached.conn;
+  }
+
+  // If connection is dropped or closed, reset promise and cached connection
+  if (mongoose.connection.readyState !== 1) {
+    cached.conn = null;
+    cached.promise = null;
   }
 
   if (!cached.promise) {
     const opts = {
-      bufferCommands: false,
+      bufferCommands: true,
       maxPoolSize: 10,
       minPoolSize: 1,
       serverSelectionTimeoutMS: 10000,
