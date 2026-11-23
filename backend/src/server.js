@@ -100,23 +100,39 @@ app.use(errorHandler);
 const isMain = process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1];
 
 if (isMain) {
-  connectDB().then(() => app.listen(PORT, () => {
-    console.log(`=======================================================`);
-    console.log(`  TEDxCIT 2027: UNTAPPED - Backend Server`);
-    console.log(`  Running at: http://localhost:${PORT}`);
-    console.log(`  Environment: ${process.env.NODE_ENV || 'development'}`);
-    console.log(`  MongoDB: ${process.env.MONGODB_URI ? 'Configured (Atlas)' : 'Not configured (startup blocked)'}`);
-    console.log(`=======================================================`);
-    console.log(`  Endpoints:`);
-    console.log(`  - GET  /api/health`);
-    console.log(`  - POST /api/anonymous-voices      (Anonymous Voices submission)`);
-    console.log(`  - POST /api/speaker-nominations   (Speaker Nomination submission)`);
-    console.log(`  - GET  /api/admin/submissions     (Admin dashboard & CSV export)`);
-    console.log(`=======================================================`);
-  })).catch((err) => {
-    console.error(`[Startup] MongoDB is required: ${err.message}`);
-    process.exitCode = 1;
-  });
+  const startListening = () => {
+    app.listen(PORT, () => {
+      console.log(`=======================================================`);
+      console.log(`  TEDxCIT 2027: UNTAPPED - Backend Server`);
+      console.log(`  Running at: http://localhost:${PORT}`);
+      console.log(`  Environment: ${process.env.NODE_ENV || 'development'}`);
+      console.log(`  MongoDB: ${isConnected() ? 'Connected (Atlas)' : 'Not connected'}`);
+      console.log(`=======================================================`);
+      console.log(`  Endpoints:`);
+      console.log(`  - GET  /api/health`);
+      console.log(`  - POST /api/create-order          (Razorpay Standard Checkout)`);
+      console.log(`  - POST /api/verify-payment        (Payment verification)`);
+      console.log(`  - POST /api/delegates/register    (Delegate registration)`);
+      console.log(`  - POST /api/anonymous-voices      (Anonymous Voices submission)`);
+      console.log(`  - POST /api/speaker-nominations   (Speaker Nomination submission)`);
+      console.log(`  - GET  /api/admin/submissions     (Admin dashboard & CSV export)`);
+      console.log(`=======================================================`);
+    });
+  };
+
+  connectDB()
+    .then(startListening)
+    .catch((err) => {
+      if (process.env.NODE_ENV !== 'production') {
+        console.warn(`[Startup Warning] MongoDB connection failed: ${err.message}`);
+        console.warn(`[Startup Warning] Starting server anyway in local development mode.`);
+        console.warn(`[Startup Warning] Delegate registration & Razorpay payments will work. Speaker nominations & anonymous voice submissions require active MongoDB.`);
+        startListening();
+      } else {
+        console.error(`[Startup] MongoDB is required in production: ${err.message}`);
+        process.exitCode = 1;
+      }
+    });
 }
 
 export default app;

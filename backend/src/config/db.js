@@ -1,4 +1,12 @@
 import mongoose from 'mongoose';
+import dns from 'node:dns';
+
+// Resolve querySrv ECONNREFUSED on Windows/campus networks by querying public DNS (Google & Cloudflare) for Atlas SRV records
+try {
+  dns.setServers(['8.8.8.8', '1.1.1.1', '8.8.4.4']);
+} catch {
+  // Ignore if custom DNS resolution is disallowed by the runtime
+}
 
 /**
  * MongoDB Atlas Connection Manager
