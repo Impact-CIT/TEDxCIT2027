@@ -796,14 +796,11 @@ export const PastEventsSection: React.FC<PastEventsSectionProps> = ({
           aria-modal="true"
           data-lenis-prevent="true"
           onClick={() => setModalEvent(null)}
-          onWheel={(e) => e.stopPropagation()}
-          onTouchMove={(e) => e.stopPropagation()}
         >
           <div
-            className="relative w-full max-w-4xl bg-[#0C0C0E] border border-[#2B2B30] rounded-3xl overflow-hidden shadow-[0_30px_100px_rgba(0,0,0,0.9)] max-h-[92vh] flex flex-col"
+            className="relative w-full max-w-4xl bg-[#0C0C0E] border border-[#2B2B30] rounded-3xl overflow-hidden shadow-[0_30px_100px_rgba(0,0,0,0.9)] max-h-[88vh] sm:max-h-[92vh] flex flex-col"
             data-lenis-prevent="true"
             onClick={(e) => e.stopPropagation()}
-            onWheel={(e) => e.stopPropagation()}
           >
             {/* Modal Close Button */}
             <button
@@ -816,7 +813,7 @@ export const PastEventsSection: React.FC<PastEventsSectionProps> = ({
 
             {/* Modal Body with Custom Modal Scrollbar */}
             <div
-              className="overflow-y-auto flex-1 overscroll-contain p-6 sm:p-10 space-y-8 custom-modal-scrollbar"
+              className="min-h-0 flex-1 overflow-y-auto overscroll-contain touch-pan-y p-6 sm:p-10 space-y-8 custom-modal-scrollbar"
               data-lenis-prevent="true"
               tabIndex={0}
             >

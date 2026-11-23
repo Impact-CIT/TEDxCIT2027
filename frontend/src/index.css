@@ -120,15 +120,18 @@ html.lenis, html.lenis body {
 
 /* Custom Modal & Card Scrollbar */
 .custom-modal-scrollbar {
+  min-height: 0;
   overflow-y: auto !important;
   overscroll-behavior: contain !important;
   -webkit-overflow-scrolling: touch !important;
+  touch-action: pan-y !important;
   scrollbar-width: thin !important;
   scrollbar-color: #EB0028 rgba(255, 255, 255, 0.08) !important;
 }
 
 .custom-modal-scrollbar::-webkit-scrollbar {
   width: 8px !important;
+  display: block !important;
 }
 
 .custom-modal-scrollbar::-webkit-scrollbar-track {

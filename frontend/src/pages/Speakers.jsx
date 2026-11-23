@@ -420,14 +420,11 @@ export default function Speakers() {
           aria-modal="true"
           data-lenis-prevent="true"
           onClick={() => setActiveSpeakerModal(null)}
-          onWheel={(e) => e.stopPropagation()}
-          onTouchMove={(e) => e.stopPropagation()}
         >
           <div
-            className="relative w-full max-w-3xl bg-[#0B0B0C] border border-[#2A2A2E] rounded-3xl overflow-hidden shadow-[0_25px_80px_rgba(0,0,0,0.85)] max-h-[90vh] flex flex-col"
+            className="relative w-full max-w-3xl bg-[#0B0B0C] border border-[#2A2A2E] rounded-3xl overflow-hidden shadow-[0_25px_80px_rgba(0,0,0,0.85)] max-h-[88vh] sm:max-h-[90vh] flex flex-col"
             data-lenis-prevent="true"
             onClick={(e) => e.stopPropagation()}
-            onWheel={(e) => e.stopPropagation()}
           >
             {/* Modal Close Button */}
             <button
@@ -440,7 +437,7 @@ export default function Speakers() {
 
             {/* Scrollable Modal Body with Guaranteed Smooth Scrolling */}
             <div
-              className="overflow-y-auto flex-1 overscroll-contain p-6 sm:p-8 md:p-10 space-y-6 custom-modal-scrollbar"
+              className="min-h-0 flex-1 overflow-y-auto overscroll-contain touch-pan-y p-6 sm:p-8 md:p-10 space-y-6 custom-modal-scrollbar"
               data-lenis-prevent="true"
               tabIndex={0}
             >
