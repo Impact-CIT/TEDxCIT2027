@@ -177,14 +177,14 @@ export const WhyUntappedSection: React.FC<WhyUntappedSectionProps> = ({
             </span>
           </div>
 
-          {/* Two-Tone Headline: "WHY" in White + "UNTAPPED?" in TED Red */}
+          {/* Two-Tone Headline: "THE" in White + "UNTAPPED" in TED Red */}
           <div className="mb-8 font-['Inter',sans-serif]">
             <h2 className="flex items-baseline gap-x-3 sm:gap-x-4 flex-wrap whitespace-nowrap">
               <span className="text-3xl sm:text-4xl md:text-5xl lg:text-[44px] xl:text-[54px] 2xl:text-6xl font-extrabold tracking-tight text-white uppercase leading-none">
-                WHY
+                THE
               </span>
               <span className="text-3xl sm:text-4xl md:text-5xl lg:text-[44px] xl:text-[54px] 2xl:text-6xl font-black text-[#EB0028] tracking-tight leading-none drop-shadow-[0_4px_24px_rgba(235,0,40,0.25)]">
-                UNTAPPED?
+                UNTAPPED
               </span>
             </h2>
           </div>
@@ -192,13 +192,13 @@ export const WhyUntappedSection: React.FC<WhyUntappedSectionProps> = ({
           {/* Curatorial Narrative */}
           <div className="space-y-4 sm:space-y-5 text-[#A0A0A5] text-[15px] sm:text-base lg:text-[16px] xl:text-[17px] leading-relaxed font-normal mb-10 max-w-2xl">
             <p>
-              Human history is shaped not by what was obvious, but by what lay quietly beneath the surface. <strong className="text-white font-medium">UNTAPPED</strong> represents the reservoir of dormant possibilities — unconventional thoughts, suppressed inquiries, and emerging paradigms that are yet to be revealed.
+              There is more to the world than what meets the eye, more to every individual than what the world has come to recognise, and more to every idea than what has already been explored.
             </p>
             <p>
-              At TEDx Chennai Institute of Technology 2027, our curatorial vision focuses on breakthroughs at the boundary lines: from artificial cognition and biomimetic urban design to non-linear storytelling and grassroots resilience.
+              <strong className="text-white font-medium">The Untapped</strong> is an invitation to look beyond the familiar, question the unquestioned, and uncover the possibilities that remain concealed beneath the surface. It celebrates the unexplored dimensions of human potential, unconventional thinking, and perspectives waiting to be discovered.
             </p>
             <p>
-              Stepping into the red circle is an invitation to cross past comfortable certainties. We gather not just to witness inspiring talks, but to catalyze dialogues that unlock the <strong className="text-white font-medium">untapped genius</strong> within our community and beyond.
+              Because sometimes, the most extraordinary possibilities are not those yet to be created, but those that have always existed, waiting to be recognised.
             </p>
           </div>
 

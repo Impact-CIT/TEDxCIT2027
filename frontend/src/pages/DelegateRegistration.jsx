@@ -44,11 +44,13 @@ export default function DelegateRegistration() {
   const passes = {
     student: {
       id: 'student',
-      name: 'Student Delegate Pass',
+      name: 'Student Pass Registration',
       price: 100,
       badge: 'Bona Fide Students',
       icon: GraduationCap,
-      description: 'Exclusive access designed for school, college, and university students.',
+      tagline: 'Your Curiosity Deserves a Seat.',
+      description:
+        'Step into a world of fresh ideas, bold questions and perspectives waiting to be discovered. Connect with curious minds, challenge what you know and explore possibilities beyond the classroom. Your next big inspiration could be just one idea away!',
       benefits: [
         'Access to all speaker sessions & live talks',
         'Official TEDxCIT 2027 Student Delegate Kit',
@@ -60,11 +62,13 @@ export default function DelegateRegistration() {
     },
     professional: {
       id: 'professional',
-      name: 'Professional Delegate Pass',
+      name: 'Delegate Pass Registration',
       price: 200,
       badge: 'Corporate & Academics',
       icon: Briefcase,
-      description: 'Full-access executive pass for industry leaders, entrepreneurs, and academicians.',
+      tagline: 'Some Conversations Change the Way You See the World.',
+      description:
+        'Be part of an experience where diverse minds, thought-provoking ideas and unconventional perspectives come together. Discover the unexplored, engage in meaningful conversations and leave with possibilities that extend far beyond the stage.',
       benefits: [
         'Priority check-in & reserved premium seating',
         'Access to all speaker sessions & panel discussions',
@@ -354,7 +358,13 @@ export default function DelegateRegistration() {
                       </div>
                     </div>
 
-                    <p className="text-xs text-[#A1A1A6] mt-4 leading-relaxed">
+                    {pass.tagline && (
+                      <p className="text-xs sm:text-sm font-semibold text-[#EB0028] mt-3 tracking-tight">
+                        {pass.tagline}
+                      </p>
+                    )}
+
+                    <p className="text-xs text-[#A1A1A6] mt-2 leading-relaxed">
                       {pass.description}
                     </p>
 

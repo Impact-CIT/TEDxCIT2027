@@ -278,18 +278,22 @@ export const AboutVideoSection: React.FC<AboutVideoSectionProps> = ({
                 CHENNAI INSTITUTE OF TECHNOLOGY
               </span>
             </div>
+            {/* Sub-tagline */}
+            <p className="text-sm sm:text-base lg:text-lg font-medium text-white/90 tracking-tight mt-3 mb-4">
+              Where Ideas Converge, Perspectives Emerge, and Possibilities Begin.
+            </p>
           </div>
 
           {/* Description Paragraphs */}
           <div className="space-y-4 sm:space-y-5 text-[#A0A0A5] text-[15px] sm:text-base lg:text-[16px] xl:text-[17px] leading-relaxed font-normal mb-10 max-w-2xl">
             <p>
-              TEDx Chennai Institute of Technology is an independently organized TEDx event that brings together curious minds, diverse perspectives and ideas worth sharing.
+              TEDxChennai Institute of Technology is a platform for ideas that dare to question convention, challenge established narratives, and envision possibilities beyond the ordinary. It brings together thinkers, creators, achievers, and curious minds from diverse walks of life to share perspectives that deserve to be heard.
             </p>
             <p>
-              Inspired by TED&apos;s mission of spreading ideas, we create a platform for thought-provoking conversations, unconventional perspectives and stories that challenge the way we see the world.
+              More than an event, it is an intellectual space where knowledge meets imagination, experiences inspire dialogue, and individual insights spark collective thought.
             </p>
             <p>
-              Through speakers, experiences and meaningful exchanges, we aim to spark curiosity, inspire action and make ideas travel beyond boundaries.
+              Through every edition, we seek to cultivate curiosity, celebrate originality, and create conversations that continue long after the stage lights fade.
             </p>
           </div>
 

@@ -179,13 +179,13 @@ export const WhatIsTEDxSection: React.FC<WhatIsTEDxSectionProps> = ({
           {/* Descriptive Copy with Elegant Typography */}
           <div className="space-y-4 sm:space-y-5 text-[#A0A0A5] text-[15px] sm:text-base lg:text-[16px] xl:text-[17px] leading-relaxed font-normal mb-10 max-w-2xl">
             <p>
-              In the spirit of ideas worth spreading, TED has created a program called <strong className="text-white font-medium">TEDx</strong>. TEDx is a program of local, self-organized events that bring people together to share a TED-like experience.
+              TED, or Technology, Entertainment, and Design, is a global non-profit initiative dedicated to sharing ideas that inspire, challenge perspectives, and spark meaningful change.
             </p>
             <p>
-              At a TEDx event, TED Talks video and live speakers combine to spark deep discussion and connection. These local, self-organized events are branded TEDx, where <strong className="text-white font-medium">x = independently organized TED event</strong>.
+              TEDx extends this vision to local communities through independently organised events, bringing together diverse voices, unconventional perspectives, and transformative ideas.
             </p>
             <p>
-              The TED Conference provides general guidance for the TEDx program, but individual TEDx events, including ours at <strong className="text-white font-medium">Chennai Institute of Technology</strong>, are self-organized under a free license granted by TED.
+              Rooted in the spirit of <strong className="text-white font-medium">Ideas Worth Spreading</strong>, TEDx creates a platform for dialogue, discovery, and the exchange of knowledge that transcends boundaries.
             </p>
           </div>
 

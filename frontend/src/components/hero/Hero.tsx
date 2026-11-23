@@ -206,8 +206,11 @@ export const Hero: React.FC<HeroProps> = ({ className = '' }) => {
         <div className="w-full lg:w-[32%] xl:w-[32%] pl-5 sm:pl-7 lg:pl-7 xl:pl-8 pr-6 sm:pr-8 lg:pr-10 xl:pr-12 pt-12 sm:pt-16 lg:pt-[170px] xl:pt-[190px] pb-12 lg:pb-16 flex flex-col justify-start">
           <div className="max-w-md lg:max-w-[440px] xl:max-w-[490px]">
             {/* Enlarged, high-impact editorial introductory copy */}
-            <p className="text-2xl sm:text-3xl lg:text-[28px] xl:text-[32px] leading-[1.28] sm:leading-[1.3] text-[#F5F5F2] font-medium tracking-[-0.025em]">
-              Discover unexplored perspectives, challenge what you know, and uncover ideas waiting to make an impact.
+            <h2 className="text-2xl sm:text-3xl lg:text-[28px] xl:text-[32px] leading-[1.2] text-white font-bold tracking-tight mb-3">
+              Uncover What Has Yet to Unfold.
+            </h2>
+            <p className="text-sm sm:text-base lg:text-[16px] leading-relaxed text-[#A0A0A5] font-normal tracking-[-0.015em]">
+              An invitation to challenge the familiar, uncover the overlooked and give the untapped its moment to emerge.
             </p>
 
             {/* Action Buttons: REGISTER NOW, APPLY TO SPEAK, and PARTNER WITH US */}

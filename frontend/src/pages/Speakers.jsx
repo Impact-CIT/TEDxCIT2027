@@ -239,9 +239,7 @@ export default function Speakers() {
             </h1>
 
             <p className="mt-4 text-[#8E8E93] text-sm sm:text-base leading-relaxed max-w-2xl">
-              Meet the groundbreaking thinkers, innovators, and changemakers stepping into the red
-              circle at Chennai Institute of Technology to ignite dialogues that shape our collective
-              future.
+              Every idea has a story, every perspective holds a possibility, and every voice has the power to spark change. Meet the minds who dare to explore beyond the obvious and bring the untapped into the spotlight.
             </p>
           </div>
 
