@@ -32,7 +32,7 @@ export default function AnonymousVoices() {
   const [draftSavedTime, setDraftSavedTime] = useState(null);
   const [registrationDeadline, setRegistrationDeadline] = useState(SPEAK_CONFIG.anonymousVoicesDeadline);
   const [deadlineFormatted, setDeadlineFormatted] = useState(SPEAK_CONFIG.anonymousVoicesDeadlineFormatted);
-  const [registrationEnabled, setRegistrationEnabled] = useState(false);
+  const [registrationEnabled, setRegistrationEnabled] = useState(true);
   const [deadlineLoaded, setDeadlineLoaded] = useState(false);
   const [deadlineLoadError, setDeadlineLoadError] = useState(null);
 
@@ -211,18 +211,16 @@ export default function AnonymousVoices() {
     }
   };
 
-  if (!deadlineLoaded || deadlineLoadError || !registrationEnabled) {
+  if (deadlineLoaded && (!registrationEnabled || deadlineLoadError)) {
     return (
       <div className="w-full min-h-[70vh] bg-[#000000] text-[#F5F5F2] flex items-center justify-center px-4 py-16 font-sans">
         <div className="max-w-xl w-full border border-[#262626] bg-[#0A0A0A] p-8 sm:p-12 text-center">
           <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#FF554F] mb-3">TEDxCIT 2027 · Anonymous Voices</p>
           <h1 className="text-2xl sm:text-3xl font-bold text-white mb-3">
-            {!deadlineLoaded ? 'Checking application availability' : registrationEnabled ? 'Applications unavailable' : 'Applications are closed'}
+            {deadlineLoadError ? 'Applications unavailable' : 'Applications are closed'}
           </h1>
           <p className="text-sm leading-relaxed text-[#A0A0A8] mb-7">
-            {deadlineLoadError || (!deadlineLoaded
-              ? 'Please wait while we check the current registration status.'
-              : 'Anonymous Voices applications are not currently accepting submissions.')}
+            {deadlineLoadError || 'Anonymous Voices applications are not currently accepting submissions.'}
           </p>
           <button
             onClick={handleBackToHome}
