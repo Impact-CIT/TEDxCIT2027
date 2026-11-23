@@ -24,7 +24,7 @@ export const submissionRateLimiter = rateLimit({
 
 export const adminLoginRateLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 10,
+  max: 50, // increased to prevent admin lockout during testing
   standardHeaders: true,
   legacyHeaders: false,
   validate: {

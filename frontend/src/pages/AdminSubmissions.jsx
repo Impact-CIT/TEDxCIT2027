@@ -165,7 +165,7 @@ export default function AdminSubmissions() {
       });
 
       const res = await fetch(`/api/admin/submissions?${query.toString()}`, {
-        credentials: 'same-origin',
+        credentials: 'include',
       });
 
       const data = await res.json();
@@ -193,7 +193,7 @@ export default function AdminSubmissions() {
 
   useEffect(() => {
     let active = true;
-    fetch('/api/admin/submissions', { credentials: 'same-origin' })
+    fetch('/api/admin/submissions', { credentials: 'include' })
       .then(async (res) => {
         const data = await res.json();
         if (!active || res.status === 401) return;
@@ -242,9 +242,9 @@ export default function AdminSubmissions() {
     setAuthError(null);
     fetch('/api/admin/login', {
       method: 'POST',
-      credentials: 'same-origin',
+      credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ password }),
+      body: JSON.stringify({ password: password.trim() }),
     })
       .then(async (res) => {
         const result = await res.json();
@@ -270,7 +270,7 @@ export default function AdminSubmissions() {
     try {
       const res = await fetch('/api/admin/deadlines', {
         method: 'PATCH',
-        credentials: 'same-origin',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -320,7 +320,7 @@ export default function AdminSubmissions() {
     try {
       const res = await fetch(`/api/admin/submissions/${type}/${id}/status`, {
         method: 'PATCH',
-        credentials: 'same-origin',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -341,7 +341,7 @@ export default function AdminSubmissions() {
   const handleExportCSV = () => {
     const url = `/api/admin/submissions?format=csv&status=${statusFilter}&search=${encodeURIComponent(searchQuery)}`;
     fetch(url, {
-      credentials: 'same-origin',
+      credentials: 'include',
     })
       .then((res) => {
         if (!res.ok) throw new Error('Could not export submissions. Please sign in again.');
@@ -446,7 +446,7 @@ export default function AdminSubmissions() {
               onClick={() => {
                 fetch('/api/admin/logout', {
                   method: 'POST',
-                  credentials: 'same-origin',
+                  credentials: 'include',
                 }).finally(() => {
                   setIsAuthenticated(false);
                   setSubmissions({ anonymousVoices: [], speakerNominations: [] });
