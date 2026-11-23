@@ -150,8 +150,8 @@ export default function Speakers() {
     if (navigator.share) {
       navigator
         .share({
-          title: `${speaker.name} at TEDxCIT 2027`,
-          text: `Watch ${speaker.name} talk on "${speaker.topic}" at TEDx Chennai Institute of Technology!`,
+          title: `${speaker.name} at TEDxCIT 2026`,
+          text: `Watch ${speaker.name} talk on "${speaker.topic}" at TEDxCIT 2026!`,
           url: window.location.href,
         })
         .catch(() => {});
@@ -229,7 +229,7 @@ export default function Speakers() {
             <div className="mb-3.5 flex items-center gap-2.5">
               <span className="w-2 h-2 rounded-full bg-[#EB0028] animate-pulse" aria-hidden="true" />
               <span className="font-mono text-xs uppercase tracking-[0.24em] text-[#8E8E93]">
-                OFFICIAL SPEAKER LINEUP • TEDxCIT 2027
+                OFFICIAL SPEAKER LINEUP • TEDxCIT 2026
               </span>
             </div>
 
@@ -253,7 +253,7 @@ export default function Speakers() {
               </div>
               <div className="text-left">
                 <span className="block text-[10px] font-mono uppercase text-[#8E8E93] tracking-wider">
-                  Confirmed Lineup
+                  Confirmed 2026 Lineup
                 </span>
                 <span className="block text-sm font-bold text-white tracking-tight">
                   {SPEAKERS_LIST.length} Distinguished Speakers
@@ -392,8 +392,8 @@ export default function Speakers() {
 
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto shrink-0">
               <a
-                href="/apply-to-speak"
-                onClick={(e) => handleNavigate(e, '/apply-to-speak')}
+                href="/apply/anonymous-voices"
+                onClick={(e) => handleNavigate(e, '/apply/anonymous-voices')}
                 className="px-6 py-3.5 bg-[#EB0028] hover:bg-[#C80022] text-white font-bold text-xs uppercase tracking-widest rounded-xl transition-all duration-300 shadow-[0_4px_25px_rgba(235,0,40,0.35)] hover:shadow-[0_6px_35px_rgba(235,0,40,0.5)] flex items-center justify-center gap-2 group text-center"
               >
                 <span>Apply to Speak</span>

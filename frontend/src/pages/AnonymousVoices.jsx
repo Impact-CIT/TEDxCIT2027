@@ -304,7 +304,7 @@ export default function AnonymousVoices() {
           </h1>
 
           <p className="text-[#A0A0A5] text-sm sm:text-base leading-relaxed mb-6">
-            Do you have an idea waiting to be discovered? Anonymous Voices offers a unique opportunity to bring your ideas, perspectives, and stories to the TEDx stage. This year, TEDxChennai Institute of Technology explores the theme <span className="text-white font-medium">The Untapped</span>, celebrating unexplored possibilities, unheard perspectives, hidden potential, and ideas that challenge the way we see the world. If you have a powerful perspective, an unconventional idea, or a story that aligns with this theme, we want to hear from you! Please share a link to your 3-5 minute video for Round 1. Your submission will be reviewed by our selection panel, and shortlisted candidates will advance to Round 2.
+            Anonymous Voices is the official process to select student speakers for the TEDx stage at Chennai Institute of Technology. This year, our event explores the theme <span className="text-white font-medium">The Untapped</span>, focusing on fresh ideas, unheard perspectives, and hidden talent across our campus. If you are a student with an idea worth sharing, please submit a link to your 3 to 5 minute video for Round 1. Our selection panel will review every submission, and shortlisted students will move forward to Round 2.
           </p>
 
           <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-[#1F1F1F] text-xs font-mono">

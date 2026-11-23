@@ -103,7 +103,7 @@ export const CinematicFramesSection: React.FC<CinematicFramesSectionProps> = ({
 }) => {
   const [activeSetIndex, setActiveSetIndex] = useState<number>(0);
   const [isPaused, setIsPaused] = useState<boolean>(false);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const currentSet = imageSets[activeSetIndex] || imageSets[0];
 

@@ -230,10 +230,10 @@ export const Hero: React.FC<HeroProps> = ({ className = '' }) => {
               </motion.a>
 
               <motion.a
-                href="/apply-to-speak"
+                href="/apply/anonymous-voices"
                 onClick={(e) => {
                   e.preventDefault();
-                  window.history.pushState({}, '', '/apply-to-speak');
+                  window.history.pushState({}, '', '/apply/anonymous-voices');
                   window.dispatchEvent(new Event('popstate'));
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}

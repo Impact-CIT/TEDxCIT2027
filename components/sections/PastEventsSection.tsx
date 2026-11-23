@@ -932,7 +932,7 @@ export const PastEventsSection: React.FC<PastEventsSectionProps> = ({
                 onClick={() => setModalEvent(null)}
                 className="px-6 py-2.5 bg-[#EB0028] hover:bg-[#C80022] text-white font-bold text-xs uppercase tracking-widest rounded-xl transition-all shadow-[0_4px_20px_rgba(235,0,40,0.4)] flex items-center gap-2"
               >
-                <span>View 2027 Speaker Lineup</span>
+                <span>View 2026 Speaker Lineup</span>
                 <ArrowUpRight className="w-4 h-4" />
               </a>
             </div>

@@ -14,7 +14,7 @@ export interface AboutVideoSectionProps {
   /** CTA button label. Default: "APPLY TO SPEAK" */
   ctaText?: string;
   /**
-   * CTA button link destination. Default: "/apply-to-speak"
+   * CTA button link destination. Default: "/apply/anonymous-voices"
    * Ignored when onApplyToSpeak is provided.
    */
   ctaLink?: string;
@@ -84,7 +84,7 @@ export const AboutVideoSection: React.FC<AboutVideoSectionProps> = ({
   posterSrc = '/images/stage-speaker-crop.jpg',
   subhead = 'IDEAS WORTH SPREADING. PERSPECTIVES WITHOUT LIMITS.',
   ctaText = 'APPLY TO SPEAK',
-  ctaLink = '/apply-to-speak',
+  ctaLink = '/apply/anonymous-voices',
   onApplyToSpeak,
   className = '',
 }) => {

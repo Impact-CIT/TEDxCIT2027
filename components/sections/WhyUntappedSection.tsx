@@ -31,7 +31,7 @@ const transitionEase = [0.16, 1, 0.3, 1] as const;
  */
 export const WhyUntappedSection: React.FC<WhyUntappedSectionProps> = ({
   subhead = 'THEME CONCEPT & CURATORIAL MANIFESTO',
-  ctaText = 'EXPLORE 2027 LINEUP',
+  ctaText = 'EXPLORE 2026 LINEUP',
   ctaLink = '/speakers',
   className = '',
 }) => {

@@ -135,7 +135,7 @@ export default function ContactUs() {
 
             {/* License Note */}
             <div className="p-4 bg-[#121212] border border-[#262626] rounded-sm text-xs text-[#8E8E93] leading-relaxed">
-              <strong className="text-white">Independent Event Disclosure:</strong> TEDxCIT 2027 is operated under a license from TED Conferences LLC. For inquiries regarding global TED programs, visit <a href="https://www.ted.com" target="_blank" rel="noreferrer" className="text-[#EB0028] underline">ted.com</a>.
+              <strong className="text-white">Independent Event Disclosure:</strong> TEDxCIT 2026 is operated under a license from TED Conferences LLC. For inquiries regarding global TED programs, visit <a href="https://www.ted.com" target="_blank" rel="noreferrer" className="text-[#EB0028] underline">ted.com</a>.
             </div>
 
           </div>
@@ -155,7 +155,7 @@ export default function ContactUs() {
                   <CheckCircle2 className="w-10 h-10 text-[#28A745] mx-auto" />
                   <h4 className="font-bold text-white text-base">Message Transmitted!</h4>
                   <p className="text-xs text-[#A1A1A6]">
-                    Thank you for contacting the TEDxCIT 2027 organizing committee. A coordinator will reach out shortly.
+                    Thank you for contacting the TEDxCIT 2026 organizing committee. A coordinator will reach out shortly.
                   </p>
                   <button
                     onClick={() => setIsSubmitted(false)}
