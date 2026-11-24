@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Megaphone } from 'lucide-react';
 import SPEAK_CONFIG from '../config/speakConfig';
 
 const DRAFT_STORAGE_KEY = 'tedx_draft_anonymous_voices';
@@ -295,14 +296,29 @@ export default function AnonymousVoices() {
             Anonymous Voices is the official process to select student speakers for the TEDx stage at Chennai Institute of Technology. This year, our event explores the theme <span className="text-white font-medium">The Untapped</span>, focusing on fresh ideas, unheard perspectives, and hidden talent across our campus. If you are a student with an idea worth sharing, please submit a link to your 3 to 5 minute video for Round 1. Our selection panel will review every submission, and shortlisted students will move forward to Round 2.
           </p>
 
-          <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-[#1F1F1F] text-xs font-mono">
-            <div>
-              <span className="text-[#8E8E93]">Registration Deadline: </span>
-              <span className="text-[#E62B1E] font-bold">{deadlineFormatted} IST</span>
+          {/* Important Announcement: Student Speakers Only */}
+          <div className="pt-5 border-t border-[#1F1F1F]">
+            <div className="bg-[#121214] border border-[#E62B1E]/30 p-4 sm:p-5 relative overflow-hidden">
+              <div className="w-1.5 h-full bg-[#E62B1E] absolute left-0 top-0 bottom-0" />
+              <div className="flex items-start gap-3.5 pl-1.5 sm:pl-2">
+                <div className="w-8 h-8 rounded-sm bg-[#E62B1E]/15 border border-[#E62B1E]/30 flex items-center justify-center text-[#E62B1E] shrink-0 mt-0.5">
+                  <Megaphone className="w-4 h-4" />
+                </div>
+                <div className="space-y-1 flex-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="font-mono text-[10px] sm:text-xs font-bold uppercase tracking-[0.16em] text-[#E62B1E] bg-[#E62B1E]/10 px-2 py-0.5 border border-[#E62B1E]/25">
+                      OFFICIAL ANNOUNCEMENT
+                    </span>
+                  </div>
+                  <p className="text-sm sm:text-base font-semibold text-white leading-relaxed">
+                    Anonymous Voices is only for student speakers.
+                  </p>
+                  <p className="text-xs sm:text-sm text-[#A0A0A5] leading-relaxed">
+                    Other nominations will be through a separate form letting out soon.
+                  </p>
+                </div>
+              </div>
             </div>
-            {isPastDeadline ? (
-              <span className="text-[#E62B1E] bg-[#E62B1E]/15 px-3 py-1 font-bold">REGISTRATIONS CLOSED</span>
-            ) : null}
           </div>
         </div>
 
