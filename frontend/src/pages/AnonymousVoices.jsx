@@ -284,7 +284,7 @@ export default function AnonymousVoices() {
         <div className="border border-[#262626] bg-[#0A0A0A] p-6 sm:p-10 mb-8 relative">
           <div className="flex flex-wrap items-center gap-2 mb-3">
             <span className="font-mono text-xs uppercase tracking-[0.2em] text-[#E62B1E] bg-[#E62B1E]/10 border border-[#E62B1E]/30 px-3 py-1">
-              EXCLUSIVE TO STUDENTS OF CIT GROUP OF INSTITUTIONS
+              EXCLUSIVE TO CHENNAI INSTITUTE OF TECHNOLOGY STUDENTS
             </span>
           </div>
 
