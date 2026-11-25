@@ -48,6 +48,7 @@ const AnonymousVoiceSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Department is required'],
       enum: [
+        'CSE',
         'AIDS',
         'AIML',
         'CZ',

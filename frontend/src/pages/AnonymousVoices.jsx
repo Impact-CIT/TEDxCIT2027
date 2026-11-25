@@ -13,7 +13,7 @@ export default function AnonymousVoices() {
     socialLinks: '',
     institution: 'Chennai Institute of Technology',
     graduationYear: '2027',
-    department: 'AIDS',
+    department: 'CSE',
     section: '',
     talkTitle: '',
     coreMessage: '',

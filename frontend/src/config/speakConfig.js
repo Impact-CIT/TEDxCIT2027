@@ -18,6 +18,7 @@ export const SPEAK_CONFIG = {
   graduationYears: ['2027', '2028', '2029', '2030'],
 
   departments: [
+    'CSE',
     'AIDS',
     'AIML',
     'CZ',

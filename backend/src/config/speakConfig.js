@@ -24,6 +24,7 @@ export const SPEAK_CONFIG = {
 
   // Department Options
   departments: [
+    'CSE',
     'AIDS',
     'AIML',
     'CZ',
