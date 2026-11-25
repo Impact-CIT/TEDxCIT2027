@@ -154,7 +154,7 @@ export const DEFAULT_SPEAKERS: SpeakerItem[] = [
 
 export const SpeakersSection: React.FC<SpeakersSectionProps> = ({
   title = 'Visionary minds. Uncharted ideas.',
-  eyebrow = '',
+  eyebrow = 'PAST SPEAKERS • 2027 LINEUP ANNOUNCING SOON',
   description = 'Every idea has a story, every perspective holds a possibility, and every voice has the power to spark change. Meet the minds who dare to explore beyond the obvious and bring the untapped into the spotlight.',
   speakers = DEFAULT_SPEAKERS,
   className = '',

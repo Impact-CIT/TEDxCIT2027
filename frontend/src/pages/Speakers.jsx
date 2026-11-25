@@ -243,6 +243,14 @@ export default function Speakers() {
             ========================================================================= */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 sm:mb-16 border-b border-[#1C1C1E] pb-10">
           <div className="w-full max-w-5xl">
+            {/* Eyebrow Status Badge */}
+            <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 bg-[#EB0028]/15 border border-[#EB0028]/60 text-xs sm:text-sm font-mono uppercase tracking-wider mb-5 shadow-[0_0_20px_rgba(235,0,40,0.2)]">
+              <span className="w-2 h-2 rounded-full bg-[#EB0028] animate-pulse shrink-0" />
+              <span className="text-[#FF2B44] font-extrabold tracking-widest">PAST SPEAKERS</span>
+              <span className="text-[#8E8E93] font-normal">•</span>
+              <span className="text-white font-bold">2027 LINEUP ANNOUNCING SOON</span>
+            </div>
+
             {/* Main Headline */}
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-white font-['Inter',sans-serif] leading-[1.1]">
               Visionary minds. <span className="text-[#EB0028]">Uncharted ideas.</span>
