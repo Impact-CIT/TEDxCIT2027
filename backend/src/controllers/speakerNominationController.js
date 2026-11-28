@@ -2,6 +2,7 @@ import { connectDB } from '../config/db.js';
 import SpeakerNomination from '../models/SpeakerNomination.js';
 import { formatRegistrationDeadline, getRegistrationDeadlines } from '../services/registrationDeadlines.js';
 import { sanitizeInput, hashClientIp, EMAIL_REGEX, PHONE_REGEX } from '../utils/security.js';
+import { syncSubmissionToGoogleSheets } from '../services/googleSheetsSync.js';
 
 export async function submitSpeakerNomination(req, res, next) {
   try {
@@ -259,6 +260,7 @@ export async function submitSpeakerNomination(req, res, next) {
     };
 
     const created = await SpeakerNomination.create(recordData);
+    await syncSubmissionToGoogleSheets('speaker', created.toObject());
     return res.status(201).json({
       success: true,
       message: 'Thank you! Your speaker nomination has been received.',

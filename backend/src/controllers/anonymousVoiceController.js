@@ -3,6 +3,7 @@ import AnonymousVoice from '../models/AnonymousVoice.js';
 import SPEAK_CONFIG from '../config/speakConfig.js';
 import { formatRegistrationDeadline, getRegistrationDeadlines } from '../services/registrationDeadlines.js';
 import { sanitizeInput, hashClientIp, EMAIL_REGEX, PHONE_REGEX } from '../utils/security.js';
+import { syncSubmissionToGoogleSheets } from '../services/googleSheetsSync.js';
 
 export async function submitAnonymousVoice(req, res, next) {
   try {
@@ -232,6 +233,7 @@ export async function submitAnonymousVoice(req, res, next) {
     }
 
     const created = await AnonymousVoice.create(submissionData);
+    await syncSubmissionToGoogleSheets('anonymous', created.toObject());
     return res.status(201).json({
       success: true,
       message: 'Thank you! Your submission for Anonymous Voices has been received.',
